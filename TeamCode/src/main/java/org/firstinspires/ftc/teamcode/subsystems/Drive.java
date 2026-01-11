@@ -33,7 +33,6 @@ public class Drive implements Subsystem {
     private static PIDFController controller;
     private static boolean headingLock = false;
 
-
     public static Robot.Alliance getCurrentAlliance(){
         return currentAlliance;
     }
