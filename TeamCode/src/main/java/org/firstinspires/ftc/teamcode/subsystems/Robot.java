@@ -70,4 +70,10 @@ public class Robot extends SubsystemGroup {
             new Delay(0.5),
             new InstantCommand(Intake.setIntakePowerCommand(0))
     );
+
+    public static SequentialGroup outtake1 = new SequentialGroup(
+            new InstantCommand(Transitions.setOuttakePositionCommand(Transitions.UP_POS)),
+            new Delay(0.75),
+            new InstantCommand(Transitions.setOuttakePositionCommand(Transitions.DOWN_POS))
+            );
 }

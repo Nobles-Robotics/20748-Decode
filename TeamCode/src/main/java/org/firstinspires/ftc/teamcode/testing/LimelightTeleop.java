@@ -15,7 +15,6 @@ public class LimelightTeleop extends LinearOpMode {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         telemetry.setMsTransmissionInterval(11);
-
         limelight.pipelineSwitch(0);
 
         /*

@@ -15,7 +15,7 @@ import dev.nextftc.hardware.impl.MotorEx;
 public class Outtake implements Subsystem {
 
     public static final Outtake INSTANCE = new Outtake();
-    private static final MotorEx outtake = new MotorEx("motorExp3").reversed().floatMode();
+    private static final MotorEx outtake = new MotorEx("motor3").reversed().floatMode();
     private Servo outtakeServo;
     private static boolean runDown = false;
 

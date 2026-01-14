@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
-import dev.nextftc.control.ControlSystem;
-import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.LambdaCommand;
@@ -22,6 +20,8 @@ public class Storage implements Subsystem {
     private static double manualPower = 0;
     private static double runPower = 0;
     private final static MotorEx spin = new MotorEx("motorExp0").brakeMode();
+
+
 
     private static DigitalChannel limitSwitch;
     private static NormalizedColorSensor colorSensor;
@@ -49,7 +49,7 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
-        spin.zero();
+         spin.zero();
          limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
          "limitSwitch");
          limitSwitch.setMode(DigitalChannel.Mode.INPUT);
@@ -71,6 +71,10 @@ public class Storage implements Subsystem {
             spin.setPower(manualPower);
         } else if (runpowerMode){
             spin.setPower(runPower);
+        }
+
+        if (!limitSwitch.getState()){
+            Robot.outtake1.schedule();
         }
 
         // Write Telemetry
@@ -112,9 +116,10 @@ public class Storage implements Subsystem {
                 .setStart(() -> {
                     manualMode = false;
                     runpowerMode = true;
-                    runPower = 0.1;
+                    runPower = 0.25;
                 })
-                .setIsDone(() -> !limitSwitch.getState())
+                //.setIsDone(() -> !limitSwitch.getState())
+                .setIsDone(() -> false)
                 .setStop(interrupted -> {
                     runPower = 0;
                     manualPower = 0;
