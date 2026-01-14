@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.subsystems.Storage.controller;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,7 +11,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.subsystems.Transitions;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
-import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
@@ -59,36 +57,8 @@ public class MainTeleOp extends NextFTCOpMode {
 
         jeff.start()
                 .whenBecomesTrue(() -> {
-                    Storage.setPIDMode(false).schedule();
+                    Storage.setRunPowerMode(false).schedule();
                 });
-
-//        // Storage nonsense
-//        jeff.leftStickX().greaterThan(0.1).and(jeff.leftStickButton()
-//                .whenTrue(() -> {
-//                    Storage.setManualModeCommand(true).schedule();
-//                    Storage.setManualPowerCommand(jeff.leftStickX().get() / 1.5).schedule();
-//                })
-//                .whenFalse(() -> {
-//                    Storage.setManualModeCommand(true).schedule();
-//                    Storage.setManualPowerCommand(jeff.leftStickX().get() / 4).schedule();
-//                }));
-//
-//        jeff.leftStickX().lessThan(-0.1).and(jeff.leftStickButton()
-//                        .whenTrue(() -> {
-//                            Storage.setManualModeCommand(true).schedule();
-//                            Storage.setManualPowerCommand(jeff.leftStickX().get() / 1.5).schedule();
-//                        })
-//                        .whenFalse(() -> {
-//                            Storage.setManualModeCommand(true).schedule();
-//                            Storage.setManualPowerCommand(jeff.leftStickX().get() / 4).schedule();
-//                        }));
-//
-//        jeff.leftStickX()
-//                .inRange(-0.05, 0.05)
-//                .whenBecomesTrue(() -> {
-//                    Storage.setManualModeCommand(true).schedule();
-//                    Storage.setManualPowerCommand(0).schedule();
-//                });
 
         // Run Outake
         jeff.rightBumper()
@@ -180,13 +150,6 @@ public class MainTeleOp extends NextFTCOpMode {
                     Storage.setManualModeCommand(true).schedule();
                     Storage.setManualPowerCommand(0).schedule();
                 });
-//        jeff.rightBumper()
-//                .whenBecomesTrue(() -> Outtake.setOuttakePowerCommand(1).schedule())
-//                .whenBecomesFalse(() -> Outtake.setOuttakePowerCommand(0).schedule());
-//        jeff.leftBumper()
-//                .whenBecomesTrue(() -> Outtake.setOuttakePowerCommand(0.8).schedule())
-//                .whenBecomesFalse(() -> Outtake.setOuttakePowerCommand(0).schedule());
-
     }
     @Override public void onUpdate() {
         for (String cname : CommandManager.INSTANCE.snapshot()) {
