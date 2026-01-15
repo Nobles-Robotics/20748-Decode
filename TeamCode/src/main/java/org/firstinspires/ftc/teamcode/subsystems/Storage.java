@@ -116,12 +116,12 @@ public class Storage implements Subsystem {
                 .setStart(() -> {
                     manualMode = false;
                     runpowerMode = true;
-                    runPower = 0.25;
+                    runPower = 0.5;
                 })
-                //.setIsDone(() -> !limitSwitch.getState())
-                .setIsDone(() -> false)
+                .setIsDone(() -> !limitSwitch.getState())
+                //.setIsDone(() -> false)
                 .setStop(interrupted -> {
-                    runPower = 0;
+                    runPower = -.15;
                     manualPower = 0;
                 })
                 .requires(Storage.INSTANCE)
