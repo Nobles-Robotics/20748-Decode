@@ -22,6 +22,7 @@ public class Storage implements Subsystem {
     private final static MotorEx spin = new MotorEx("motorExp0").brakeMode();
 
 
+    public static boolean previousState = true;
 
     private static DigitalChannel limitSwitch;
     private static NormalizedColorSensor colorSensor;
@@ -61,21 +62,21 @@ public class Storage implements Subsystem {
 
     @Override
     public void periodic() {
-        if (wasJustPressed()){
-            index++;
-            if (index >= STATES.length) {
-                index = 0;
-            }
-        }
+//        if (wasJustPressed()){
+//            index++;
+//            if (index >= STATES.length) {
+//                index = 0;
+//            }
+//        }
         if (manualMode) {
             spin.setPower(manualPower);
         } else if (runpowerMode){
             spin.setPower(runPower);
         }
 
-        if (!limitSwitch.getState()){
-            Robot.outtake1.schedule();
-        }
+//        if (!limitSwitch.getState()){
+//            Robot.outtake1.schedule();
+//        }
 
         // Write Telemetry
         Logger.add("Storage", Logger.Level.DEBUG, "ticks: " + spin.getCurrentPosition());
@@ -116,12 +117,34 @@ public class Storage implements Subsystem {
                 .setStart(() -> {
                     manualMode = false;
                     runpowerMode = true;
-                    runPower = 0.5;
+                    runPower = 0.25;
                 })
                 .setIsDone(() -> !limitSwitch.getState())
                 //.setIsDone(() -> false)
                 .setStop(interrupted -> {
-                    runPower = -.15;
+                    spinToNextOuttakeSlowlyIndex().schedule();
+                })
+                .requires(Storage.INSTANCE)
+                .setInterruptible(true)
+                .named("Spin to next index");
+    }
+
+    public static Command spinToNextOuttakeSlowlyIndex() {
+        return new LambdaCommand()
+                .setStart(() -> {
+                    runpowerMode = true;
+                    runPower = -0.1;
+                })
+                .setIsDone(() -> {
+                    if (!previousState && limitSwitch.getState()){
+                        return true;
+                    }
+                    previousState = limitSwitch.getState();
+                    return false;
+                })
+                //.setIsDone(() -> false)
+                .setStop(interrupted -> {
+                    runPower = 0;
                     manualPower = 0;
                 })
                 .requires(Storage.INSTANCE)

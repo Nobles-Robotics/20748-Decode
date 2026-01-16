@@ -24,7 +24,10 @@ public class Outtake implements Subsystem {
             .basicFF(0.00030, 0, 0.075)
             .build();
     public static Command off = new RunToVelocity(controller, 0.0).requires(INSTANCE).named("FlywheelOff");
-    public static Command on = new RunToVelocity(controller, 2100).requires(INSTANCE).named("FlywheelOn");
+    //public static Command on = new RunToVelocity(controller, 2100).requires(INSTANCE).named("FlywheelOn");
+    public static Command on = new InstantCommand(() -> {
+        runDown = false;
+    });
 
     private static void setRunDown(boolean newBoolean) {
         runDown = newBoolean;
@@ -52,17 +55,23 @@ public class Outtake implements Subsystem {
     @Override
     public void periodic() {
         outtakeServo.setPosition(0);
+        outtake.setPower(1);
+//        if (!runDown) {
+//            outtake.setPower(1);
+//        } else {
+//            outtake.setPower(0);
+//        }
         //outtake.setPower(outtakePower);
-        double testPower = controller.calculate(outtake.getState());
-        Logger.add("Outtake", Logger.Level.DEBUG, "velocity: " + outtake.getVelocity() + "power: " + testPower );
-        if (runDown) {
-            outtake.setPower(0);
-        } else {
-            if (Math.abs(testPower) > 0.05){
-                outtake.setPower(testPower);
-            } else {
-                outtake.setPower(0);
-            }
-        }
+//        double testPower = controller.calculate(outtake.getState());
+//        Logger.add("Outtake", Logger.Level.DEBUG, "velocity: " + outtake.getVelocity() + "power: " + testPower );
+//        if (runDown) {
+//            outtake.setPower(0);
+//        } else {
+//            if (Math.abs(testPower) > 0.05){
+//                outtake.setPower(testPower);
+//            } else {
+//                outtake.setPower(0);
+//            }
+//        }
     }
 }

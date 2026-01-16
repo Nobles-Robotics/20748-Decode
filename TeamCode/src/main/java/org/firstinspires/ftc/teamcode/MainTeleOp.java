@@ -19,6 +19,7 @@ import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
+import dev.nextftc.hardware.impl.MotorEx;
 
 @TeleOp(name="MainTeleOp", group="TeleOp")
 public class MainTeleOp extends NextFTCOpMode {
@@ -32,11 +33,14 @@ public class MainTeleOp extends NextFTCOpMode {
                         Robot.INSTANCE,
                         Drive.INSTANCE,
                         Intake.INSTANCE,
-                        Outtake.INSTANCE,
+                        //Outtake.INSTANCE,
                         Transitions.INSTANCE
                 )
         );
     }
+
+    private static final MotorEx outtake = new MotorEx("motor3").reversed().floatMode();
+
 
     @Override public void onInit() {
     }
@@ -152,6 +156,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 });
     }
     @Override public void onUpdate() {
+        outtake.setPower(1);
         for (String cname : CommandManager.INSTANCE.snapshot()) {
             Logger.add("Commands", Logger.Level.DEBUG, cname);
         }
