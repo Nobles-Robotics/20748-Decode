@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Transitions;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
@@ -78,23 +79,36 @@ public class MainAuto extends NextFTCOpMode {
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
         intakeAlign1.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign1Blue.getHeading());
         intake1.setLinearHeadingInterpolation(intakeAlign1Blue.getHeading(), intake1Blue.getHeading());
-        score1.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
+        intakeOut1.setLinearHeadingInterpolation(intake1Blue.getHeading(), intakeAlign1Blue.getHeading());
+        score1.setLinearHeadingInterpolation(intakeAlign1Blue.getHeading(), scorePose.getHeading());
 
-        int standardDelay = 1;
+        double standardDelay = 0.5;
 
         return new SequentialGroup(
+                // Phase 1: Score preloaded balls
                 new FollowPath(scorePreload),
                 new Delay(standardDelay),
                 Robot.outtakeAll,
                 new Delay(standardDelay),
+
+                // Phase 2: Move to intake alignment position
                 new FollowPath(intakeAlign1),
                 new Delay(standardDelay),
-                // Start running intake procedure
-                new FollowPath(intake1),
-                new Delay(standardDelay),
+
+                // Phase 3: Drive through intake zone while running intake procedure
+                // intakeAll starts intake, collects 3 balls, rotates storage, then stops intake
+                new ParallelGroup(
+                        new FollowPath(intake1),
+                        Robot.intakeAll
+                ),
+
+                // Phase 4: Drive back out of intake zone (intake already stopped by intakeAll)
                 new FollowPath(intakeOut1),
                 new Delay(standardDelay),
+
+                // Phase 5: Return to scoring position and outtake collected balls
                 new FollowPath(score1),
+                new Delay(standardDelay),
                 Robot.outtakeAll
         );
     }
