@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.utils.Alliance;
-
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -53,7 +51,7 @@ public class Robot extends SubsystemGroup {
             Outtake.off
     );
 
-    public static SequentialGroup intakeAll = new SequentialGroup(
-
-    );
+//    public static SequentialGroup intakeAll = new SequentialGroup(
+//
+//    );
 }

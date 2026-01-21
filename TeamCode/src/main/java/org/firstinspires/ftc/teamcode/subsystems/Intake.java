@@ -13,7 +13,7 @@ public class Intake implements Subsystem {
     private static double intakePower = 0;
     private final static double FORWARD_POWER = 1;
     private final static double REVERSE_POWER = -1;
-    private final MotorEx intake = new MotorEx("motor3");
+    private final MotorEx intake = new MotorEx("motorExp1");
 
     @Override
     public void initialize() {
