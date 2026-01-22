@@ -76,7 +76,7 @@ public class MainTeleOp extends NextFTCOpMode {
                     Storage.setManualPowerCommand(0.075).schedule();
                 })
                 .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(false).schedule();
+                    Storage.setManualModeCommand(true).schedule();
                     Storage.setManualPowerCommand(0).schedule();
                 });
         gamepad2.b()
@@ -85,7 +85,7 @@ public class MainTeleOp extends NextFTCOpMode {
                     Storage.setManualPowerCommand(0.5).schedule();
                 })
                 .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(false).schedule();
+                    Storage.setManualModeCommand(true).schedule();
                     Storage.setManualPowerCommand(0).schedule();
                 });
         gamepad2.y()
@@ -94,7 +94,7 @@ public class MainTeleOp extends NextFTCOpMode {
                     Storage.setManualPowerCommand(0.2).schedule();
                 })
                 .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(false).schedule();
+                    Storage.setManualModeCommand(true).schedule();
                     Storage.setManualPowerCommand(0).schedule();
                 });
     }
