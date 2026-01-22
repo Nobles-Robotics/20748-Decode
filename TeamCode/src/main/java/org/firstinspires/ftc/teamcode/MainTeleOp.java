@@ -2,12 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.Drive;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Storage;
-import org.firstinspires.ftc.teamcode.subsystems.Transitions;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.components.AllianceManager;
 
@@ -29,12 +24,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 CommandManager.INSTANCE,
                 AllianceManager.INSTANCE,
                 new SubsystemComponent(
-                        Storage.INSTANCE,
-                        Robot.INSTANCE,
-                        Drive.INSTANCE,
-                        Intake.INSTANCE,
-                        Outtake.INSTANCE,
-                        Transitions.INSTANCE
+                        Storage.INSTANCE
                 )
         );
     }
@@ -44,59 +34,19 @@ public class MainTeleOp extends NextFTCOpMode {
 
     @Override public void onStartButtonPressed() {
 
-        GamepadEx gamepad1 = Gamepads.gamepad1();
         GamepadEx gamepad2 = Gamepads.gamepad2();
 
-        gamepad1.x()
-                .whenBecomesTrue(() -> Outtake.on.schedule())
-                .whenBecomesFalse(() -> Outtake.off.schedule());
-        gamepad1.y()
-                .whenBecomesTrue(() -> Transitions.on().schedule())
-                .whenBecomesFalse(() -> Transitions.off().schedule());
-
-        gamepad1.rightBumper()
-                .whenBecomesTrue(() -> Intake.on().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
-
-        gamepad1.dpadDown()
-                .whenTrue(() -> Storage.spinToNextIntakeIndex().schedule());
-
-        gamepad1.dpadUp()
-                .whenTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
-
-        gamepad1.dpadRight()
-                .whenTrue(() -> Robot.outtakeAll.schedule());
-
-        gamepad1.dpadLeft()
-                .whenTrue(() -> Robot.outtakeOne.schedule());
-
         gamepad2.a()
-                .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.075).schedule();
-                })
-                .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(false).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
-                });
+                .whenBecomesTrue(() -> Storage.setManualPowerCommand(0.075).schedule())
+                .whenBecomesFalse(() -> Storage.setManualPowerCommand(0).schedule());
         gamepad2.b()
-                .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.5).schedule();
-                })
-                .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(false).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
-                });
+                .whenBecomesTrue(() -> Storage.setManualPowerCommand(0.5).schedule())
+                .whenBecomesFalse(() -> Storage.setManualPowerCommand(0).schedule());
         gamepad2.y()
-                .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.2).schedule();
-                })
-                .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(false).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
-                });
+                .whenBecomesTrue(() -> Storage.setManualPowerCommand(0.2).schedule())
+                .whenBecomesFalse(() -> Storage.setManualPowerCommand(0).schedule());
+        gamepad2.back()
+                .whenBecomesTrue(() -> Storage.resetAveragingCommand().schedule());
     }
     @Override public void onUpdate() {
         for (String cname : CommandManager.INSTANCE.snapshot()) {

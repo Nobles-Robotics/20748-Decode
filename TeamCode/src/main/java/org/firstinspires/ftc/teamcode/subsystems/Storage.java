@@ -1,191 +1,111 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import dev.nextftc.control.ControlSystem;
-import dev.nextftc.control.KineticState;
+import org.firstinspires.ftc.teamcode.utils.Logger;
+
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.commands.utility.LambdaCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 
 public class Storage implements Subsystem {
     public static final Storage INSTANCE = new Storage();
-    private static boolean manualMode = true;
-    private static boolean positionMode = false;
-    private static double manualPower = 0;
+
+    // Hardware
     private final static MotorEx spin = new MotorEx("motorExp0").brakeMode();
     private static DigitalChannel limitSwitch;
-    private static NormalizedColorSensor colorSensor;
-    private static double currentPosition;
-    private static double targetPosition;
-    private static final double DELTA_TICKS = 185;
-    private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
-    private static boolean lastState = false;
 
-    public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.0075, 0, 0)
-            .build();
+    // Movement state
+    private static boolean manualMode = true;
+    private static double manualPower = 0;
 
-    public static final State[] STATES = {
-            State.NONE,
-            State.NONE,
-            State.NONE
-    };
+    // Math / Averaging Variables
+    private static double lastPressPosition = 0;
+    private static double runningSum = 0;
+    private static int validCount = 0;
 
-    public enum State {
-        PURPLE,
-        GREEN,
-        NONE,
-        BALL,
-    }
+    // Switch state tracking
+    private static boolean lastSwitchState = false;
 
     @Override
     public void initialize() {
-        currentPosition = spin.getCurrentPosition();
-        targetPosition = currentPosition;
+        spin.setPower(0);
+        // Initialize lastPress to current so the first delta isn't huge
+        lastPressPosition = spin.getCurrentPosition();
 
-        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
-                "limitSwitch");
+        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class, "limitSwitch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
-
-        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
-                "colorSensor");
     }
 
     @Override
     public void periodic() {
+        // 1. Handle Motor Power
         if (manualMode) {
             spin.setPower(manualPower);
-        } else if (positionMode) {
-            double testPower = controller.calculate(new KineticState(targetPosition));
-            if (Math.abs(testPower) > 0.05) {
-                spin.setPower(testPower);
-            } else {
-                spin.setPower(0);
-            }
         }
-//        if (wasJustPressed()) {
-//            resetEncoderAtOuttake();
-//        }
+
+        // 2. Handle Limit Switch Logic
+        // Note: Check your specific wiring. Usually !getState() is pressed for Touch Sensors.
+        // Adopting your previous logic style, assuming getState() returns true when pressed.
+        boolean currentSwitchState = limitSwitch.getState();
+
+        // Detect Rising Edge (Just Pressed)
+        if (currentSwitchState && !lastSwitchState) {
+            handleLimitSwitchPress();
+        }
+
+        lastSwitchState = currentSwitchState;
     }
 
-    public static Command spinToNextIntakeIndex() {
-        return new LambdaCommand()
-                .setStart(() -> {
-                    manualMode = false;
-                    positionMode = true;
-                    double startPos = currentPosition + 10;
+    private void handleLimitSwitchPress() {
+        double currentPosition = spin.getCurrentPosition();
 
-                    double remainder = startPos % DELTA_TICKS;
-                    if (remainder < 0) remainder += DELTA_TICKS;
+        // Calculate absolute difference since last press
+        double delta = Math.abs(currentPosition - lastPressPosition);
 
-                    double ticksToMove = DELTA_TICKS - remainder;
+        // Update the last position marker immediately
+        lastPressPosition = currentPosition;
 
-                    targetPosition = startPos + ticksToMove;
-                })
-                .setIsDone(() -> true)
-                .setStop(interrupted -> {
-                })
-                .requires(Storage.INSTANCE)
-                .setInterruptible(true)
-                .named("Spin to next index");
-    }
+        // 3. Filter and Log
+        if (delta >= 130 && delta <= 230) {
+            runningSum += delta;
+            validCount++;
 
-    public static Command spinToNextOuttakeIndex() {
-        return new LambdaCommand()
-                .setStart(() -> {
-                    manualMode = false;
-                    positionMode = true;
-                    double startPos = currentPosition - 10;
+            double average = runningSum / validCount;
 
-                    double remainder = startPos % DELTA_TICKS;
-                    if (remainder < 0) remainder += DELTA_TICKS;
+            // Using standard Android Log (appears in Logcat)
+            // Replace with your specific Logger.log wrapper if you have one
+            Logger.add("Transition", Logger.Level.DEBUG, "delta: " + delta + " avg: " + average);
 
-                    double ticksToMove = (DELTA_TICKS / 2.0) - remainder;
-                    if (ticksToMove >= 0) ticksToMove -= DELTA_TICKS;
-
-                    targetPosition = startPos + ticksToMove;
-                })
-                .setIsDone(() -> true)
-                .setStop(interrupted -> {
-                })
-                .requires(Storage.INSTANCE)
-                .setInterruptible(true)
-                .named("Spin to next index");
+            // Optional: Print to Telemetry as well for visibility on Driver Station
+            ActiveOpMode.telemetry().addData("Avg Ticks", average);
+            ActiveOpMode.telemetry().addData("Valid Counts", validCount);
+        } else {
+            Logger.add("Transition", Logger.Level.DEBUG, "delta: " + delta + " out of range");
+        }
     }
 
     public static Command setManualPowerCommand(double newPower) {
-        return new InstantCommand(() -> setManualPower(newPower));
+        return new InstantCommand(() -> {
+            manualMode = true;
+            manualPower = newPower;
+        });
     }
 
-    public static Command setManualModeCommand(boolean newMode) {
-        return new InstantCommand(() -> setManualMode(newMode));
+    public static Command stopCommand() {
+        return new InstantCommand(() -> {
+            manualMode = true;
+            manualPower = 0;
+        });
     }
 
-    public static Command setPositionModeCommand(boolean newMode) {
-        return new InstantCommand(() -> setPositionMode(newMode));
-    }
-
-    public static Command resetEncoderCommand() {
-        return new InstantCommand(() -> resetEncoder(0));
-    }
-
-    public static Command resetEncoderAtOuttakeCommand() {
-        return new InstantCommand(() -> resetEncoder(OUTTAKE_POSITION));
-    }
-
-    private static void setManualPower(double newPower) {
-        manualPower = newPower;
-    }
-
-    private static void setPositionMode(boolean newBoolean) {
-        positionMode = newBoolean;
-    }
-
-    private static void setManualMode(boolean newMode) {
-        manualMode = newMode;
-    }
-
-    private static void resetEncoder(double newPosition) {
-        spin.setCurrentPosition(newPosition);
-        targetPosition = newPosition;
-    }
-
-    public static NormalizedRGBA getColor() {
-        return colorSensor.getNormalizedColors();
-    }
-
-    public static State readColor() {
-        NormalizedRGBA colors = getColor();
-
-        double red = colors.red;
-        double green = colors.green;
-        double blue = colors.blue;
-
-        double sum = red + green + blue;
-
-        double r = red / sum;
-        double g = green / sum;
-        double b = blue / sum;
-
-        if (r > 0.35 && b > 0.35 && g < 0.25) {
-            return State.PURPLE;
-        }
-        if (g > 0.45 && r < 0.3 && b < 0.3) {
-            return State.GREEN;
-        }
-        return State.NONE;
-    }
-
-    public static boolean wasJustPressed() {
-        boolean currentState = limitSwitch.getState();
-        boolean justPressed = currentState && !lastState;
-        lastState = currentState;
-        return justPressed;
+    public static Command resetAveragingCommand() {
+        return new InstantCommand(() -> {
+            runningSum = 0;
+            validCount = 0;
+            lastPressPosition = spin.getCurrentPosition();
+        });
     }
 }
