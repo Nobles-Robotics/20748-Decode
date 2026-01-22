@@ -36,7 +36,6 @@ public class Storage implements Subsystem {
         lastPressPosition = spin.getCurrentPosition();
 
         limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class, "limitSwitch");
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
     @Override
