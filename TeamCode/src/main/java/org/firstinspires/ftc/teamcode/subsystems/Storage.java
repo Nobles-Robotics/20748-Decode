@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.teamcode.utils.Logger;
+
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
@@ -18,7 +20,7 @@ public class Storage implements Subsystem {
     private static boolean manualMode = true;
     private static boolean positionMode = false;
     private static double manualPower = 0;
-    private final static MotorEx spin = new MotorEx("motorExp0").brakeMode();
+    private final static MotorEx spin = new MotorEx("motorExp0").brakeMode().reversed();
     private static DigitalChannel limitSwitch;
     private static NormalizedColorSensor colorSensor;
     private static double currentPosition;
@@ -28,7 +30,7 @@ public class Storage implements Subsystem {
     private static boolean lastState = false;
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.0075, 0, 0)
+            .posPid(0.001, 0, 0)
             .build();
 
     public static final State[] STATES = {
@@ -46,6 +48,7 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
+        spin.zero();
         currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
 
@@ -61,19 +64,22 @@ public class Storage implements Subsystem {
     public void periodic() {
         if (manualMode) {
             spin.setPower(manualPower);
+            Logger.add("Manual", "power: " + manualPower);
         } else if (positionMode) {
             double testPower = controller.calculate(new KineticState(targetPosition));
+            Logger.add("Controller", "target position: " + targetPosition + "current position:" + currentPosition + testPower);
             if (Math.abs(testPower) > 0.05) {
                 spin.setPower(testPower);
             } else {
                 spin.setPower(0);
             }
         }
-//        if (wasJustPressed()) {
-//            resetEncoderAtOuttake();
-//        }
     }
 
+
+    //        if (wasJustPressed()) {
+//            resetEncoderAtOuttake();
+//        }
     public static Command spinToNextIntakeIndex() {
         return new LambdaCommand()
                 .setStart(() -> {
