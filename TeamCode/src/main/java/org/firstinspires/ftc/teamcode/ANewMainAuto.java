@@ -94,6 +94,8 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new FollowPath(intakeOut1),
                 new Delay(standardDelay),
+
+                new Delay(standardDelay),
                 new FollowPath(score1),
                 Robot.outtakeAll
         );
