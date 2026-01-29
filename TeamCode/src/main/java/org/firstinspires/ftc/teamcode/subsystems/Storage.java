@@ -25,6 +25,12 @@ public class Storage implements Subsystem {
     private static double lastPressPosition = 0;
     private static double runningSum = 0;
     private static int validCount = 0;
+    private static int dummyCount = 0;
+    private static double delta;
+    private static double mod = 0;
+    private static double test1 = 0;
+    private static double test2 = 0;
+    private static double test3 = 0;
 
     // Switch state tracking
     private static boolean lastSwitchState = false;
@@ -53,36 +59,43 @@ public class Storage implements Subsystem {
         // Detect Rising Edge (Just Pressed)
         if (currentSwitchState && !lastSwitchState) {
             handleLimitSwitchPress();
+            stopCommand().schedule();
         }
 
         lastSwitchState = currentSwitchState;
+        double average = runningSum / validCount;
+        double avg1 = test1 / mod * 3;
+        double avg2 = test2 / mod * 3;
+        double avg3 = test3 / mod * 3;
+
+        ActiveOpMode.telemetry().addLine(limitSwitch.getState() + " limit switch");
+        ActiveOpMode.telemetry().addLine(spin.getCurrentPosition() + " ");
+        ActiveOpMode.telemetry().addLine("delta: " + delta + " avg: " + average);
+        ActiveOpMode.telemetry().addData("Avg Ticks", average);
+        ActiveOpMode.telemetry().addData("Valid Counts", validCount);
+        ActiveOpMode.telemetry().addData("Bad Counts", dummyCount);
+        ActiveOpMode.telemetry().addLine(avg1 + ", " + avg2 + ", " + avg3);
     }
 
     private void handleLimitSwitchPress() {
         double currentPosition = spin.getCurrentPosition();
 
         // Calculate absolute difference since last press
-        double delta = Math.abs(currentPosition - lastPressPosition);
+        delta = Math.abs(currentPosition - lastPressPosition);
 
         // Update the last position marker immediately
         lastPressPosition = currentPosition;
-
         // 3. Filter and Log
         if (delta >= 130 && delta <= 230) {
             runningSum += delta;
             validCount++;
 
-            double average = runningSum / validCount;
-
-            // Using standard Android Log (appears in Logcat)
-            // Replace with your specific Logger.log wrapper if you have one
-            Logger.add("Transition", Logger.Level.DEBUG, "delta: " + delta + " avg: " + average);
-
-            // Optional: Print to Telemetry as well for visibility on Driver Station
-            ActiveOpMode.telemetry().addData("Avg Ticks", average);
-            ActiveOpMode.telemetry().addData("Valid Counts", validCount);
+            if (mod % 3 == 0) test1 += delta;
+            if (mod % 3 == 1) test2 += delta;
+            if (mod % 3 == 2) test3 += delta;
+            mod++;
         } else {
-            Logger.add("Transition", Logger.Level.DEBUG, "delta: " + delta + " out of range");
+            dummyCount++;
         }
     }
 
