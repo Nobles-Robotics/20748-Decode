@@ -24,7 +24,7 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 public class MainTeleOp extends NextFTCOpMode {
     {
         addComponents(
-                BulkReadComponent.INSTANCE, // TODO: make actual MANUAL mode bulkreading (we don't need to also read the expansion hub every loop)
+                BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE,
                 CommandManager.INSTANCE,
                 AllianceManager.INSTANCE,
