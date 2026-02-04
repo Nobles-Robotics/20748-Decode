@@ -16,8 +16,7 @@ import java.util.List;
 public class LimelightTest extends LinearOpMode {
     private Limelight3A limelight;
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
 
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -39,24 +38,43 @@ public class LimelightTest extends LinearOpMode {
                     telemetry.addData("ty", result.getTy()); // How far up or down the target is (degrees)
                     telemetry.addData("ta", result.getTa()); // How big the target looks (0%-100% of the image)
 
-                    telemetry.addData("TagCount", result.getBotposeTagCount());
-                    telemetry.addData("Barcode results", result.getBarcodeResults());
+                    telemetry.addData("Separate", "I just los my daww");
 
-                    telemetry.addData("Detec results", result.getDetectorResults());
-                    telemetry.addData("Separate","I just los my daww");
-                    //telemetry.addData("Fiduc results", result.getFiducialResults());
                     List<LLResultTypes.FiducialResult> fidResults = result.getFiducialResults();
-                    for (LLResultTypes.FiducialResult fr : fidResults){
+                    for (LLResultTypes.FiducialResult fr : fidResults) {
                         telemetry.addData("APRIL ID ", fr.getFiducialId());
-                        telemetry.addData("APRIL SKEW ", fr.getSkew());
-                        telemetry.addData("APRIL FAMILY ", fr.getFamily());
+
+                        telemetry.addData("Pattern ", getPattern(fr.getFiducialId()));
+
                         telemetry.addData("----", "---");
+
+                        telemetry.addData("APRIL TARGET POSE (CAMERA SPACE) ", fr.getTargetPoseCameraSpace());
+
                     }
 
+                    //telemetry.addData("Separate","アイジャストラストマイーダーーーグ");
 
                     telemetry.update();
                 }
             }
         }
+
     }
+    public String getPattern(int id) {
+        String p1 = "P";
+        String p2 = "P";
+        String p3 = "P";
+
+        if (id == 21){
+            p1 = "G";
+        }else if (id == 22){
+            p2 = "G";
+        }else if (id == 23){
+            p3 = "G";
+        }
+
+        return p1 + " " + p2 + " " + p3;
+    }
+
 }
+
