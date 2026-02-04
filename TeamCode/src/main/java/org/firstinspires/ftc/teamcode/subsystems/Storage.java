@@ -25,12 +25,12 @@ public class Storage implements Subsystem {
     private static NormalizedColorSensor colorSensor;
     private static double currentPosition;
     private static double targetPosition;
-    private static final double DELTA_TICKS = 185;
+    private static final double DELTA_TICKS = 179.22;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.001, 0, 0)
+            .posPid(0.000075, 0, 0)
             .build();
 
     public static final State[] STATES = {
@@ -52,12 +52,12 @@ public class Storage implements Subsystem {
         currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
 
-        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
-                "limitSwitch");
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
-
-        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
-                "colorSensor");
+//        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
+//                "limitSwitch");
+//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+//
+//        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
+//                "colorSensor");
     }
 
     @Override
@@ -67,13 +67,14 @@ public class Storage implements Subsystem {
             Logger.add("Manual", "power: " + manualPower);
         } else if (positionMode) {
             double testPower = controller.calculate(new KineticState(targetPosition));
-            Logger.add("Controller", "target position: " + targetPosition + "current position:" + currentPosition + testPower);
+            Logger.add("Controller", "target position: " + targetPosition + "current position:" + currentPosition);
             if (Math.abs(testPower) > 0.05) {
                 spin.setPower(testPower);
             } else {
                 spin.setPower(0);
             }
         }
+        Logger.add("Controller", "target position: " + targetPosition + "current position" + currentPosition);
     }
 
 

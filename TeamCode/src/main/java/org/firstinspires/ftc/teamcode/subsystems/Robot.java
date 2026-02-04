@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
@@ -26,19 +27,19 @@ public class Robot extends SubsystemGroup {
     }
 
     public static SequentialGroup outtakeAll = new SequentialGroup(
-            Outtake.on,
-            Storage.spinToNextOuttakeIndex(),
+            new InstantCommand(Outtake.on),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            Transitions.on(),
+            new InstantCommand(Transitions.on()),
             new Delay(DELAY),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            Storage.spinToNextOuttakeIndex(),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(DELAY),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            Storage.spinToNextOuttakeIndex(),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(DELAY),
-            Transitions.off(),
-            Outtake.off
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
     );
 
     public static SequentialGroup outtakeOne = new SequentialGroup(

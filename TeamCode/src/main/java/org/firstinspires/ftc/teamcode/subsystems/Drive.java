@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static com.pedropathing.math.MathFunctions.normalizeAngle;
+
+import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
+
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.utils.Alliance;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
 import dev.nextftc.core.commands.Command;
@@ -16,18 +21,24 @@ import dev.nextftc.ftc.ActiveOpMode;
 
 public class Drive implements Subsystem {
     public static final Drive INSTANCE = new Drive();
-    private static Follower follower;
+    public static Follower follower;
     public static TelemetryManager telemetryM;
     private static boolean slowMode = false;
     private static final double slowModeMultiplier = 0.2;
-    private static final boolean robotCentric = false;
+    private static final boolean robotCentric = true;
 
     @Override
     public void initialize() {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
-        follower.setStartingPose(new Pose(68, 76, Math.toRadians(315)));
+        follower.setStartingPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
         follower.update();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        cornerReset();
+    }
+
+    public void cornerReset() {
+        if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
+        else follower.setPose(new Pose(8, 6.25, Math.toRadians(0)));
     }
 
     @Override

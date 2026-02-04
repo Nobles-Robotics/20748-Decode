@@ -47,10 +47,21 @@ public class MainTeleOp extends NextFTCOpMode {
         GamepadEx gamepad1 = Gamepads.gamepad1();
         GamepadEx gamepad2 = Gamepads.gamepad2();
 
-        gamepad1.x()
-                .whenBecomesTrue(() -> Outtake.on.schedule())
+        gamepad2.rightBumper()
+                .whenBecomesTrue(() -> {
+                    Outtake.on.schedule();
+                    Outtake.setTargetVelocity(2400);
+                })
                 .whenBecomesFalse(() -> Outtake.off.schedule());
-        gamepad1.y()
+
+//        gamepad2.leftBumper()
+//                .whenBecomesTrue(() -> {
+//                    Outtake.on.schedule();
+//                    Outtake.setTargetVelocity(2650);
+//                })
+//                .whenBecomesFalse(() -> Outtake.off.schedule());
+
+        gamepad2.x()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
                 .whenBecomesFalse(() -> Transitions.off().schedule());
 
@@ -59,25 +70,34 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
         gamepad1.dpadDown()
-                .whenTrue(() -> Storage.spinToNextIntakeIndex().schedule());
+                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
 
         gamepad1.dpadUp()
-                .whenTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
 
         gamepad1.dpadRight()
-                .whenTrue(() -> Robot.outtakeAll.schedule());
+                .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
         gamepad1.dpadLeft()
-                .whenTrue(() -> Robot.outtakeOne.schedule());
+                .whenBecomesTrue(() -> Robot.outtakeOne.schedule());
+
+        gamepad2.dpadDown()
+                .whenBecomesTrue(() -> Intake.on().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+        ;
+
+        gamepad2.leftBumper()
+                .whenBecomesTrue(() -> Transitions.on().schedule())
+                .whenBecomesFalse(() -> Transitions.off().schedule());
 
         gamepad2.a()
                 .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.075).schedule();
+                    Outtake.setManualMode(true);
+                    Outtake.setManualPower(1);
                 })
                 .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
+                    Outtake.setManualMode(false);
+                    Outtake.setManualPower(0);
                 });
         gamepad2.b()
                 .whenBecomesTrue(() -> {
