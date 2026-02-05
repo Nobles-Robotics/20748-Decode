@@ -48,10 +48,10 @@ public class Drive implements Subsystem {
                 telemetryM.update();
 
                 // Calculate the correct values based on Gamepad 1
-                double forward = slowMode ? ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: ActiveOpMode.gamepad1().left_stick_y;
-                double strafe = slowMode ? ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: ActiveOpMode.gamepad1().left_stick_x;
-                double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
-
+                double forward = slowMode ? ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: Math.pow(ActiveOpMode.gamepad1().left_stick_y, 3);
+                double strafe = slowMode ? ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: Math.pow(ActiveOpMode.gamepad1().left_stick_x, 3);
+                double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -Math.pow(ActiveOpMode.gamepad1().right_stick_x, 3);
+                
                 follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
 
