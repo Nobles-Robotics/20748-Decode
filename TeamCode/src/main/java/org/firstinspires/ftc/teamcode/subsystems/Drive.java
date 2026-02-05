@@ -24,7 +24,7 @@ public class Drive implements Subsystem {
     public static Follower follower;
     public static TelemetryManager telemetryM;
     private static boolean slowMode = false;
-    private static final double slowModeMultiplier = 0.2;
+    private static final double slowModeMultiplier = 0.25;
     private static final boolean robotCentric = true;
 
     @Override
