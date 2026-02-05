@@ -61,7 +61,12 @@ public class MainTeleOp extends NextFTCOpMode {
 //                })
 //                .whenBecomesFalse(() -> Outtake.off.schedule());
 
-        gamepad2.leftBumper()
+        gamepad1.leftBumper()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        // TODO: make toggle
+        gamepad1.y()
                 .whenBecomesTrue(() -> {
                     Drive.setSlowModeCommand(true);
                 })
@@ -90,7 +95,11 @@ public class MainTeleOp extends NextFTCOpMode {
         gamepad2.dpadUp()
                 .whenBecomesTrue(() -> Intake.on().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
-        ;
+
+        gamepad2.dpadDown()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
 
         gamepad2.leftBumper()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
