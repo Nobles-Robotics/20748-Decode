@@ -48,6 +48,7 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
+        spin.setCurrentPosition(0);
         spin.zero();
         currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
@@ -67,14 +68,14 @@ public class Storage implements Subsystem {
             Logger.add("Manual", "power: " + manualPower);
         } else if (positionMode) {
             double testPower = controller.calculate(new KineticState(targetPosition));
-            Logger.add("Controller", "target position: " + targetPosition + "current position:" + currentPosition);
+            Logger.add("Storage", "power: " + testPower);
             if (Math.abs(testPower) > 0.05) {
                 spin.setPower(testPower);
             } else {
                 spin.setPower(0);
             }
         }
-        Logger.add("Controller", "target position: " + targetPosition + "current position" + currentPosition);
+        Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
     }
 
 

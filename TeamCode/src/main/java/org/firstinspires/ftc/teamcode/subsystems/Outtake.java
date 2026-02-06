@@ -90,7 +90,7 @@ public class Outtake implements Subsystem {
     }
 
     public static boolean reachedTargetVelocity(){
-        return outtake.getVelocity() > targetVelocity;
+        return outtake.getVelocity() > (targetVelocity - 50);
     }
 
     public static void setTargetVelocity(double newTargetVelocity){
