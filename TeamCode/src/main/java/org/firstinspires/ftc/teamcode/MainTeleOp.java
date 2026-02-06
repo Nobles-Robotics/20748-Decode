@@ -61,6 +61,17 @@ public class MainTeleOp extends NextFTCOpMode {
 //                })
 //                .whenBecomesFalse(() -> Outtake.off.schedule());
 
+        gamepad1.leftBumper()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        // TODO: make toggle
+        gamepad1.y()
+                .whenBecomesTrue(() -> {
+                    Drive.setSlowModeCommand(true);
+                })
+                .whenBecomesFalse(() -> Drive.setSlowModeCommand(false));
+
         gamepad2.x()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
                 .whenBecomesFalse(() -> Transitions.off().schedule());
@@ -81,10 +92,14 @@ public class MainTeleOp extends NextFTCOpMode {
         gamepad1.dpadLeft()
                 .whenBecomesTrue(() -> Robot.outtakeOne.schedule());
 
-        gamepad2.dpadDown()
+        gamepad2.dpadUp()
                 .whenBecomesTrue(() -> Intake.on().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
-        ;
+
+        gamepad2.dpadDown()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
 
         gamepad2.leftBumper()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
@@ -92,12 +107,12 @@ public class MainTeleOp extends NextFTCOpMode {
 
         gamepad2.a()
                 .whenBecomesTrue(() -> {
-                    Outtake.setManualMode(true);
-                    Outtake.setManualPower(1);
+                    Storage.setManualModeCommand(true).schedule();
+                    Storage.setManualPowerCommand(0.75).schedule();
                 })
                 .whenBecomesFalse(() -> {
-                    Outtake.setManualMode(false);
-                    Outtake.setManualPower(0);
+                    Storage.setManualModeCommand(true).schedule();
+                    Storage.setManualPowerCommand(0).schedule();
                 });
         gamepad2.b()
                 .whenBecomesTrue(() -> {
@@ -117,6 +132,7 @@ public class MainTeleOp extends NextFTCOpMode {
                     Storage.setManualModeCommand(true).schedule();
                     Storage.setManualPowerCommand(0).schedule();
                 });
+
     }
     @Override public void onUpdate() {
         for (String cname : CommandManager.INSTANCE.snapshot()) {
