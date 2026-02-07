@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
@@ -22,6 +25,8 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 
 @TeleOp(name="MainTeleOp", group="TeleOp")
 public class MainTeleOp extends NextFTCOpMode {
+    private Limelight3A limelight;
+
     {
         addComponents(
                 BulkReadComponent.INSTANCE,
@@ -43,9 +48,22 @@ public class MainTeleOp extends NextFTCOpMode {
     }
 
     @Override public void onStartButtonPressed() {
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(0);
+        limelight.start();
 
         GamepadEx gamepad1 = Gamepads.gamepad1();
         GamepadEx gamepad2 = Gamepads.gamepad2();
+
+        gamepad1.a()
+                .whenBecomesTrue(() -> {
+                    LLResult result = limelight.getLatestResult();
+                    if (result != null && result.isValid() && !result.getFiducialResults().isEmpty()) {
+                        LLResultTypes.FiducialResult fiducial = result.getFiducialResults().get(0);
+                        telemetry.addData("AprilTag ID", fiducial.getFiducialId());
+                        telemetry.update();
+                    }
+                });
 
         gamepad2.rightBumper()
                 .whenBecomesTrue(() -> {
@@ -142,5 +160,8 @@ public class MainTeleOp extends NextFTCOpMode {
     }
 
     @Override public void onStop() {
+        if (limelight != null) {
+            limelight.stop();
+        }
     }
 }
