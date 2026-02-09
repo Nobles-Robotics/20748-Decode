@@ -7,7 +7,9 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
-    private static final double DELAY = 0.5;
+    private static final double OUTTAKE_DELAY = 0.5;
+    private static final double INTAKE_DELAY = 0.5;
+
 
     private Robot() {
         super(
@@ -32,37 +34,24 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Storage.setManualModeCommand(true)),
             new InstantCommand(Storage.setManualPowerCommand(0.75)),
             new InstantCommand(Transitions.on()),
-            new Delay(DELAY),
+            new Delay(OUTTAKE_DELAY),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            new Delay(DELAY),
+            new Delay(OUTTAKE_DELAY),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            new Delay(DELAY),
+            new Delay(OUTTAKE_DELAY),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off),
             new InstantCommand(Storage.setManualPowerCommand(0))
-            );
-
-    public static SequentialGroup outtakeAllStupidly = new SequentialGroup(
-            new InstantCommand(Outtake.on),
-            new WaitUntil(Outtake::reachedTargetVelocity),
-            new InstantCommand(Transitions.on()),
-            new InstantCommand(Storage.setManualModeCommand(true)),
-            new InstantCommand(Storage.setManualPowerCommand(.4)),
-            new InstantCommand(Transitions.off()),
-            new InstantCommand(Outtake.off)
     );
 
-    public static SequentialGroup outtakeOne = new SequentialGroup(
-            Outtake.on,
-            Storage.spinToNextOuttakeIndex(),
-            new WaitUntil(Outtake::reachedTargetVelocity),
-            Transitions.on(),
-            new Delay(DELAY),
-            Transitions.off(),
-            Outtake.off
+    public static SequentialGroup intakeAll = new SequentialGroup(
+            new InstantCommand(Intake.on()),
+            new InstantCommand(Storage.requestAlign(1)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.requestAlign(1)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.requestAlign(1)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Intake.off())
     );
-
-//    public static SequentialGroup intakeAll = new SequentialGroup(
-//
-//    );
 }

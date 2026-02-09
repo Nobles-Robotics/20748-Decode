@@ -90,7 +90,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
         gamepad1.dpadLeft()
-                .whenBecomesTrue(() -> Robot.outtakeOne.schedule());
+                .whenBecomesTrue(() -> Robot.intakeAll.schedule());
 
         gamepad2.dpadUp()
                 .whenBecomesTrue(() -> Intake.on().schedule())
