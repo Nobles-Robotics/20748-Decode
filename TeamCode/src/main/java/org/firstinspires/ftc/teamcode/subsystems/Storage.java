@@ -78,13 +78,15 @@ public class Storage implements Subsystem {
             spin.setPower(manualPower);
             Logger.add("Manual", "power: " + manualPower);
         } else if (positionMode) {
-            double testPower = controller.calculate(new KineticState(targetPosition));
-            Logger.add("Storage", "power: " + testPower);
-            if (Math.abs(testPower) > 0.05) {
-                spin.setPower(testPower);
+            double newPower = controller.calculate(new KineticState(targetPosition));
+            Logger.add("Storage", "power: " + newPower);
+            if (Math.abs(newPower) > 0.05) {
+                spin.setPower(newPower);
             } else {
                 spin.setPower(0);
             }
+        } else {
+            spin.setPower(0);
         }
         Logger.add("Storage", "target position: " + targetPosition + "real position" + spin.getCurrentPosition());
         Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);

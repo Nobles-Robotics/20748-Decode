@@ -19,6 +19,7 @@ import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
+import org.firstinspires.ftc.teamcode.utils.components.LoopTimeComponent;
 
 @TeleOp(name="MainTeleOp", group="TeleOp")
 public class MainTeleOp extends NextFTCOpMode {
@@ -28,6 +29,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 BindingsComponent.INSTANCE,
                 CommandManager.INSTANCE,
                 AllianceManager.INSTANCE,
+                LoopTimeComponent.INSTANCE,
                 new SubsystemComponent(
                         Storage.INSTANCE,
                         Robot.INSTANCE,

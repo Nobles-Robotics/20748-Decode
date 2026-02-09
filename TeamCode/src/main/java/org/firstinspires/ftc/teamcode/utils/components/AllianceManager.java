@@ -23,19 +23,6 @@ public class AllianceManager implements Component {
         lastState = ActiveOpMode.gamepad1().x;
     }
 
-    @Override public void postInit() {
-        ActiveOpMode.telemetry().addData("Alliance", currentAlliance);
-        ActiveOpMode.telemetry().addLine("Press 'X' to toggle current alliance");
-        if (ActiveOpMode.gamepad1().x && !lastState) {
-            if (currentAlliance == Alliance.BLUE) {
-                currentAlliance = Alliance.RED;
-            } else {
-                currentAlliance = Alliance.BLUE;
-            }
-        }
-        lastState = ActiveOpMode.gamepad1().x;
-    }
-
     public static Alliance getCurrentAlliance(){
         return currentAlliance;
     }
