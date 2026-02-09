@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
+
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
-import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     private static final double OUTTAKE_DELAY = 0.5;
     private static final double INTAKE_DELAY = 0.5;
-
 
     private Robot() {
         super(
@@ -28,7 +28,7 @@ public class Robot extends SubsystemGroup {
     public void periodic() {
     }
 
-    public static SequentialGroup outtakeAll = new SequentialGroup(
+    public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new WaitUntil(Outtake::reachedTargetVelocity),
             new InstantCommand(Storage.setManualModeCommand(true)),
@@ -44,7 +44,7 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Storage.setManualPowerCommand(0))
     );
 
-    public static SequentialGroup intakeAll = new SequentialGroup(
+    public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
             new InstantCommand(Storage.requestAlign(1)),
             new Delay(INTAKE_DELAY),

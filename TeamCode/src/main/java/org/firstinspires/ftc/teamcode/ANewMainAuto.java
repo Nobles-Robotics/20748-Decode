@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.subsystems.Transitions;
+import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
@@ -76,13 +77,13 @@ public class ANewMainAuto extends NextFTCOpMode {
     Path score1 = new Path(new BezierLine(intakeAlign1Blue, scorePose));
 
 
-    public static SequentialGroup intakeAll = new SequentialGroup(
+    public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
             new InstantCommand(Storage.setManualModeCommand(true)),
             new InstantCommand(Storage.setManualPowerCommand(0.75))
 
     );
-    public static SequentialGroup endIntake = new SequentialGroup(
+    public static SequentialGroupFixed endIntake = new SequentialGroupFixed(
             new InstantCommand(Storage.setManualModeCommand(true)),
             new InstantCommand(Storage.setManualPowerCommand(0)),
             new InstantCommand(Intake.off())
@@ -100,7 +101,7 @@ public class ANewMainAuto extends NextFTCOpMode {
 
 
 
-        return new SequentialGroup(
+        return new SequentialGroupFixed(
                 new FollowPath(scorePreload),
                 new Delay(standardDelay),
                 //Robot.outtakeAll,
@@ -111,7 +112,7 @@ public class ANewMainAuto extends NextFTCOpMode {
 
                 new ParallelGroup(
                         intakeAll,
-                        new SequentialGroup(
+                        new SequentialGroupFixed(
                                 new FollowPath(intake1),
                                 new Delay(standardDelay)
                         )
