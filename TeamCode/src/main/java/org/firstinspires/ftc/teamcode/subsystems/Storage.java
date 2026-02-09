@@ -14,7 +14,7 @@ public class Storage implements Subsystem {
     public static final Storage INSTANCE = new Storage();
 
     // Hardware
-    private final static MotorEx spin = new MotorEx("motorExp0").brakeMode();
+    private final static MotorEx spin = new MotorEx("motorExp3").brakeMode();
     private static DigitalChannel limitSwitch;
 
     // Movement state

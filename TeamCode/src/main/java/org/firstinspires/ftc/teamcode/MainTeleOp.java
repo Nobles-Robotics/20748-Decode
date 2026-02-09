@@ -40,7 +40,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Storage.setManualPowerCommand(0.075).schedule())
                 .whenBecomesFalse(() -> Storage.setManualPowerCommand(0).schedule());
         gamepad2.b()
-                .whenBecomesTrue(() -> Storage.setManualPowerCommand(0.5).schedule())
+                .whenBecomesTrue(() -> Storage.setManualPowerCommand(1).schedule())
                 .whenBecomesFalse(() -> Storage.setManualPowerCommand(0).schedule());
         gamepad2.y()
                 .whenBecomesTrue(() -> Storage.setManualPowerCommand(0.2).schedule())
