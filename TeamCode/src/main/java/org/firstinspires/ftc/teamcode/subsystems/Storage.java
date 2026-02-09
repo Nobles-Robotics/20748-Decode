@@ -28,6 +28,7 @@ public class Storage implements Subsystem {
     private static final double DELTA_TICKS = 179.25;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
+    public static boolean alignRequested = false;
 
     public static ControlSystem controller = ControlSystem.builder()
             .posPid(0.0015, 0, 0)
@@ -53,9 +54,19 @@ public class Storage implements Subsystem {
         currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
 
-//        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
-//                "limitSwitch");
-//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
+                "limitSwitch");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
+        boolean currentSwitchState = limitSwitch.getState();
+
+        if (currentSwitchState && !lastState && alignRequested) {
+            stop().schedule();
+            alignRequested = false;
+        }
+
+        lastState = currentSwitchState;
+
 //
 //        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
 //                "colorSensor");
@@ -79,10 +90,6 @@ public class Storage implements Subsystem {
         Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
     }
 
-
-    //        if (wasJustPressed()) {
-//            resetEncoderAtOuttake();
-//        }
     public static Command spinToNextIntakeIndex() {
         return new LambdaCommand()
                 .setStart(() -> {
@@ -126,6 +133,21 @@ public class Storage implements Subsystem {
                 .requires(Storage.INSTANCE)
                 .setInterruptible(true)
                 .named("Spin to next index");
+    }
+
+    public static Command requestAlign(double newPower) {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            setManualPower(newPower);
+            alignRequested = true;
+        });
+    }
+
+    public static Command stop() {
+        return new InstantCommand(() -> {
+            manualMode = true;
+            manualPower = 0;
+        });
     }
 
     public static Command setManualPowerCommand(double newPower) {

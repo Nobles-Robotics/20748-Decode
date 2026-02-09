@@ -100,7 +100,6 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Intake.reverse().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-
         gamepad2.leftBumper()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
                 .whenBecomesFalse(() -> Transitions.off().schedule());

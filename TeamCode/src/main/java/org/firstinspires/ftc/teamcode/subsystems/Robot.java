@@ -28,19 +28,19 @@ public class Robot extends SubsystemGroup {
 
     public static SequentialGroup outtakeAll = new SequentialGroup(
             new InstantCommand(Outtake.on),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new WaitUntil(Outtake::reachedTargetVelocity),
+            new InstantCommand(Storage.setManualModeCommand(true)),
+            new InstantCommand(Storage.setManualPowerCommand(0.75)),
             new InstantCommand(Transitions.on()),
             new Delay(DELAY),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(DELAY),
             new WaitUntil(Outtake::reachedTargetVelocity),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(DELAY),
             new InstantCommand(Transitions.off()),
-            new InstantCommand(Outtake.off)
-    );
+            new InstantCommand(Outtake.off),
+            new InstantCommand(Storage.setManualPowerCommand(0))
+            );
 
     public static SequentialGroup outtakeAllStupidly = new SequentialGroup(
             new InstantCommand(Outtake.on),
