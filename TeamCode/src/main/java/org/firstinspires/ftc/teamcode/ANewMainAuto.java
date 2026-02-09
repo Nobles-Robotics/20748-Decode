@@ -7,20 +7,25 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.subsystems.Transitions;
+import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.FollowPath;
+import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
@@ -38,7 +43,8 @@ public class ANewMainAuto extends NextFTCOpMode {
                         Intake.INSTANCE,
                         Outtake.INSTANCE,
                         Transitions.INSTANCE
-                )
+                ),
+                new PedroComponent(Constants::createFollower)
         );
     }
 
@@ -71,7 +77,18 @@ public class ANewMainAuto extends NextFTCOpMode {
     Path score1 = new Path(new BezierLine(intakeAlign1Blue, scorePose));
 
 
+    public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
+            new InstantCommand(Intake.on()),
+            new InstantCommand(Storage.setManualModeCommand(true)),
+            new InstantCommand(Storage.setManualPowerCommand(0.75))
 
+    );
+    public static SequentialGroupFixed endIntake = new SequentialGroupFixed(
+            new InstantCommand(Storage.setManualModeCommand(true)),
+            new InstantCommand(Storage.setManualPowerCommand(0)),
+            new InstantCommand(Intake.off())
+
+    );
 
 
     private Command autonomousRoutine() {
@@ -82,22 +99,40 @@ public class ANewMainAuto extends NextFTCOpMode {
 
         int standardDelay = 1;
 
-        return new SequentialGroup(
+
+
+        return new SequentialGroupFixed(
                 new FollowPath(scorePreload),
                 new Delay(standardDelay),
-                Robot.outtakeAll,
+                //Robot.outtakeAll,
                 new Delay(standardDelay),
                 new FollowPath(intakeAlign1),
                 new Delay(standardDelay),
-                // Start running intake procedure
                 new FollowPath(intake1),
+
+                new ParallelGroup(
+                        intakeAll,
+                        new SequentialGroupFixed(
+                                new FollowPath(intake1),
+                                new Delay(standardDelay)
+                        )
+                ),
+                endIntake,
+
                 new Delay(standardDelay),
                 new FollowPath(intakeOut1),
                 new Delay(standardDelay),
 
+                new ParallelGroup(
+                        intakeAll,
+                        new FollowPath(intake1)
+
+                ),
+                endIntake,
+
                 new Delay(standardDelay),
-                new FollowPath(score1),
-                Robot.outtakeAll
+                new FollowPath(score1)
+                //Robot.outtakeAll
         );
     }
 

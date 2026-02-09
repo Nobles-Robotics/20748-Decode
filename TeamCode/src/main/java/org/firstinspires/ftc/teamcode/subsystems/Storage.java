@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.teamcode.utils.Logger;
+
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
@@ -18,17 +20,18 @@ public class Storage implements Subsystem {
     private static boolean manualMode = true;
     private static boolean positionMode = false;
     private static double manualPower = 0;
-    private final static MotorEx spin = new MotorEx("motorExp0").brakeMode();
+    private final static MotorEx spin = new MotorEx("motorExp3").brakeMode().reversed();
     private static DigitalChannel limitSwitch;
     private static NormalizedColorSensor colorSensor;
     private static double currentPosition;
     private static double targetPosition;
-    private static final double DELTA_TICKS = 185;
+    private static final double DELTA_TICKS = 179.25;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
+    public static boolean alignRequested = false;
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.0075, 0, 0)
+            .posPid(0.0015, 0, 0)
             .build();
 
     public static final State[] STATES = {
@@ -46,6 +49,8 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
+        spin.setCurrentPosition(0);
+        spin.zero();
         currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
 
@@ -53,25 +58,39 @@ public class Storage implements Subsystem {
                 "limitSwitch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
-                "colorSensor");
+
+//
+//        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
+//                "colorSensor");
     }
 
     @Override
     public void periodic() {
         if (manualMode) {
             spin.setPower(manualPower);
+            Logger.add("Manual", "power: " + manualPower);
         } else if (positionMode) {
-            double testPower = controller.calculate(new KineticState(targetPosition));
-            if (Math.abs(testPower) > 0.05) {
-                spin.setPower(testPower);
+            double newPower = controller.calculate(new KineticState(targetPosition));
+            Logger.add("Storage", "power: " + newPower);
+            if (Math.abs(newPower) > 0.05) {
+                spin.setPower(newPower);
             } else {
                 spin.setPower(0);
             }
+        } else {
+            spin.setPower(0);
         }
-//        if (wasJustPressed()) {
-//            resetEncoderAtOuttake();
-//        }
+        Logger.add("Storage", "target position: " + targetPosition + "real position" + spin.getCurrentPosition());
+        Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
+
+        boolean currentSwitchState = limitSwitch.getState();
+
+        if (currentSwitchState && !lastState && alignRequested) {
+            stop().schedule();
+            alignRequested = false;
+        }
+
+        lastState = currentSwitchState;
     }
 
     public static Command spinToNextIntakeIndex() {
@@ -117,6 +136,21 @@ public class Storage implements Subsystem {
                 .requires(Storage.INSTANCE)
                 .setInterruptible(true)
                 .named("Spin to next index");
+    }
+
+    public static Command requestAlign(double newPower) {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            setManualPower(newPower);
+            alignRequested = true;
+        });
+    }
+
+    public static Command stop() {
+        return new InstantCommand(() -> {
+            manualMode = true;
+            manualPower = 0;
+        });
     }
 
     public static Command setManualPowerCommand(double newPower) {

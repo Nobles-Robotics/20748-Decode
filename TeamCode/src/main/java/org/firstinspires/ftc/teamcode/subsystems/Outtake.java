@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Drive.follower;
+import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
+
 import com.bylazar.telemetry.PanelsTelemetry;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import dev.nextftc.control.KineticState;
@@ -9,6 +13,8 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.hardware.impl.MotorEx;
+
+import org.firstinspires.ftc.teamcode.utils.Alliance;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
 public class Outtake implements Subsystem {
@@ -18,19 +24,22 @@ public class Outtake implements Subsystem {
     private static Servo hoodServo;
     private static Servo traverseServo;
     private static final PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;
-    private static double targetVelocity = 2300;
+    private static double targetVelocity = 2500;
     private static double currentVelocity = 0;
     private static double manualPower = 0;
     private static boolean velocityMode = false;
     private static boolean manualMode = false;
+
+    public static Pose shootTarget = new Pose(6, 144 - 6, 0);
+
     /*
     TODO: retune these values
-     ks -> minimum for movement; kV -> choose a velocity, minimum to reach that movement;
+     ks -> minimum for movement; kV -> 1/max velo;
      kP until reaches other velocites
      */
     private static final ControlSystem controller = ControlSystem.builder()
-            .velPid(0.045, 0, 0)
-            .basicFF(0.0005, 0, 0.1)
+            .velPid(0.0045, 0, 0)
+            .basicFF(0.0004, 0, 0.0345)
             .build();
 
     public static Command off = new InstantCommand(() -> {
@@ -55,6 +64,7 @@ public class Outtake implements Subsystem {
         manualMode = false;
         velocityMode = false;
         manualPower = 0;
+        setShootTarget();
     }
 
     @Override
@@ -66,18 +76,21 @@ public class Outtake implements Subsystem {
         } else if (velocityMode){
             controller.setGoal(new KineticState(0, targetVelocity));
             double velocityPower = controller.calculate(new KineticState(0, currentVelocity));
+            Logger.add("Outtake", "current power:" + velocityPower);
 
             outtake.setPower(velocityPower);
         } else {
             outtake.setPower(0);
         }
+        Logger.add("Outtake", "current velo:" + currentVelocity);
 
+        Logger.add("Outtake", "current distance:" + getDistance());
         Logger.panelsLog("velo", currentVelocity);
         Logger.panelsLog("power", outtake.getPower());
     }
 
     public static boolean reachedTargetVelocity(){
-        return outtake.getVelocity() > targetVelocity;
+        return outtake.getVelocity() > (targetVelocity - 50);
     }
 
     public static void setTargetVelocity(double newTargetVelocity){
@@ -90,5 +103,22 @@ public class Outtake implements Subsystem {
 
     public static void setManualPower(double newPower){
         manualPower = newPower;
+    }
+
+    public void setShootTarget() {
+        if (currentAlliance == Alliance.BLUE&& shootTarget.getX() != 6)
+            shootTarget = new Pose(6, 144 - 6, 0);
+        else if (currentAlliance == Alliance.RED && shootTarget.getX() != (144 - 6))
+            shootTarget = shootTarget.mirror();
+    }
+
+    public Pose getShootTarget() {
+        return shootTarget;
+    }
+
+    public double getDistance() {
+        double deltaX = - shootTarget.getX() + follower.getPose().getX();
+        double deltaY = - shootTarget.getX() + follower.getPose().getY();
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
     }
 }
