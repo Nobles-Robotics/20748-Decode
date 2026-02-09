@@ -118,7 +118,7 @@ public class Outtake implements Subsystem {
 
     public double getDistance() {
         double deltaX = - shootTarget.getX() + follower.getPose().getX();
-        double deltaY = - shootTarget.getX() + follower.getPose().getY();
+        double deltaY = - shootTarget.getY() + follower.getPose().getY();
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
     }
 }

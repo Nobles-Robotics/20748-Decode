@@ -66,6 +66,8 @@ public class Storage implements Subsystem {
 
     @Override
     public void periodic() {
+        currentPosition = spin.getCurrentPosition();
+
         if (manualMode) {
             spin.setPower(manualPower);
             Logger.add("Manual", "power: " + manualPower);
