@@ -36,7 +36,7 @@ public class Drive implements Subsystem {
         cornerReset();
     }
 
-    public void cornerReset() {
+    public void cornerReset() { // from 0,0 facing towards the goal
         if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
         else follower.setPose(new Pose(8, 6.25, Math.toRadians(0)));
     }
@@ -59,7 +59,9 @@ public class Drive implements Subsystem {
                 telemetryM.update();
 
                 double forward = slowMode ? -ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_y;
+                forward = -forward;
                 double strafe = slowMode ? -ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_x;
+                strafe = -strafe;
                 double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
 
                 follower.setTeleOpDrive(forward, strafe, turn, robotCentric);

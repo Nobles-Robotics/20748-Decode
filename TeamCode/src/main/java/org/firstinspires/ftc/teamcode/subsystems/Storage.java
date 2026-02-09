@@ -20,7 +20,7 @@ public class Storage implements Subsystem {
     private static boolean manualMode = true;
     private static boolean positionMode = false;
     private static double manualPower = 0;
-    private final static MotorEx spin = new MotorEx("motorExp0").brakeMode().reversed();
+    private final static MotorEx spin = new MotorEx("motorExp3").brakeMode().reversed();
     private static DigitalChannel limitSwitch;
     private static NormalizedColorSensor colorSensor;
     private static double currentPosition;
@@ -58,14 +58,6 @@ public class Storage implements Subsystem {
                 "limitSwitch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        boolean currentSwitchState = limitSwitch.getState();
-
-        if (currentSwitchState && !lastState && alignRequested) {
-            stop().schedule();
-            alignRequested = false;
-        }
-
-        lastState = currentSwitchState;
 
 //
 //        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
@@ -90,6 +82,15 @@ public class Storage implements Subsystem {
         }
         Logger.add("Storage", "target position: " + targetPosition + "real position" + spin.getCurrentPosition());
         Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
+
+        boolean currentSwitchState = limitSwitch.getState();
+
+        if (currentSwitchState && !lastState && alignRequested) {
+            stop().schedule();
+            alignRequested = false;
+        }
+
+        lastState = currentSwitchState;
     }
 
     public static Command spinToNextIntakeIndex() {

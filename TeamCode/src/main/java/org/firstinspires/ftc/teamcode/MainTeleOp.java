@@ -86,9 +86,9 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
 
         gamepad1.dpadUp()
-                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+                .whenBecomesTrue(() -> Storage.requestAlign(.45).schedule());
 
-        gamepad1.dpadRight()
+        gamepad2.dpadRight()
                 .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
         gamepad1.dpadLeft()
