@@ -25,12 +25,12 @@ public class Storage implements Subsystem {
     private static NormalizedColorSensor colorSensor;
     private static double currentPosition;
     private static double targetPosition;
-    private static final double DELTA_TICKS = 179.22;
+    private static final double DELTA_TICKS = 179.25;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.000075, 0, 0)
+            .posPid(0.0015, 0, 0)
             .build();
 
     public static final State[] STATES = {
@@ -75,6 +75,7 @@ public class Storage implements Subsystem {
                 spin.setPower(0);
             }
         }
+        Logger.add("Storage", "target position: " + targetPosition + "real position" + spin.getCurrentPosition());
         Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
     }
 
