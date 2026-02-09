@@ -117,8 +117,16 @@ public class Outtake implements Subsystem {
     }
 
     public double getDistance() {
-        double deltaX = - shootTarget.getX() + follower.getPose().getX();
-        double deltaY = - shootTarget.getY() + follower.getPose().getY();
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        double deltaX = shootTarget.getX() - follower.getPose().getX();
+        double deltaY = shootTarget.getY() - follower.getPose().getY();
+
+        return Math.hypot(deltaX, deltaY);
+    }
+
+    public double getAngle() {
+        double deltaX = shootTarget.getX() - follower.getPose().getX();
+        double deltaY = shootTarget.getY() - follower.getPose().getY();
+
+        return Math.atan2(deltaY, deltaX);
     }
 }

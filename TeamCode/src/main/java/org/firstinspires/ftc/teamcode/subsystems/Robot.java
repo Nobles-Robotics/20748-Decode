@@ -8,7 +8,6 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
-    private static final double OUTTAKE_DELAY = .15;
     private static final double INTAKE_DELAY = 0.5;
 
     private Robot() {
@@ -32,10 +31,10 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.on),
             new WaitUntil(Outtake::reachedTargetVelocity),
             new InstantCommand(Transitions.on()),
-            new Delay(OUTTAKE_DELAY),
+            new Delay(.15),
             new InstantCommand(Storage.setManualModeCommand(true)),
             new InstantCommand(Storage.setManualPowerCommand(0.35)),
-            new Delay(OUTTAKE_DELAY*15),
+            new Delay(2),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off),
             new InstantCommand(Storage.setManualPowerCommand(0))

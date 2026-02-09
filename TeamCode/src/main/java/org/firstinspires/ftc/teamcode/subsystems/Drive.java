@@ -41,22 +41,21 @@ public class Drive implements Subsystem {
         cornerReset();
     }
 
-    public void cornerReset() { // from 0,0 facing towards the goal
+    public void cornerReset() {
         if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
         else follower.setPose(new Pose(8, 6.25, Math.toRadians(0)));
     }
 
     @Override
     public void periodic() {
-        drive.schedule();
-
         controller.setCoefficients(follower.constants.coefficientsHeadingPIDF);
         controller.updateError(getHeadingError());
+
+        //targetHeading = Outtake.INSTANCE.getAngle();
+
+        drive.schedule();
     }
 
-    private static void setSlowMode(boolean newMode) {
-        slowMode = newMode;
-    }
     public static Command setSlowModeCommand(boolean newMode) {
         return new InstantCommand(() -> setSlowMode(newMode));
     }
@@ -90,5 +89,17 @@ public class Drive implements Subsystem {
             return 0;
         }
         return MathFunctions.getTurnDirection(follower.getPose().getHeading(), targetHeading) * MathFunctions.getSmallestAngleDifference(follower.getPose().getHeading(), targetHeading);
+    }
+
+    private static void setSlowMode(boolean newMode) {
+        slowMode = newMode;
+    }
+
+    private static void setHeadingLock(boolean newLock) {
+        headingLock = newLock;
+    }
+
+    private static void setTargetHeading(double newHeading) {
+        targetHeading = newHeading;
     }
 }
