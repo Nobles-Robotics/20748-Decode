@@ -108,7 +108,7 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new FollowPath(intakeAlign1),
                 new Delay(standardDelay),
-                new FollowPath(intake1),
+                // new FollowPath(intake1),
 
                 new ParallelGroup(
                         intakeAll,
