@@ -82,19 +82,23 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.5).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
-        gp1.x().or(gp2.x())
-                .whenBecomesTrue(() -> Storage.assertManualPower(0.2).schedule())
-                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
-
-        gp1.y().or(gp2.y())
+        gp1.x().or(gp2.x()).or(gp2.leftBumper())
                 .whenBecomesTrue(() -> Transitions.on().schedule())
                 .whenBecomesFalse(() -> Transitions.off().schedule());
 
+        gp1.y().or(gp2.y())
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.2).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
         gp1.dpadUp().or(gp2.dpadUp())
-                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
+                //.whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
+                .whenBecomesTrue(() -> Intake.on().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.dpadDown().or(gp2.dpadDown())
-                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+                //.whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.dpadLeft().or(gp2.dpadLeft())
                 .whenBecomesTrue(() -> Storage.requestAlign(.45).schedule());
@@ -122,12 +126,12 @@ public class MainTeleOp extends NextFTCOpMode {
                 })
                 .whenBecomesFalse(() -> Outtake.off.schedule());
 
-        gp2.leftBumper()
-                .whenBecomesTrue(() -> {
-                    Outtake.on.schedule();
-                    Outtake.setTargetVelocity(2650);
-                })
-                .whenBecomesFalse(() -> Outtake.off.schedule());
+//        gp2.leftBumper()
+//                .whenBecomesTrue(() -> {
+//                    Outtake.on.schedule();
+//                    Outtake.setTargetVelocity(2650);
+//                })
+//                .whenBecomesFalse(() -> Outtake.off.schedule());
 
         gp1.rightTrigger().atLeast(.5)
                 .whenBecomesTrue(() -> Drive.setSlowModeCommand(true).schedule())

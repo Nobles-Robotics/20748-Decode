@@ -34,7 +34,7 @@ public class Robot extends SubsystemGroup {
             new Delay(.15),
             new InstantCommand(Storage.setManualModeCommand(true)),
             new InstantCommand(Storage.setManualPowerCommand(0.35)),
-            new Delay(2),
+            new Delay(2.5),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off),
             new InstantCommand(Storage.setManualPowerCommand(0))

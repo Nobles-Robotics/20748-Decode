@@ -85,6 +85,7 @@ public class Outtake implements Subsystem {
         Logger.add("Outtake", "current velo:" + currentVelocity);
 
         Logger.add("Outtake", "current distance:" + getDistance());
+        Logger.add("Outtake", "current angle delta:" + getAngle());
         Logger.panelsLog("velo", currentVelocity);
         Logger.panelsLog("power", outtake.getPower());
     }

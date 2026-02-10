@@ -29,7 +29,7 @@ public class Drive implements Subsystem {
     private static final double slowModeMultiplier = 0.25;
     private static final boolean robotCentric = true;
     private static double targetHeading = Math.toRadians(180); // Radians
-    private static PIDFController controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
+    private static PIDFController controller;
     private static boolean headingLock = true;
 
     @Override
@@ -37,6 +37,7 @@ public class Drive implements Subsystem {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
         follower.setStartingPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
         follower.update();
+        controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         cornerReset();
     }
@@ -54,7 +55,7 @@ public class Drive implements Subsystem {
         controller.setCoefficients(follower.constants.coefficientsHeadingPIDF);
         controller.updateError(getHeadingError());
 
-        //targetHeading = Outtake.INSTANCE.getAngle();
+        targetHeading = Outtake.INSTANCE.getAngle();
 
         drive.schedule();
     }
@@ -73,9 +74,9 @@ public class Drive implements Subsystem {
                 telemetryM.update();
 
                 double forward = slowMode ? -ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_y;
-                //forward = -forward;
+                forward = -forward;
                 double strafe = slowMode ? -ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_x;
-                //strafe = -strafe;
+                strafe = -strafe;
                 double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
 
                 if (headingLock)
@@ -92,9 +93,9 @@ public class Drive implements Subsystem {
             .setInterruptible(false)
             .named("Drive");
     public double getHeadingError() {
-        if (follower.getCurrentPath() == null) {
-            return 0;
-        }
+//        if (follower.getCurrentPath() == null) {
+//            return 0;
+//        }
         return MathFunctions.getTurnDirection(follower.getPose().getHeading(), targetHeading) * MathFunctions.getSmallestAngleDifference(follower.getPose().getHeading(), targetHeading);
     }
 
