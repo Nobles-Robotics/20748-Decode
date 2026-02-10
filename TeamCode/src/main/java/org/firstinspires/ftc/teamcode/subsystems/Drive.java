@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static com.pedropathing.math.MathFunctions.normalizeAngle;
-
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
 
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -32,6 +30,7 @@ public class Drive implements Subsystem {
     private static PIDFController controller;
     private static boolean headingLock = false;
 
+    private static double aimAssistment = 0;
     @Override
     public void initialize() {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
@@ -67,6 +66,9 @@ public class Drive implements Subsystem {
     public static Command setHeadingLockCommand(boolean newMode) {
         return new InstantCommand(() -> setHeadingLock(newMode));
     }
+    public static void setAimAssist(double num){
+        aimAssistment = num;
+    }
     public static Command drive = new LambdaCommand()
             .setStart(() -> follower.startTeleopDrive())
             .setUpdate(() -> {
@@ -85,7 +87,8 @@ public class Drive implements Subsystem {
                     follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
                 Logger.add("Drive", Logger.Level.DEBUG, "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
-                Logger.add("Drive", Logger.Level.DEBUG, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
+                Logger.add("Drive", Logger.Level.INFO, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
+                //Logger.add("Test", LimelightTest, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
             })
             .setStop(interrupted -> {})
             .setIsDone(() -> false)

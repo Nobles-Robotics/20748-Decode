@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.subsystems.Transitions;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.components.AllianceManager;
 
@@ -36,7 +37,8 @@ public class MainTeleOp extends NextFTCOpMode {
                         Drive.INSTANCE,
                         Intake.INSTANCE,
                         Outtake.INSTANCE,
-                        Transitions.INSTANCE
+                        Transitions.INSTANCE,
+                        Limelight.INSTANCE
                 )
         );
     }
@@ -115,10 +117,6 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Intake.reverse().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp1.rightBumper()
-                .whenBecomesTrue(() -> Intake.on().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
-
         gp2.rightBumper()
                 .whenBecomesTrue(() -> {
                     Outtake.on.schedule();
@@ -126,7 +124,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 })
                 .whenBecomesFalse(() -> Outtake.off.schedule());
 
-//        gp2.leftBumper()
+//        gamepad2.leftBumper()
 //                .whenBecomesTrue(() -> {
 //                    Outtake.on.schedule();
 //                    Outtake.setTargetVelocity(2650);
