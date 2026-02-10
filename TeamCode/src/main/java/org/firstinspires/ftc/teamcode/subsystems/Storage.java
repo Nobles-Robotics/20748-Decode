@@ -58,7 +58,6 @@ public class Storage implements Subsystem {
                 "limitSwitch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-
 //
 //        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
 //                "colorSensor");
@@ -155,6 +154,13 @@ public class Storage implements Subsystem {
         });
     }
 
+
+    public static Command assertManualPower(double newPower) {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            setManualPower(newPower);
+        });
+    }
     public static Command setManualPowerCommand(double newPower) {
         return new InstantCommand(() -> setManualPower(newPower));
     }

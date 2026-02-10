@@ -46,94 +46,96 @@ public class MainTeleOp extends NextFTCOpMode {
 
     @Override public void onStartButtonPressed() {
 
-        GamepadEx gamepad1 = Gamepads.gamepad1();
-        GamepadEx gamepad2 = Gamepads.gamepad2();
 
-        gamepad2.rightBumper()
+        GamepadEx gp1 = Gamepads.gamepad1();
+        GamepadEx gp2 = Gamepads.gamepad2();
+
+         /*
+         GAMEPAD SCHEMA
+         sticks
+         a | b | x | y
+         up | down | left | right
+         left bumper | right bumper
+         left trigger | right trigger
+         start | back
+
+         both
+         a = storage .75 | b = storage .5 | x = storage .2| y = transition
+         up = nextIntake | down = nextOuttake | left = requestAlign | right = outtakeAll
+         start = nothing| back = cornerReset
+
+         gp1
+         sticks = drive
+         left bumper = intake back | right bumper = intake forward
+         left trigger = heading lock | right trigger = slowmode
+
+         gp2
+         sticks = nothing
+         left bumper = outtake far | right bumper = outtake close
+         left trigger = nothing| right trigger = nothing
+         */
+
+        gp1.a().or(gp2.a())
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+        gp1.b().or(gp2.b())
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.5).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
+        gp1.x().or(gp2.x())
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.2).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
+        gp1.y().or(gp2.y())
+                .whenBecomesTrue(() -> Transitions.on().schedule())
+                .whenBecomesFalse(() -> Transitions.off().schedule());
+
+        gp1.dpadUp().or(gp2.dpadUp())
+                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
+
+        gp1.dpadDown().or(gp2.dpadDown())
+                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+
+        gp1.dpadLeft().or(gp2.dpadLeft())
+                .whenBecomesTrue(() -> Storage.requestAlign(.45).schedule());
+
+        gp1.dpadRight().or(gp2.dpadRight())
+                .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
+
+        gp1.back().or(gp2.back())
+                .whenBecomesTrue(() -> Drive.cornerResetCommand().schedule());
+
+        // ============================================================================================================================
+
+        gp1.leftBumper()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        gp1.rightBumper()
+                .whenBecomesTrue(() -> Intake.on().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        gp2.rightBumper()
                 .whenBecomesTrue(() -> {
                     Outtake.on.schedule();
                     Outtake.setTargetVelocity(2400);
                 })
                 .whenBecomesFalse(() -> Outtake.off.schedule());
 
-//        gamepad2.leftBumper()
-//                .whenBecomesTrue(() -> {
-//                    Outtake.on.schedule();
-//                    Outtake.setTargetVelocity(2650);
-//                })
-//                .whenBecomesFalse(() -> Outtake.off.schedule());
-
-        gamepad1.leftBumper()
-                .whenBecomesTrue(() -> Intake.reverse().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
-
-        // TODO: make toggle
-        gamepad1.y()
+        gp2.leftBumper()
                 .whenBecomesTrue(() -> {
-                    Drive.setSlowModeCommand(true);
+                    Outtake.on.schedule();
+                    Outtake.setTargetVelocity(2650);
                 })
-                .whenBecomesFalse(() -> Drive.setSlowModeCommand(false));
+                .whenBecomesFalse(() -> Outtake.off.schedule());
 
-        gamepad2.x()
-                .whenBecomesTrue(() -> Transitions.on().schedule())
-                .whenBecomesFalse(() -> Transitions.off().schedule());
+        gp1.rightTrigger().atLeast(.5)
+                .whenBecomesTrue(() -> Drive.setSlowModeCommand(true).schedule())
+                .whenBecomesFalse(() -> Drive.setSlowModeCommand(false).schedule());
 
-        gamepad1.rightBumper()
-                .whenBecomesTrue(() -> Intake.on().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
-
-        gamepad1.dpadDown()
-                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
-
-        gamepad1.dpadUp()
-                .whenBecomesTrue(() -> Storage.requestAlign(.45).schedule());
-
-        gamepad2.dpadRight()
-                .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
-
-        gamepad1.dpadLeft()
-                .whenBecomesTrue(() -> Robot.intakeAll.schedule());
-
-        gamepad2.dpadUp()
-                .whenBecomesTrue(() -> Intake.on().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
-
-        gamepad2.dpadDown()
-                .whenBecomesTrue(() -> Intake.reverse().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
-
-        gamepad2.leftBumper()
-                .whenBecomesTrue(() -> Transitions.on().schedule())
-                .whenBecomesFalse(() -> Transitions.off().schedule());
-
-        gamepad2.a()
-                .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.75).schedule();
-                })
-                .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
-                });
-        gamepad2.b()
-                .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.5).schedule();
-                })
-                .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
-                });
-        gamepad2.y()
-                .whenBecomesTrue(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.2).schedule();
-                })
-                .whenBecomesFalse(() -> {
-                    Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0).schedule();
-                });
-
+        gp1.leftTrigger().atLeast(.5)
+                .whenBecomesTrue(() -> Drive.setHeadingLockCommand(true).schedule())
+                .whenBecomesFalse(() -> Drive.setHeadingLockCommand(false).schedule());
     }
     @Override public void onUpdate() {
         for (String cname : CommandManager.INSTANCE.snapshot()) {

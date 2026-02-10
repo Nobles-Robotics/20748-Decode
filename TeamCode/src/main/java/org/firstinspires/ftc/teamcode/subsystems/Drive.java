@@ -41,7 +41,10 @@ public class Drive implements Subsystem {
         cornerReset();
     }
 
-    public void cornerReset() {
+    public static Command cornerResetCommand() {
+        return new InstantCommand(() -> cornerReset());
+    }
+    public static void cornerReset() {
         if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
         else follower.setPose(new Pose(8, 6.25, Math.toRadians(0)));
     }
@@ -58,6 +61,10 @@ public class Drive implements Subsystem {
 
     public static Command setSlowModeCommand(boolean newMode) {
         return new InstantCommand(() -> setSlowMode(newMode));
+    }
+
+    public static Command setHeadingLockCommand(boolean newMode) {
+        return new InstantCommand(() -> setHeadingLock(newMode));
     }
     public static Command drive = new LambdaCommand()
             .setStart(() -> follower.startTeleopDrive())
