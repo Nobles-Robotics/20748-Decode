@@ -19,6 +19,9 @@ import dev.nextftc.core.commands.utility.LambdaCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.ftc.ActiveOpMode;
 
+
+import org.firstinspires.ftc.teamcode.LimelightTest;
+
 public class Drive implements Subsystem {
     public static final Drive INSTANCE = new Drive();
     public static Follower follower;
@@ -27,6 +30,7 @@ public class Drive implements Subsystem {
     private static final double slowModeMultiplier = 0.25;
     private static final boolean robotCentric = true;
 
+    private static double aimAssistment = 0;
     @Override
     public void initialize() {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
@@ -49,8 +53,15 @@ public class Drive implements Subsystem {
     private static void setSlowMode(boolean newMode) {
         slowMode = newMode;
     }
-    public static Command setSlowModeCommand(boolean newMode) {
-        return new InstantCommand(() -> setSlowMode(newMode));
+
+    public static void toggleSlowModeCommand() {
+        slowMode = !slowMode;
+    }
+    public static void setSlowModeCommand(boolean newMode) {
+        setSlowMode(newMode);
+    }
+    public static void setAimAssist(double num){
+        aimAssistment = num;
     }
     public static Command drive = new LambdaCommand()
             .setStart(() -> follower.startTeleopDrive())
@@ -66,13 +77,14 @@ public class Drive implements Subsystem {
                 // Calculate the correct values based on Gamepad 1
                 double forward = slowMode ? LSticky * slowModeMultiplier: LSticky;
                 double strafe = slowMode ? LStickx * slowModeMultiplier: LStickx;
-                double turn = slowMode ? -RStickx * slowModeMultiplier: -RStickx;
-
+                //double turn = (slowMode ? -RStickx * slowModeMultiplier: -RStickx) - (aimAssistment);
+                double turn = -Math.pow(RStickx, 3.0) - (aimAssistment);
                 follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
 
                 Logger.add("Drive", Logger.Level.DEBUG, "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
-                Logger.add("Drive", Logger.Level.DEBUG, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
+                Logger.add("Drive", Logger.Level.INFO, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
+                //Logger.add("Test", LimelightTest, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
             })
             .setStop(interrupted -> {})
             .setIsDone(() -> false)

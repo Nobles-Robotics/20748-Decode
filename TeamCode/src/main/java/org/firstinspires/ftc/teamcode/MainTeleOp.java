@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.subsystems.Transitions;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.components.AllianceManager;
 
@@ -20,8 +21,13 @@ import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
+
+
 @TeleOp(name="MainTeleOp", group="TeleOp")
 public class MainTeleOp extends NextFTCOpMode {
+
+
+
     {
         addComponents(
                 BulkReadComponent.INSTANCE,
@@ -34,7 +40,8 @@ public class MainTeleOp extends NextFTCOpMode {
                         Drive.INSTANCE,
                         Intake.INSTANCE,
                         Outtake.INSTANCE,
-                        Transitions.INSTANCE
+                        Transitions.INSTANCE,
+                        Limelight.INSTANCE
                 )
         );
     }
@@ -68,9 +75,10 @@ public class MainTeleOp extends NextFTCOpMode {
         // TODO: make toggle
         gamepad1.y()
                 .whenBecomesTrue(() -> {
-                    Drive.setSlowModeCommand(true);
-                })
-                .whenBecomesFalse(() -> Drive.setSlowModeCommand(false));
+
+                    Drive.toggleSlowModeCommand();
+
+                });
 
         gamepad2.x()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
@@ -91,6 +99,9 @@ public class MainTeleOp extends NextFTCOpMode {
 
         gamepad1.dpadLeft()
                 .whenBecomesTrue(() -> Robot.outtakeOne.schedule());
+
+        gamepad1.a()
+                .whenBecomesTrue(() -> Limelight.toggleAimAssist());
 
         gamepad2.dpadUp()
                 .whenBecomesTrue(() -> Intake.on().schedule())
@@ -126,7 +137,7 @@ public class MainTeleOp extends NextFTCOpMode {
         gamepad2.y()
                 .whenBecomesTrue(() -> {
                     Storage.setManualModeCommand(true).schedule();
-                    Storage.setManualPowerCommand(0.2).schedule();
+                    Storage.setManualPowerCommand(0.3).schedule();
                 })
                 .whenBecomesFalse(() -> {
                     Storage.setManualModeCommand(true).schedule();
@@ -135,6 +146,12 @@ public class MainTeleOp extends NextFTCOpMode {
 
     }
     @Override public void onUpdate() {
+
+
+
+
+
+
         for (String cname : CommandManager.INSTANCE.snapshot()) {
             Logger.add("Commands", cname);
         }
