@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
 import dev.nextftc.control.ControlSystem;
@@ -22,7 +25,7 @@ public class Storage implements Subsystem {
     private static double manualPower = 0;
     private final static MotorEx spin = new MotorEx("motorExp3").brakeMode().reversed();
     private static DigitalChannel limitSwitch;
-    private static NormalizedColorSensor colorSensor;
+    private static RevColorSensorV3 colorSensor;
     private static double currentPosition;
     private static double targetPosition;
     private static final double DELTA_TICKS = 179.25;
@@ -198,29 +201,26 @@ public class Storage implements Subsystem {
         targetPosition = newPosition;
     }
 
-    public static NormalizedRGBA getColor() {
-        return colorSensor.getNormalizedColors();
-    }
+    public State getColor() {
+        NormalizedRGBA c = colorSensor.getNormalizedColors();
+        double d = colorSensor.getDistance(DistanceUnit.MM);
 
-    public static State readColor() {
-        NormalizedRGBA colors = getColor();
-
-        double red = colors.red;
-        double green = colors.green;
-        double blue = colors.blue;
-
-        double sum = red + green + blue;
-
-        double r = red / sum;
-        double g = green / sum;
-        double b = blue / sum;
-
-        if (r > 0.35 && b > 0.35 && g < 0.25) {
-            return State.PURPLE;
+        if (d > 30.0) {
+            return State.NONE;
         }
-        if (g > 0.45 && r < 0.3 && b < 0.3) {
+
+        float divisor = Math.max(c.alpha, 1.0f);
+        float r = c.red / divisor;
+        float g = c.green / divisor;
+        float b = c.blue / divisor;
+
+        if ((g / r) > 2.0 && g > b) {
             return State.GREEN;
         }
+        else if ((b / g) > 1.3 && b > r) {
+            return State.PURPLE;
+        }
+
         return State.NONE;
     }
 
