@@ -24,7 +24,7 @@ public class Outtake implements Subsystem {
     private static Servo hoodServo;
     private static Servo traverseServo;
     private static final PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;
-    private static double targetVelocity = 2700;
+    private static double targetVelocity = 2500;
     private static double currentVelocity = 0;
     private static double manualPower = 0;
     private static boolean velocityMode = false;
@@ -85,12 +85,13 @@ public class Outtake implements Subsystem {
         Logger.add("Outtake", "current velo:" + currentVelocity);
 
         Logger.add("Outtake", "current distance:" + getDistance());
+        Logger.add("Outtake", "current angle delta:" + getAngle());
         Logger.panelsLog("velo", currentVelocity);
         Logger.panelsLog("power", outtake.getPower());
     }
 
     public static boolean reachedTargetVelocity(){
-        return outtake.getVelocity() > targetVelocity;
+        return outtake.getVelocity() > (targetVelocity - 50);
     }
 
     public static void setTargetVelocity(double newTargetVelocity){
@@ -117,8 +118,16 @@ public class Outtake implements Subsystem {
     }
 
     public double getDistance() {
-        double deltaX = - shootTarget.getX() + follower.getPose().getX();
-        double deltaY = - shootTarget.getX() + follower.getPose().getY();
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        double deltaX = shootTarget.getX() - follower.getPose().getX();
+        double deltaY = shootTarget.getY() - follower.getPose().getY();
+
+        return Math.hypot(deltaX, deltaY);
+    }
+
+    public double getAngle() {
+        double deltaX = shootTarget.getX() - follower.getPose().getX();
+        double deltaY = shootTarget.getY() - follower.getPose().getY();
+
+        return Math.atan2(deltaY, deltaX);
     }
 }

@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
 import dev.nextftc.control.ControlSystem;
@@ -20,17 +23,18 @@ public class Storage implements Subsystem {
     private static boolean manualMode = true;
     private static boolean positionMode = false;
     private static double manualPower = 0;
-    private final static MotorEx spin = new MotorEx("motorExp0").brakeMode().reversed();
+    private final static MotorEx spin = new MotorEx("motorExp3").brakeMode().reversed();
     private static DigitalChannel limitSwitch;
-    private static NormalizedColorSensor colorSensor;
+    private static RevColorSensorV3 colorSensor;
     private static double currentPosition;
     private static double targetPosition;
-    private static final double DELTA_TICKS = 179.22;
+    private static final double DELTA_TICKS = 179.25;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
+    public static boolean alignRequested = false;
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.000075, 0, 0)
+            .posPid(0.0015, 0, 0)
             .build();
 
     public static final State[] STATES = {
@@ -48,13 +52,15 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
+        spin.setCurrentPosition(0);
         spin.zero();
         currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
 
-//        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
-//                "limitSwitch");
-//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
+                "limitSwitch");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
 //
 //        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
 //                "colorSensor");
@@ -62,25 +68,35 @@ public class Storage implements Subsystem {
 
     @Override
     public void periodic() {
+        currentPosition = spin.getCurrentPosition();
+
         if (manualMode) {
             spin.setPower(manualPower);
             Logger.add("Manual", "power: " + manualPower);
         } else if (positionMode) {
-            double testPower = controller.calculate(new KineticState(targetPosition));
-            Logger.add("Controller", "target position: " + targetPosition + "current position:" + currentPosition);
-            if (Math.abs(testPower) > 0.05) {
-                spin.setPower(testPower);
+            double newPower = controller.calculate(new KineticState(currentPosition));
+            Logger.add("Storage", "power: " + newPower);
+            if (Math.abs(newPower) > 0.05) {
+                spin.setPower(newPower);
             } else {
                 spin.setPower(0);
             }
+        } else {
+            spin.setPower(0);
         }
-        Logger.add("Controller", "target position: " + targetPosition + "current position" + currentPosition);
+        Logger.add("Storage", "target position: " + targetPosition + "real position" + spin.getCurrentPosition());
+        Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
+
+        boolean currentSwitchState = limitSwitch.getState();
+
+        if (currentSwitchState && !lastState && alignRequested) {
+            stop().schedule();
+            alignRequested = false;
+        }
+
+        lastState = currentSwitchState;
     }
 
-
-    //        if (wasJustPressed()) {
-//            resetEncoderAtOuttake();
-//        }
     public static Command spinToNextIntakeIndex() {
         return new LambdaCommand()
                 .setStart(() -> {
@@ -126,6 +142,28 @@ public class Storage implements Subsystem {
                 .named("Spin to next index");
     }
 
+    public static Command requestAlign(double newPower) {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            setManualPower(newPower);
+            alignRequested = true;
+        });
+    }
+
+    public static Command stop() {
+        return new InstantCommand(() -> {
+            manualMode = true;
+            manualPower = 0;
+        });
+    }
+
+
+    public static Command assertManualPower(double newPower) {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            setManualPower(newPower);
+        });
+    }
     public static Command setManualPowerCommand(double newPower) {
         return new InstantCommand(() -> setManualPower(newPower));
     }
@@ -163,29 +201,26 @@ public class Storage implements Subsystem {
         targetPosition = newPosition;
     }
 
-    public static NormalizedRGBA getColor() {
-        return colorSensor.getNormalizedColors();
-    }
+    public State getColor() {
+        NormalizedRGBA c = colorSensor.getNormalizedColors();
+        double d = colorSensor.getDistance(DistanceUnit.MM);
 
-    public static State readColor() {
-        NormalizedRGBA colors = getColor();
-
-        double red = colors.red;
-        double green = colors.green;
-        double blue = colors.blue;
-
-        double sum = red + green + blue;
-
-        double r = red / sum;
-        double g = green / sum;
-        double b = blue / sum;
-
-        if (r > 0.35 && b > 0.35 && g < 0.25) {
-            return State.PURPLE;
+        if (d > 30.0) {
+            return State.NONE;
         }
-        if (g > 0.45 && r < 0.3 && b < 0.3) {
+
+        float divisor = Math.max(c.alpha, 1.0f);
+        float r = c.red / divisor;
+        float g = c.green / divisor;
+        float b = c.blue / divisor;
+
+        if ((g / r) > 2.0 && g > b) {
             return State.GREEN;
         }
+        else if ((b / g) > 1.3 && b > r) {
+            return State.PURPLE;
+        }
+
         return State.NONE;
     }
 

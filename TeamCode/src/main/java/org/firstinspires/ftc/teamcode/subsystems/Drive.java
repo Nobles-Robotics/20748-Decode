@@ -6,9 +6,11 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
+import com.pedropathing.math.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.utils.Alliance;
 import org.firstinspires.ftc.teamcode.utils.Logger;
@@ -29,6 +31,9 @@ public class Drive implements Subsystem {
     private static boolean slowMode = false;
     private static final double slowModeMultiplier = 0.25;
     private static final boolean robotCentric = true;
+    private static double targetHeading = Math.toRadians(180); // Radians
+    private static PIDFController controller;
+    private static boolean headingLock = false;
 
     private static double aimAssistment = 0;
     @Override
@@ -36,29 +41,35 @@ public class Drive implements Subsystem {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
         follower.setStartingPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
         follower.update();
+        controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         cornerReset();
     }
 
-    public void cornerReset() {
-        if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
-        else follower.setPose(new Pose(8, 6.25, Math.toRadians(0)));
+    public static Command cornerResetCommand() {
+        return new InstantCommand(() -> cornerReset());
+    }
+    public static void cornerReset() {
+        if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(135, 9, Math.toRadians(0)));
+        else follower.setPose(new Pose(9, 9, Math.toRadians(180)));
     }
 
     @Override
     public void periodic() {
+        controller.setCoefficients(follower.constants.coefficientsHeadingPIDF);
+        controller.updateError(getHeadingError());
+
+        targetHeading = MathFunctions.normalizeAngle(Outtake.INSTANCE.getAngle() + Math.PI);
+        Logger.add("Drive", Logger.Level.DEBUG, "target heading? " + targetHeading);
         drive.schedule();
     }
 
-    private static void setSlowMode(boolean newMode) {
-        slowMode = newMode;
+    public static Command setSlowModeCommand(boolean newMode) {
+        return new InstantCommand(() -> setSlowMode(newMode));
     }
 
-    public static void toggleSlowModeCommand() {
-        slowMode = !slowMode;
-    }
-    public static void setSlowModeCommand(boolean newMode) {
-        setSlowMode(newMode);
+    public static Command setHeadingLockCommand(boolean newMode) {
+        return new InstantCommand(() -> setHeadingLock(newMode));
     }
     public static void setAimAssist(double num){
         aimAssistment = num;
@@ -69,18 +80,16 @@ public class Drive implements Subsystem {
                 follower.update();
                 telemetryM.update();
 
-                float LStickx = ActiveOpMode.gamepad1().left_stick_x;
-                float LSticky = ActiveOpMode.gamepad1().left_stick_y;
-                float RStickx = ActiveOpMode.gamepad1().right_stick_x;
-                float RSticky = ActiveOpMode.gamepad1().right_stick_y;
+                double forward = slowMode ? -ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_y;
+                //forward = -forward;
+                double strafe = slowMode ? -ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_x;
+                //strafe = -strafe;
+                double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
 
-                // Calculate the correct values based on Gamepad 1
-                double forward = slowMode ? LSticky * slowModeMultiplier: LSticky;
-                double strafe = slowMode ? LStickx * slowModeMultiplier: LStickx;
-                //double turn = (slowMode ? -RStickx * slowModeMultiplier: -RStickx) - (aimAssistment);
-                double turn = -Math.pow(RStickx, 3.0) - (aimAssistment);
-                follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
-
+                if (headingLock)
+                    follower.setTeleOpDrive(forward, strafe, controller.run(), robotCentric);
+                else
+                    follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
                 Logger.add("Drive", Logger.Level.DEBUG, "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
                 Logger.add("Drive", Logger.Level.INFO, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
@@ -91,4 +100,22 @@ public class Drive implements Subsystem {
             .requires(Drive.INSTANCE)
             .setInterruptible(false)
             .named("Drive");
+    public double getHeadingError() {
+//        if (follower.getCurrentPath() == null) {
+//            return 0;
+//        }
+        return MathFunctions.getTurnDirection(follower.getPose().getHeading(), targetHeading) * MathFunctions.getSmallestAngleDifference(follower.getPose().getHeading(), targetHeading);
+    }
+
+    private static void setSlowMode(boolean newMode) {
+        slowMode = newMode;
+    }
+
+    private static void setHeadingLock(boolean newLock) {
+        headingLock = newLock;
+    }
+
+    private static void setTargetHeading(double newHeading) {
+        targetHeading = newHeading;
+    }
 }
