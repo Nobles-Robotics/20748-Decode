@@ -30,7 +30,7 @@ public class Drive implements Subsystem {
     private static final boolean robotCentric = true;
     private static double targetHeading = Math.toRadians(180); // Radians
     private static PIDFController controller;
-    private static boolean headingLock = true;
+    private static boolean headingLock = false;
 
     @Override
     public void initialize() {
@@ -46,8 +46,8 @@ public class Drive implements Subsystem {
         return new InstantCommand(() -> cornerReset());
     }
     public static void cornerReset() {
-        if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
-        else follower.setPose(new Pose(8, 6.25, Math.toRadians(0)));
+        if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(135, 9, Math.toRadians(0)));
+        else follower.setPose(new Pose(9, 9, Math.toRadians(180)));
     }
 
     @Override
@@ -55,8 +55,8 @@ public class Drive implements Subsystem {
         controller.setCoefficients(follower.constants.coefficientsHeadingPIDF);
         controller.updateError(getHeadingError());
 
-        targetHeading = Outtake.INSTANCE.getAngle();
-
+        targetHeading = MathFunctions.normalizeAngle(Outtake.INSTANCE.getAngle() + Math.PI);
+        Logger.add("Drive", Logger.Level.DEBUG, "target heading? " + targetHeading);
         drive.schedule();
     }
 
@@ -74,9 +74,9 @@ public class Drive implements Subsystem {
                 telemetryM.update();
 
                 double forward = slowMode ? -ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_y;
-                forward = -forward;
+                //forward = -forward;
                 double strafe = slowMode ? -ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_x;
-                strafe = -strafe;
+                //strafe = -strafe;
                 double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
 
                 if (headingLock)

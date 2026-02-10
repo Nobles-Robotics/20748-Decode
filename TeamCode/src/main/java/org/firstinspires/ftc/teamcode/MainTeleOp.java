@@ -101,7 +101,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.dpadLeft().or(gp2.dpadLeft())
-                .whenBecomesTrue(() -> Storage.requestAlign(.45).schedule());
+                .whenBecomesTrue(() -> Storage.requestAlign(1).schedule());
 
         gp1.dpadRight().or(gp2.dpadRight())
                 .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
