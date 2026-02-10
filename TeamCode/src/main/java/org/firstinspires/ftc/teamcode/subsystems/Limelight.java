@@ -52,7 +52,7 @@ public class Limelight extends SubsystemGroup {
     @Override
     public void periodic() {
         LLResult result = limelight.getLatestResult();
-
+        Drive.setAimAssist(0.0);
         if (result != null) {
             if (result.isValid()) {
 //                telemetry.addData("tx", result.getTx()); // How far left or right the target is (degrees)
@@ -77,15 +77,13 @@ public class Limelight extends SubsystemGroup {
 
                     if (fr.getFiducialId() == 20 && assistOn){
                         Drive.setAimAssist(fr.getTargetPoseCameraSpace().getPosition().x);
-                    }else{
-                        Drive.setAimAssist(0.0);
                     }
 
-                if (fidResults.isEmpty()) {Drive.setAimAssist(0.0);}
                 }
                 //telemetry.update();
             }
         }
+
     }
 
     public String getPattern(int id) {
