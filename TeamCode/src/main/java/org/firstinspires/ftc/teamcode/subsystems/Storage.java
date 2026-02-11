@@ -33,7 +33,7 @@ public class Storage implements Subsystem {
     private static double newPower;
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.0015, 0, 0)
+            .posPid(0.015, 0, .04)
             .build();
 
     public static final State[] STATES = {
@@ -60,9 +60,8 @@ public class Storage implements Subsystem {
                 "limitSwitch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-//
-//        colorSensor = ActiveOpMode.hardwareMap().get(NormalizedColorSensor.class,
-//                "colorSensor");
+        colorSensor = ActiveOpMode.hardwareMap().get(RevColorSensorV3.class,
+                "colorSensor");
     }
 
     @Override
@@ -73,8 +72,9 @@ public class Storage implements Subsystem {
             spin.setPower(manualPower);
             newPower = manualPower;
         } else if (positionMode) {
+            controller.setGoal(new KineticState(targetPosition));
             newPower = controller.calculate(new KineticState(currentPosition));
-            if (Math.abs(newPower) > 0.05) {
+            if (Math.abs(newPower) > 0.01) {
                 spin.setPower(newPower);
             } else {
                 spin.setPower(0);
@@ -83,6 +83,8 @@ public class Storage implements Subsystem {
             spin.setPower(0);
         }
         Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
+        Logger.add("Storage", "color:" + getColor());
+        Logger.add("Storage", "color:" + getColor());
 
         boolean currentSwitchState = limitSwitch.getState();
 

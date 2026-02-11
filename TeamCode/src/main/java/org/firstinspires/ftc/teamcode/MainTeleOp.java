@@ -93,17 +93,19 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp1.dpadUp().or(gp2.dpadUp())
-                //.whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
-                .whenBecomesTrue(() -> Intake.on().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
+                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
+                //.whenBecomesTrue(() -> Intake.on().schedule())
+                //.whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.dpadDown().or(gp2.dpadDown())
-                //.whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
-                .whenBecomesTrue(() -> Intake.reverse().schedule())
-                .whenBecomesFalse(() -> Intake.off().schedule());
+                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+                //.whenBecomesTrue(() -> Intake.reverse().schedule())
+                //.whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.dpadLeft().or(gp2.dpadLeft())
-                .whenBecomesTrue(() -> Storage.requestAlign(1).schedule());
+                //.whenBecomesTrue(() -> Storage.requestAlign(.5).schedule());
+            .whenBecomesTrue(() -> Intake.on().schedule())
+            .whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.dpadRight().or(gp2.dpadRight())
                 .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
@@ -114,7 +116,7 @@ public class MainTeleOp extends NextFTCOpMode {
         // ============================================================================================================================
 
         gp1.leftBumper()
-                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesTrue(() -> Intake.on().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
         gp2.rightBumper()

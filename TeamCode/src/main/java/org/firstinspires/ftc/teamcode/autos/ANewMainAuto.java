@@ -113,7 +113,7 @@ public class ANewMainAuto extends NextFTCOpMode {
                         intakeAll,
                         new SequentialGroupFixed(
                                 new FollowPath(intake1),
-                                new Delay(standardDelay)
+                                new Delay(standardDelay*2)
                         )
                 ),
                 endIntake,

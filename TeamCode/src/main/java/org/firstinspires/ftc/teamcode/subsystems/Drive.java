@@ -86,8 +86,8 @@ public class Drive implements Subsystem {
                     follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
                 Logger.add("Drive", "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
-                Logger.add("Drive", "posx: " + follower.getPose().getX() + " posy: " + follower.getPose().getY() + " heading: " + follower.getPose().getHeading());
-                Logger.add("Drive", "heading lock?"+ headingLock + "target heading: " + targetHeading + "error: " + getHeadingError() + "target distance:" + Outtake.getDistance());
+                Logger.add("Drive", "posx: " + Math.round(follower.getPose().getX()) + " posy: " + Math.round(follower.getPose().getY()) + " heading: " + Math.round(follower.getPose().getHeading()));
+                Logger.add("Drive", "heading lock?"+ headingLock + "target heading: " + Math.round(targetHeading) + "error: " + Math.round(getHeadingError()) + "target distance:" + Math.round(Outtake.getDistance()));
                 Logger.add("Drive", "slowmode? " + slowMode + "multiplier: " + slowModeMultiplier);
             })
             .setStop(interrupted -> {})

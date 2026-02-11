@@ -9,6 +9,8 @@ import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     private static final double INTAKE_DELAY = 0.5;
+    private static final double OUTTAKE_DELAY = 0.2;
+
 
     private Robot() {
         super(
@@ -27,7 +29,7 @@ public class Robot extends SubsystemGroup {
     public void periodic() {
     }
 
-    public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
+    public static SequentialGroupFixed outtakeAllStupidly = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new WaitUntil(Outtake::reachedTargetVelocity),
             new InstantCommand(Transitions.on()),
@@ -51,5 +53,19 @@ public class Robot extends SubsystemGroup {
             new Delay(INTAKE_DELAY),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Intake.off())
+    );
+
+    public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
+            new InstantCommand(Outtake.on),
+            new WaitUntil(Outtake::reachedTargetVelocity),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new InstantCommand(Transitions.on()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
     );
 }

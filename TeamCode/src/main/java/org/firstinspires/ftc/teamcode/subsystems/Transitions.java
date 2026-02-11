@@ -12,7 +12,7 @@ public class Transitions implements Subsystem {
     private final static double FORWARD_POWER = 1;
     private final static double REVERSE_POWER = -1;
     public static double currentPower = 0;
-    private final MotorEx transition = new MotorEx("motorExp1");
+    private final MotorEx transition = new MotorEx("motorExp0");
 
     @Override
     public void initialize() {
