@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode; // make sure this aligns with class location
+package org.firstinspires.ftc.teamcode.autos; // make sure this aligns with class location
 //HIIII pls don't delete
 
 import com.pedropathing.follower.Follower;
@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 @Autonomous(name = "Main Auto")
 public class MainAuto extends OpMode {

@@ -30,6 +30,8 @@ public class Outtake implements Subsystem {
     private static boolean velocityMode = false;
     private static boolean manualMode = false;
 
+    private static double newPower;
+
     public static Pose shootTarget = new Pose(6, 144 - 6, 0);
 
     /*
@@ -73,21 +75,15 @@ public class Outtake implements Subsystem {
 
         if (manualMode) {
             outtake.setPower(manualPower);
+            newPower = manualPower;
         } else if (velocityMode){
             controller.setGoal(new KineticState(0, targetVelocity));
-            double velocityPower = controller.calculate(new KineticState(0, currentVelocity));
-            Logger.add("Outtake", "current power:" + velocityPower);
-
-            outtake.setPower(velocityPower);
+            newPower = controller.calculate(new KineticState(0, currentVelocity));
+            outtake.setPower(newPower);
         } else {
             outtake.setPower(0);
         }
-        Logger.add("Outtake", "current velo:" + currentVelocity);
-
-        Logger.add("Outtake", "current distance:" + getDistance());
-        Logger.add("Outtake", "current angle delta:" + getAngle());
-        Logger.panelsLog("velo", currentVelocity);
-        Logger.panelsLog("power", outtake.getPower());
+        Logger.add("Outtake", "current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower );
     }
 
     public static boolean reachedTargetVelocity(){
@@ -113,18 +109,18 @@ public class Outtake implements Subsystem {
             shootTarget = shootTarget.mirror();
     }
 
-    public Pose getShootTarget() {
+    public static Pose getShootTarget() {
         return shootTarget;
     }
 
-    public double getDistance() {
+    public static double getDistance() {
         double deltaX = shootTarget.getX() - follower.getPose().getX();
         double deltaY = shootTarget.getY() - follower.getPose().getY();
 
         return Math.hypot(deltaX, deltaY);
     }
 
-    public double getAngle() {
+    public static double getAngle() {
         double deltaX = shootTarget.getX() - follower.getPose().getX();
         double deltaY = shootTarget.getY() - follower.getPose().getY();
 

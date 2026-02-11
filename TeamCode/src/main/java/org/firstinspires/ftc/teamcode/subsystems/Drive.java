@@ -42,7 +42,7 @@ public class Drive implements Subsystem {
     }
 
     public static Command cornerResetCommand() {
-        return new InstantCommand(() -> cornerReset());
+        return new InstantCommand(Drive::cornerReset);
     }
     public static void cornerReset() {
         if (currentAlliance == Alliance.BLUE) follower.setPose(new Pose(135, 9, Math.toRadians(0)));
@@ -54,8 +54,7 @@ public class Drive implements Subsystem {
         controller.setCoefficients(follower.constants.coefficientsHeadingPIDF);
         controller.updateError(getHeadingError());
 
-        targetHeading = MathFunctions.normalizeAngle(Outtake.INSTANCE.getAngle() + Math.PI);
-        Logger.add("Drive", Logger.Level.DEBUG, "target heading? " + targetHeading);
+        targetHeading = MathFunctions.normalizeAngle(Outtake.getAngle() + Math.PI);
         drive.schedule();
     }
 
@@ -86,16 +85,17 @@ public class Drive implements Subsystem {
                 else
                     follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
-                Logger.add("Drive", Logger.Level.DEBUG, "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
-                Logger.add("Drive", Logger.Level.INFO, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
-                //Logger.add("Test", LimelightTest, "slowmode? " + slowMode + "multiplier? " + slowModeMultiplier);
+                Logger.add("Drive", "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
+                Logger.add("Drive", "posx: " + follower.getPose().getX() + " posy: " + follower.getPose().getY() + " heading: " + follower.getPose().getHeading());
+                Logger.add("Drive", "heading lock?"+ headingLock + "target heading: " + targetHeading + "error: " + getHeadingError() + "target distance:" + Outtake.getDistance());
+                Logger.add("Drive", "slowmode? " + slowMode + "multiplier: " + slowModeMultiplier);
             })
             .setStop(interrupted -> {})
             .setIsDone(() -> false)
             .requires(Drive.INSTANCE)
             .setInterruptible(false)
             .named("Drive");
-    public double getHeadingError() {
+    public static double getHeadingError() {
 //        if (follower.getCurrentPath() == null) {
 //            return 0;
 //        }

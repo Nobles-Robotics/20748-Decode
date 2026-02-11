@@ -30,6 +30,7 @@ public class Storage implements Subsystem {
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
     public static boolean alignRequested = false;
+    private static double newPower;
 
     public static ControlSystem controller = ControlSystem.builder()
             .posPid(0.0015, 0, 0)
@@ -70,10 +71,9 @@ public class Storage implements Subsystem {
 
         if (manualMode) {
             spin.setPower(manualPower);
-            Logger.add("Manual", "power: " + manualPower);
+            newPower = manualPower;
         } else if (positionMode) {
-            double newPower = controller.calculate(new KineticState(currentPosition));
-            Logger.add("Storage", "power: " + newPower);
+            newPower = controller.calculate(new KineticState(currentPosition));
             if (Math.abs(newPower) > 0.05) {
                 spin.setPower(newPower);
             } else {
@@ -82,8 +82,7 @@ public class Storage implements Subsystem {
         } else {
             spin.setPower(0);
         }
-        Logger.add("Storage", "target position: " + targetPosition + "real position" + spin.getCurrentPosition());
-        Logger.add("Storage", "target position: " + targetPosition + "current position" + currentPosition);
+        Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
 
         boolean currentSwitchState = limitSwitch.getState();
 
