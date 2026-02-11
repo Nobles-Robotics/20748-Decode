@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
+import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -12,7 +14,6 @@ public class Robot extends SubsystemGroup {
     private static final double OUTTAKE_DELAY = 0.2;
 
     public static final double CACHING_TOLERANCE = 0.03;
-
 
     private Robot() {
         super(
@@ -70,4 +71,21 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );
+
+    // !EXPERIMENTAL! disables color sensor, intense logging, and limit switch
+    public static Command optimizeLoopTimes(boolean enable) {
+        return new InstantCommand(() -> {
+            if (enable) {
+                Storage.setRequestReadColorSensor(false);
+                Storage.setRequestReadLimitSwitch(false);
+                Limelight.setRequestReadLimelight(false);
+                Logger.disableInfoLogging();
+            } else {
+                Storage.setRequestReadColorSensor(true);
+                Storage.setRequestReadLimitSwitch(true);
+                Limelight.setRequestReadLimelight(true);
+                Logger.enableInfoLogging();
+            }
+        });
+    }
 }

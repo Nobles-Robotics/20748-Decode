@@ -79,8 +79,8 @@ public class MainTeleOp extends NextFTCOpMode {
 
         gp1.back().or(gp2.back())
                 .toggleOnBecomesTrue()
-                .whenBecomesTrue(Logger::disableInfoLogging)
-                .whenBecomesFalse(Logger::enableInfoLogging);
+                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true))
+                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(false));
 
         gp1.a().or(gp2.a())
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())

@@ -22,9 +22,12 @@ public class Limelight extends SubsystemGroup {
         super(Drive.INSTANCE);
     }
     private Limelight3A limelight;
-
     static boolean assistOn = false;
+    private static boolean requestReadLimelight = true;
 
+    public static void setRequestReadLimelight(boolean toRequest){
+        requestReadLimelight = toRequest;
+    }
 
     public static void setAimAssist(boolean bool){
         assistOn = bool;

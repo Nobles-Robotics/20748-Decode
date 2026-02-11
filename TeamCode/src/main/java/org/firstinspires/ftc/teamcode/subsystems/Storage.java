@@ -33,6 +33,16 @@ public class Storage implements Subsystem {
     private static boolean lastState = false;
     public static boolean alignRequested = false;
     private static double newPower;
+    private static boolean requestReadLimitSwitch = true;
+    private static boolean requestReadColorSensor = true;
+
+    public static void setRequestReadLimitSwitch(boolean toRequest){
+        requestReadLimitSwitch = toRequest;
+    }
+
+    public static void setRequestReadColorSensor(boolean toRequest){
+        requestReadColorSensor = toRequest;
+    }
 
     public static ControlSystem controller = ControlSystem.builder()
             .posPid(0.015, 0, .04)
