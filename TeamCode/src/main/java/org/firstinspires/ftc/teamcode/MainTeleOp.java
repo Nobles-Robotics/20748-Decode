@@ -100,7 +100,7 @@ public class MainTeleOp extends NextFTCOpMode {
 
         gp2.leftBumper()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
-                .whenBecomesTrue(() -> Transitions.off().schedule());
+                .whenBecomesFalse(() -> Transitions.off().schedule());
 
         gp1.back().or(gp2.back())
                 .whenBecomesTrue(() -> Drive.cornerResetCommand().schedule());
