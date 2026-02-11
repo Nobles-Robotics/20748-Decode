@@ -77,38 +77,30 @@ public class MainTeleOp extends NextFTCOpMode {
          left trigger = nothing| right trigger = nothing
          */
 
-        gp1.a().or(gp2.a())
+        gp2.a()
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
-        gp1.b().or(gp2.b())
-                .whenBecomesTrue(() -> Storage.assertManualPower(0.5).schedule())
-                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+        gp2.b()
+                .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
-        gp1.x().or(gp2.x()).or(gp2.leftBumper())
-                .whenBecomesTrue(() -> Transitions.on().schedule())
-                .whenBecomesFalse(() -> Transitions.off().schedule());
+        gp2.x()
+                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
 
-        gp1.y().or(gp2.y())
+        gp2.y()
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.2).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
-        gp1.dpadUp().or(gp2.dpadUp())
-                .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
-                //.whenBecomesTrue(() -> Intake.on().schedule())
-                //.whenBecomesFalse(() -> Intake.off().schedule());
+        gp2.dpadUp()
+                .whenBecomesTrue(() -> Intake.on().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp1.dpadDown().or(gp2.dpadDown())
-                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
-                //.whenBecomesTrue(() -> Intake.reverse().schedule())
-                //.whenBecomesFalse(() -> Intake.off().schedule());
+        gp2.dpadDown()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp1.dpadLeft().or(gp2.dpadLeft())
-                //.whenBecomesTrue(() -> Storage.requestAlign(.5).schedule());
-            .whenBecomesTrue(() -> Intake.on().schedule())
-            .whenBecomesFalse(() -> Intake.off().schedule());
-
-        gp1.dpadRight().or(gp2.dpadRight())
-                .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
+        gp2.leftBumper()
+                .whenBecomesTrue(() -> Transitions.on().schedule())
+                .whenBecomesTrue(() -> Transitions.off().schedule());
 
         gp1.back().or(gp2.back())
                 .whenBecomesTrue(() -> Drive.cornerResetCommand().schedule());
