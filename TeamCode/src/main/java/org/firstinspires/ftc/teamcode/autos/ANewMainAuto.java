@@ -107,16 +107,15 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new FollowPath(intakeAlign1),
                 new Delay(standardDelay),
-                // new FollowPath(intake1),
 
-                new ParallelGroup(
-                        intakeAll,
-                        new SequentialGroupFixed(
-                                new FollowPath(intake1),
-                                new Delay(standardDelay*2)
-                        )
-                ),
-                endIntake,
+
+                Intake.on(),
+                Storage.setManualModeCommand(true),
+                Storage.setManualPowerCommand(0.75),
+
+                new FollowPath(intake1),
+                new Delay(standardDelay*2),
+                //endIntake,
 
                 new Delay(standardDelay),
                 new FollowPath(intakeOut1),
