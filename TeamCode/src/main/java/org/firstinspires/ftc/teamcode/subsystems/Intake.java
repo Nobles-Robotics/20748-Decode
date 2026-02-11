@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Robot.CACHING_TOLERANCE;
+
 import org.firstinspires.ftc.teamcode.utils.Logger;
 
 import dev.nextftc.core.commands.Command;
@@ -13,7 +15,7 @@ public class Intake implements Subsystem {
     private static double intakePower = 0;
     private final static double FORWARD_POWER = 1;
     private final static double REVERSE_POWER = -1;
-    private final MotorEx intake = new MotorEx("motorExp1");
+    private final MotorEx intake = new MotorEx("motorExp1", CACHING_TOLERANCE);
 
     @Override
     public void initialize() {

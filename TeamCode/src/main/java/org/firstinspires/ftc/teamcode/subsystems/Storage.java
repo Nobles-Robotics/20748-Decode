@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Robot.CACHING_TOLERANCE;
+
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -21,7 +23,7 @@ public class Storage implements Subsystem {
     private static boolean manualMode = true;
     private static boolean positionMode = false;
     private static double manualPower = 0;
-    private final static MotorEx spin = new MotorEx("motorExp3").brakeMode().reversed();
+    private final static MotorEx spin = new MotorEx("motorExp3", CACHING_TOLERANCE).brakeMode().reversed();
     private static DigitalChannel limitSwitch;
     private static RevColorSensorV3 colorSensor;
     private static double currentPosition;
@@ -83,7 +85,6 @@ public class Storage implements Subsystem {
             spin.setPower(0);
         }
         Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
-        Logger.add("Storage", "color:" + getColor());
         Logger.add("Storage", "color:" + getColor());
 
         boolean currentSwitchState = limitSwitch.getState();
@@ -212,6 +213,8 @@ public class Storage implements Subsystem {
         float r = c.red / divisor;
         float g = c.green / divisor;
         float b = c.blue / divisor;
+
+        Logger.add("Storage", "r: " + r + "g:" + g + "b:" + b);
 
         if ((g / r) > 2.0 && g > b) {
             return State.GREEN;

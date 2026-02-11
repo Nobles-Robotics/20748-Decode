@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.subsystems.Drive.follower;
+import static org.firstinspires.ftc.teamcode.subsystems.Robot.CACHING_TOLERANCE;
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
 
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.utils.Logger;
 public class Outtake implements Subsystem {
 
     public static final Outtake INSTANCE = new Outtake();
-    private static final MotorEx outtake = new MotorEx("motorExp2").reversed().floatMode();
+    private static final MotorEx outtake = new MotorEx("motorExp2", CACHING_TOLERANCE).reversed().floatMode();
     private static Servo hoodServo;
     private static Servo traverseServo;
     private static final PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;

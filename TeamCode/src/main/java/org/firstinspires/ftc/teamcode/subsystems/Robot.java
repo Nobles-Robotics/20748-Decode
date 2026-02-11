@@ -11,6 +11,8 @@ public class Robot extends SubsystemGroup {
     private static final double INTAKE_DELAY = 0.5;
     private static final double OUTTAKE_DELAY = 0.2;
 
+    public static final double CACHING_TOLERANCE = 0.03;
+
 
     private Robot() {
         super(

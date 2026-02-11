@@ -4,5 +4,3 @@ public enum Alliance {
     RED,
     BLUE
 }
-
-

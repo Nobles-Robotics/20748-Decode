@@ -77,9 +77,15 @@ public class MainTeleOp extends NextFTCOpMode {
          left trigger = nothing| right trigger = nothing
          */
 
+        gp1.back().or(gp2.back())
+                .toggleOnBecomesTrue()
+                .whenBecomesTrue(Logger::disableInfoLogging)
+                .whenBecomesFalse(Logger::enableInfoLogging);
+
         gp1.a().or(gp2.a())
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
         gp1.b().or(gp2.b())
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.5).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());

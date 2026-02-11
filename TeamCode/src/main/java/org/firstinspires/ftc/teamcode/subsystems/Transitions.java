@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Robot.CACHING_TOLERANCE;
+
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -12,7 +14,7 @@ public class Transitions implements Subsystem {
     private final static double FORWARD_POWER = 1;
     private final static double REVERSE_POWER = -1;
     public static double currentPower = 0;
-    private final MotorEx transition = new MotorEx("motorExp0");
+    private final MotorEx transition = new MotorEx("motorExp0", CACHING_TOLERANCE);
 
     @Override
     public void initialize() {
@@ -22,7 +24,7 @@ public class Transitions implements Subsystem {
     @Override
     public void periodic() {
         transition.setPower(currentPower);
-        Logger.add("Transition", Logger.Level.DEBUG, "power: " + transition.getPower());
+        Logger.add("Transition", "power: " + currentPower);
     }
 
     public static Command on() {
