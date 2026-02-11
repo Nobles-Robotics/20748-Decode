@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.ftc.ActiveOpMode;
+import dev.nextftc.hardware.impl.MotorEx;
 
 public class Transitions implements Subsystem {
 
@@ -13,18 +12,17 @@ public class Transitions implements Subsystem {
     private final static double FORWARD_POWER = 1;
     private final static double REVERSE_POWER = -1;
     public static double currentPower = 0;
-    private CRServo transitionServo;
+    private final MotorEx transition = new MotorEx("motorExp1");
 
     @Override
     public void initialize() {
-        transitionServo = ActiveOpMode.hardwareMap().crservo.get("servoExp0");
-        transitionServo.setPower(0);
+        transition.setPower(0);
     }
 
     @Override
     public void periodic() {
-        transitionServo.setPower(currentPower);
-        Logger.add("Transition", Logger.Level.DEBUG, "power: " + transitionServo.getPower());
+        transition.setPower(currentPower);
+        Logger.add("Transition", Logger.Level.DEBUG, "power: " + transition.getPower());
     }
 
     public static Command on() {
