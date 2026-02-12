@@ -12,7 +12,6 @@ public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     private static final double INTAKE_DELAY = 0.5;
     private static final double OUTTAKE_DELAY = 0.2;
-
     public static final double CACHING_TOLERANCE = 0.03;
 
     private Robot() {
@@ -47,14 +46,12 @@ public class Robot extends SubsystemGroup {
 
     public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
-            new InstantCommand(Transitions.on()),
-            new InstantCommand(Storage.requestAlign(1)),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.requestAlign(1)),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.requestAlign(1)),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Transitions.off()),
             new InstantCommand(Intake.off())
     );
 
