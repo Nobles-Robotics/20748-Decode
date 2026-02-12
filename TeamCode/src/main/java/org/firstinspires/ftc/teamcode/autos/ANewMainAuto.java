@@ -109,19 +109,17 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
 
 
-                Intake.on(),
+
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new FollowPath(intake1, true, 0.25),
                                 new Delay (5)
                         ),
                         new SequentialGroupFixed(
-                                Storage.assertManualPower(1)
+                                Robot.intakeAll
                         )
 
                 ),
-
-                Intake.off(),
 
                 new Delay(standardDelay),
                 new FollowPath(intakeOut1),
