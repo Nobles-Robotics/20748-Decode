@@ -112,7 +112,7 @@ public class ANewMainAuto extends NextFTCOpMode {
 
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake1, true, 0.25),
+                                new FollowPath(intake1, true, .45),
                                 new Delay (5)
                         ),
                         new SequentialGroupFixed(
