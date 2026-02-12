@@ -10,7 +10,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
-    private static final double INTAKE_DELAY = 1;
+    private static final double INTAKE_DELAY = 5;
     private static final double OUTTAKE_DELAY = 0.2;
     public static final double CACHING_TOLERANCE = 0.03;
 
