@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
@@ -20,7 +21,9 @@ import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
+
 import org.firstinspires.ftc.teamcode.utils.components.LoopTimeComponent;
+import org.firstinspires.ftc.teamcode.utils.photoncore.PhotonCore;
 
 @TeleOp(name="MainTeleOp", group="TeleOp")
 public class MainTeleOp extends NextFTCOpMode {
@@ -42,6 +45,14 @@ public class MainTeleOp extends NextFTCOpMode {
                 )
         );
     }
+
+    @Override public void onInit() {
+//        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+//        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+//        PhotonCore.experimental.setMaximumParallelCommands(8); // Can be adjusted based on user preference - but raising this number further can cause issues
+//        PhotonCore.enable();
+    }
+
     @Override public void onWaitForStart() {
         ActiveOpMode.telemetry().update();
     }
@@ -131,6 +142,9 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesFalse(() -> Drive.setHeadingLockCommand(false).schedule());
     }
     @Override public void onUpdate() {
+//        PhotonCore.CONTROL_HUB.clearBulkCache();
+//        PhotonCore.EXPANSION_HUB.clearBulkCache();
+
         for (String cname : CommandManager.INSTANCE.snapshot()) {
             Logger.add("Commands", cname);
         }

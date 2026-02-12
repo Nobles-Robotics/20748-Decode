@@ -168,9 +168,14 @@ public class PhotonCore implements Runnable, OpModeManagerNotifier.Notifications
         return true;
     }
 
+    // don't break servos since we don't use the servo power injector
+//    protected static boolean shouldParallelize(LynxCommand command){
+//        return (command instanceof LynxSetMotorConstantPowerCommand ||
+//                command instanceof LynxSetServoPulseWidthCommand);
+//    }
+
     protected static boolean shouldParallelize(LynxCommand command){
-        return (command instanceof LynxSetMotorConstantPowerCommand ||
-                command instanceof LynxSetServoPulseWidthCommand);
+        return (command instanceof LynxSetMotorConstantPowerCommand);
     }
 
     protected static boolean shouldAckImmediately(LynxCommand command){
