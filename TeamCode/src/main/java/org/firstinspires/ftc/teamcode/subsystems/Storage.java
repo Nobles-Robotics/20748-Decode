@@ -42,6 +42,7 @@ public class Storage implements Subsystem {
     private static double newPower;
     private static boolean requestReadLimitSwitch = true;
     private static boolean requestReadColorSensor = true;
+    private static boolean storageMotorStuck = false;
 
     public static void setRequestReadLimitSwitch(boolean toRequest){
         requestReadLimitSwitch = toRequest;
@@ -210,6 +211,39 @@ public class Storage implements Subsystem {
     public static Command resetEncoderAtOuttakeCommand() {
         return new InstantCommand(() -> resetEncoder(OUTTAKE_POSITION));
     }
+
+    public static Command checkIfStuck(double checkDurationSeconds, double minPositionDeltaTicks) {
+        final double[] startPosition = {0};
+        final long[] startTimeNanos = {0};
+
+        return new LambdaCommand()
+                .setStart(() -> {
+                    startPosition[0] = currentPosition;
+                    startTimeNanos[0] = System.nanoTime();
+                    storageMotorStuck = false;
+                })
+                .setIsDone(() -> {
+                    double elapsedSeconds = (System.nanoTime() - startTimeNanos[0]) / 1_000_000_000.0;
+
+                    if (elapsedSeconds >= checkDurationSeconds) {
+                        double movedTicks = Math.abs(currentPosition - startPosition[0]);
+                        storageMotorStuck = movedTicks < minPositionDeltaTicks;
+                        return true;
+                    }
+
+                    return false;
+                })
+                .setStop(interrupted -> {
+                })
+                .requires(Storage.INSTANCE)
+                .setInterruptible(true)
+                .named("Check storage stuck");
+    }
+
+    public static boolean isStorageMotorStuck() {
+        return storageMotorStuck;
+    }
+
 
     private static void setManualPower(double newPower) {
         manualPower = newPower;

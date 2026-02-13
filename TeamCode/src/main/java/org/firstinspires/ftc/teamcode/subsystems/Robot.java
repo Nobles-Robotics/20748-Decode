@@ -4,11 +4,14 @@ import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.conditionals.IfElseCommand;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
+import kotlin.time.Instant;
+
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     private static final double INTAKE_DELAY = 0.5;
@@ -51,17 +54,32 @@ public class Robot extends SubsystemGroup {
             new Delay(1),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new InstantCommand(Storage.checkIfStuck(0.5, 2)),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToNextOuttakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
