@@ -56,7 +56,7 @@ public class ANewMainAuto extends NextFTCOpMode {
     public static final Pose scorePoseBlue = new Pose(68, 76, Math.toRadians(315)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
     public static final Pose intakeAlign1Blue = new Pose(68, 84, Math.toRadians(180)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    public static final Pose intake1Blue = new Pose(14, 84, Math.toRadians(180)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
 
     public static final Pose startPoseFarRed = new Pose(87, 8, Math.toRadians(270)); // Start Pose of our robot.
@@ -108,20 +108,16 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new FollowPath(intakeAlign1),
                 new Delay(standardDelay),
 
-
-                Intake.on(),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake1, true, 0.25),
+                                new FollowPath(intake1, true, 0.75),
                                 new Delay (5)
                         ),
                         new SequentialGroupFixed(
-                                Storage.assertManualPower(1)
+                                Robot.intakeAll
                         )
 
                 ),
-
-                Intake.off(),
 
                 new Delay(standardDelay),
                 new FollowPath(intakeOut1),
