@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.Robot.CACHING_TOLERANCE;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.utils.Logger;
@@ -35,6 +36,8 @@ public class Storage implements Subsystem {
     private static double newPower;
     private static boolean requestReadLimitSwitch = true;
     private static boolean requestReadColorSensor = true;
+    private static final double STUCK_TIMEOUT_SECONDS = 0.5;
+    private static final double STUCK_POSITION_TOLERANCE = 2.0;
 
     public static void setRequestReadLimitSwitch(boolean toRequest){
         requestReadLimitSwitch = toRequest;
@@ -167,6 +170,27 @@ public class Storage implements Subsystem {
         });
     }
 
+
+    public static Command isStuck() {
+        final ElapsedTime timer = new ElapsedTime();
+        final double[] lastPosition = new double[1];
+        return new LambdaCommand()
+                .setStart(() -> {
+                    lastPosition[0] = currentPosition;
+                    timer.reset();
+                })
+                .setUpdate(() -> {
+                    if (Math.abs(currentPosition - lastPosition[0]) > STUCK_POSITION_TOLERANCE) {
+                        lastPosition[0] = currentPosition;
+                        timer.reset();
+                    }
+                })
+                .setIsDone(() -> timer.seconds() >= STUCK_TIMEOUT_SECONDS)
+                .setStop(interrupted -> {})
+                .requires(Storage.INSTANCE)
+                .setInterruptible(true)
+                .named("Detect motor stuck");
+    }
 
     public static Command assertManualPower(double newPower) {
         return new InstantCommand(() -> {
