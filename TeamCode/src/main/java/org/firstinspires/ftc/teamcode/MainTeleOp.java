@@ -83,11 +83,11 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false));
 
         gp1.a().or(gp2.a())
-                .whenBecomesTrue(() -> Storage.assertManualPower(-0.75).schedule())
+                .whenBecomesTrue(() -> Storage.assertManualPower(-0.5).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp1.b().or(gp2.b())
-                .whenBecomesTrue(() -> Storage.assertManualPower(-0.5).schedule())
+                .whenBecomesTrue(() -> Storage.assertManualPower(-0.25).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp1.x().or(gp2.x()).or(gp1.rightBumper())
@@ -101,7 +101,7 @@ public class MainTeleOp extends NextFTCOpMode {
             .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
         gp1.dpadUp().or(gp2.dpadUp())
-                .whenBecomesTrue(() -> Storage.spinToNextOuttakeIndex().schedule());
+                .whenBecomesTrue(() -> Storage.resetEncoderCommand().schedule());
 
         gp1.dpadDown().or(gp2.dpadDown())
                 .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
