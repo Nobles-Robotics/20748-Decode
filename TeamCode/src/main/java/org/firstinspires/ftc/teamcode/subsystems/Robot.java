@@ -9,29 +9,12 @@ import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
+
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
+    public static final double CACHING_TOLERANCE = 0.03;
     private static final double INTAKE_DELAY = 0.5;
     private static final double OUTTAKE_DELAY = 0.5;
-    public static final double CACHING_TOLERANCE = 0.03;
-
-    private Robot() {
-        super(
-                Intake.INSTANCE,
-                Transitions.INSTANCE,
-                Storage.INSTANCE,
-                Outtake.INSTANCE
-        );
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void periodic() {
-    }
-
     public static SequentialGroupFixed outtakeAllStupidly = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new WaitUntil(Outtake::reachedTargetVelocity),
@@ -44,7 +27,6 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off),
             new InstantCommand(Storage.setManualPowerCommand(0))
     );
-
     public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
@@ -77,13 +59,12 @@ public class Robot extends SubsystemGroup {
             new Delay(INTAKE_DELAY),
             new InstantCommand(Intake.off())
     );
-
     public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new ParallelDeadlineGroup(
                     new Delay(1),
                     new WaitUntil(Outtake::reachedTargetVelocity)
-                    ),
+            ),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new InstantCommand(Transitions.on()),
             new Delay(OUTTAKE_DELAY),
@@ -94,7 +75,6 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );
-
     public static SequentialGroupFixed outtakeOn = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new ParallelDeadlineGroup(
@@ -107,6 +87,14 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );
+    private Robot() {
+        super(
+                Intake.INSTANCE,
+                Transitions.INSTANCE,
+                Storage.INSTANCE,
+                Outtake.INSTANCE
+        );
+    }
 
     // !EXPERIMENTAL! disables color sensor, intense logging, and limit switch
     public static Command optimizeLoopTimes(boolean enable) {
@@ -123,5 +111,13 @@ public class Robot extends SubsystemGroup {
                 Logger.enableInfoLogging();
             }
         });
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void periodic() {
     }
 }
