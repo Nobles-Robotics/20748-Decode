@@ -48,10 +48,10 @@ public class Limelight extends SubsystemGroup {
 
     @Override
     public void periodic() {
-        Drive.setAimAssist(0.0);
         if (!requestReadLimelight) {
             return;
         }
+        Drive.setAimAssist(0.0);
 
         LLResult result = limelight.getLatestResult();
         if (result != null) {
