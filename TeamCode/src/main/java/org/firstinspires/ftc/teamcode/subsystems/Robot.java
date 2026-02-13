@@ -14,7 +14,7 @@ public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     public static final double CACHING_TOLERANCE = 0.03;
     private static final double INTAKE_DELAY = 0.5;
-    private static final double OUTTAKE_DELAY = 0.5;
+    private static final double OUTTAKE_DELAY = 0.66;
     public static SequentialGroupFixed outtakeAllStupidly = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new WaitUntil(Outtake::reachedTargetVelocity),
@@ -61,10 +61,7 @@ public class Robot extends SubsystemGroup {
     );
     public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
-            new ParallelDeadlineGroup(
-                    new Delay(1),
-                    new WaitUntil(Outtake::reachedTargetVelocity)
-            ),
+            new WaitUntil(Outtake::reachedTargetVelocity),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new InstantCommand(Transitions.on()),
             new Delay(OUTTAKE_DELAY),

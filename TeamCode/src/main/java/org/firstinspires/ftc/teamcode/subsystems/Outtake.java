@@ -25,7 +25,7 @@ public class Outtake implements Subsystem {
     private static Servo hoodServo;
     private static Servo traverseServo;
     private static final PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;
-    private static double targetVelocity = 2500;
+    private static double targetVelocity = 2300;
     private static double currentVelocity = 0;
     private static double manualPower = 0;
     private static boolean velocityMode = false;
