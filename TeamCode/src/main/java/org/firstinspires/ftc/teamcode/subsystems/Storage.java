@@ -97,16 +97,22 @@ public class Storage implements Subsystem {
             spin.setPower(0);
         }
         Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
-        Logger.add("Storage", "color:" + getColor());
 
-        boolean currentSwitchState = limitSwitch.getState();
+        if (requestReadColorSensor) {
+            Logger.add("Storage", "color:" + getColor());
 
-        if (currentSwitchState && !lastState && alignRequested) {
-            stop().schedule();
-            alignRequested = false;
         }
 
-        lastState = currentSwitchState;
+        if (requestReadLimitSwitch) {
+            boolean currentSwitchState = limitSwitch.getState();
+
+            if (currentSwitchState && !lastState && alignRequested) {
+                stop().schedule();
+                alignRequested = false;
+            }
+
+            lastState = currentSwitchState;
+        }
     }
 
     public static Command spinToNextIntakeIndex() {
