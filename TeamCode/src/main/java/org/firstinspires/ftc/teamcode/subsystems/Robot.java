@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
+import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 public class Robot extends SubsystemGroup {
@@ -57,13 +58,29 @@ public class Robot extends SubsystemGroup {
 
     public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
-            new WaitUntil(Outtake::reachedTargetVelocity),
+            new ParallelDeadlineGroup(
+                    new Delay(1),
+                    new WaitUntil(Outtake::reachedTargetVelocity)
+                    ),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new InstantCommand(Transitions.on()),
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
+    );
+
+    public static SequentialGroupFixed outtakeOn = new SequentialGroupFixed(
+            new InstantCommand(Outtake.on),
+            new ParallelDeadlineGroup(
+                    new Delay(1),
+                    new WaitUntil(Outtake::reachedTargetVelocity)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new InstantCommand(Transitions.on()),
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)

@@ -33,6 +33,11 @@ public class Storage implements Subsystem {
     private static final double DELTA_TICKS = 179.25;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
+    private static double lastPress;
+    private static double lastPressDelta;
+    private static double totallastPress;
+    private static double howMany;
+    private static double offset;
     public static boolean alignRequested = false;
     private static double newPower;
     private static boolean requestReadLimitSwitch = true;
@@ -47,7 +52,7 @@ public class Storage implements Subsystem {
     }
 
     public static ControlSystem controller = ControlSystem.builder()
-            .posPid(0.015, 0, .04)
+            .posPid(0.015, 0, .043)
             .build();
 
     public static final State[] STATES = {
@@ -67,7 +72,6 @@ public class Storage implements Subsystem {
     public void initialize() {
         spin.setCurrentPosition(0);
         spin.zero();
-        currentPosition = spin.getCurrentPosition();
         targetPosition = currentPosition;
 
         limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
@@ -97,6 +101,8 @@ public class Storage implements Subsystem {
             spin.setPower(0);
         }
         Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
+        Logger.add("Storage", "last press:" + lastPress + "delta: " + lastPressDelta);
+        Logger.add("Storage", "avg:" + totallastPress/howMany);
 
         if (requestReadColorSensor) {
             Logger.add("Storage", "color:" + getColor());
@@ -105,6 +111,12 @@ public class Storage implements Subsystem {
 
         if (requestReadLimitSwitch) {
             boolean currentSwitchState = limitSwitch.getState();
+            if (currentSwitchState && !lastState) {
+                lastPressDelta = lastPress - currentPosition;
+                lastPress = currentPosition;
+                totallastPress += lastPressDelta;
+                howMany++;
+            }
 
             if (currentSwitchState && !lastState && alignRequested) {
                 stop().schedule();

@@ -25,7 +25,7 @@ public class Drive implements Subsystem {
     public static TelemetryManager telemetryM;
     private static boolean slowMode = false;
     private static final double slowModeMultiplier = 0.25;
-    private static final boolean robotCentric = true;
+    private static final boolean robotCentric = false;
     private static double targetHeading = Math.toRadians(180); // Radians
     private static PIDFController controller;
     private static boolean headingLock = false;
@@ -75,9 +75,9 @@ public class Drive implements Subsystem {
                 telemetryM.update();
 
                 double forward = slowMode ? -ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_y;
-                //forward = -forward;
+                forward = -forward;
                 double strafe = slowMode ? -ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_x;
-                //strafe = -strafe;
+                strafe = -strafe;
                 double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
 
                 if (headingLock)
