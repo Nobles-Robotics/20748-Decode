@@ -28,6 +28,8 @@ public class Storage implements Subsystem {
     private static RevColorSensorV3 colorSensor;
     private static double currentPosition;
     private static double targetPosition;
+    private static double canonicalIntakeTargetPositions;
+    private static double canonicalOuttakeTargetPositions;
     private static final double DELTA_TICKS = 179.25;
     private static final double OUTTAKE_POSITION = DELTA_TICKS + DELTA_TICKS / 2;
     private static boolean lastState = false;
@@ -112,21 +114,19 @@ public class Storage implements Subsystem {
                 .setStart(() -> {
                     manualMode = false;
                     positionMode = true;
-                    double startPos = currentPosition + 10;
 
-                    double remainder = startPos % DELTA_TICKS;
-                    if (remainder < 0) remainder += DELTA_TICKS;
+                    double lookAheadPos = currentPosition + 10;
 
-                    double ticksToMove = DELTA_TICKS - remainder;
+                    long nextIndex = (long) Math.ceil(lookAheadPos / DELTA_TICKS);
 
-                    targetPosition = startPos + ticksToMove;
+                    targetPosition = nextIndex * DELTA_TICKS;
                 })
                 .setIsDone(() -> true)
                 .setStop(interrupted -> {
                 })
                 .requires(Storage.INSTANCE)
                 .setInterruptible(true)
-                .named("Spin to next index");
+                .named("Spin Forward to Intake");
     }
 
     public static Command spinToNextOuttakeIndex() {
@@ -134,22 +134,21 @@ public class Storage implements Subsystem {
                 .setStart(() -> {
                     manualMode = false;
                     positionMode = true;
-                    double startPos = currentPosition - 10;
 
-                    double remainder = startPos % DELTA_TICKS;
-                    if (remainder < 0) remainder += DELTA_TICKS;
+                    double lookBehindPos = currentPosition - 10;
 
-                    double ticksToMove = (DELTA_TICKS / 2.0) - remainder;
-                    if (ticksToMove >= 0) ticksToMove -= DELTA_TICKS;
+                    double shiftedPos = lookBehindPos - (DELTA_TICKS / 2.0);
 
-                    targetPosition = startPos + ticksToMove;
+                    long prevIndex = (long) Math.floor(shiftedPos / DELTA_TICKS);
+
+                    targetPosition = (prevIndex * DELTA_TICKS) + (DELTA_TICKS / 2.0);
                 })
                 .setIsDone(() -> true)
                 .setStop(interrupted -> {
                 })
                 .requires(Storage.INSTANCE)
                 .setInterruptible(true)
-                .named("Spin to next index");
+                .named("Spin Backward to Outtake");
     }
 
     public static Command requestAlign(double newPower) {
@@ -242,4 +241,15 @@ public class Storage implements Subsystem {
         lastState = currentState;
         return justPressed;
     }
+
+    private static double getCanonicalIntakeTargetPosition(double position) {
+        long closestIndex = Math.round(position / DELTA_TICKS);
+        return closestIndex * DELTA_TICKS;
+    }
+
+    private static double getCanonicalOuttakeTargetPosition(double position) {
+        long closestIndex = Math.round((position - (DELTA_TICKS / 2.0)) / DELTA_TICKS);
+        return (closestIndex * DELTA_TICKS) + (DELTA_TICKS / 2.0);
+    }
+
 }
