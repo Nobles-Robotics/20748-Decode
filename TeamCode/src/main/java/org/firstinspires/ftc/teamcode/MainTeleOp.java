@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -46,6 +47,8 @@ public class MainTeleOp extends NextFTCOpMode {
         );
     }
 
+    private static final PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;
+
     @Override public void onInit() {
 //        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 //        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -55,6 +58,7 @@ public class MainTeleOp extends NextFTCOpMode {
 
     @Override public void onWaitForStart() {
         ActiveOpMode.telemetry().update();
+        panelsTelemetry.getTelemetry().update();
     }
 
     @Override public void onStartButtonPressed() {
@@ -149,6 +153,9 @@ public class MainTeleOp extends NextFTCOpMode {
             Logger.add("Commands", cname);
         }
         Logger.update();
+
+        ActiveOpMode.telemetry().update();
+        panelsTelemetry.getTelemetry().update();
     }
 
     @Override public void onStop() {

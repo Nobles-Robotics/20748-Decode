@@ -57,6 +57,9 @@ public final class Logger {
     }
 
     public static void update() {
+        if (!showInfo) {
+            return;
+        }
         for (Map.Entry<String, Map<Integer, LogEntry>> entry : structuredLogs.entrySet()) {
             String subsystem = entry.getKey();
             Map<Integer, LogEntry> messages = entry.getValue();
@@ -81,9 +84,7 @@ public final class Logger {
             }
         }
 
-        ActiveOpMode.telemetry().update();
         structuredLogs.clear();
         logCounter = 0;
-        panelsTelemetry.getTelemetry().update();
     }
 }
