@@ -147,6 +147,26 @@ public class Storage implements Subsystem {
                 .named("Spin Forward to Intake");
     }
 
+    public static Command spinToLastIntakeIndex() {
+        return new LambdaCommand()
+                .setStart(() -> {
+                    manualMode = false;
+                    positionMode = true;
+
+                    double lookAheadPos = currentPosition + 10;
+
+                    long nextIndex = (long) Math.ceil(lookAheadPos / DELTA_TICKS);
+
+                    targetPosition = (nextIndex - 1) * DELTA_TICKS;
+                })
+                .setIsDone(() -> true)
+                .setStop(interrupted -> {
+                })
+                .requires(Storage.INSTANCE)
+                .setInterruptible(true)
+                .named("Spin Forward to Intake");
+    }
+
     public static Command spinToNextOuttakeIndex() {
         return new LambdaCommand()
                 .setStart(() -> {
