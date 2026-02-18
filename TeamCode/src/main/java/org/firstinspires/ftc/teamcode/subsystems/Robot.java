@@ -127,6 +127,8 @@ public class Robot extends SubsystemGroup {
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );
