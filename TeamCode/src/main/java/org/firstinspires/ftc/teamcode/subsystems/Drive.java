@@ -80,7 +80,7 @@ public class Drive implements Subsystem {
                 forward = -forward;
                 double strafe = slowMode ? -ActiveOpMode.gamepad1().left_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_x;
                 strafe = -strafe;
-                double turn = slowMode ? -ActiveOpMode.gamepad1().right_stick_x * slowModeMultiplier: -ActiveOpMode.gamepad1().right_stick_x;
+                double turn = slowMode ? -(ActiveOpMode.gamepad1().right_stick_x + aimAssistment) * slowModeMultiplier: -(ActiveOpMode.gamepad1().right_stick_x + aimAssistment);
 
                 if (headingLock)
                     follower.setTeleOpDrive(forward, strafe, controller.run(), robotCentric);

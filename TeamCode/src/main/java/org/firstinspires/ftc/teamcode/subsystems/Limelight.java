@@ -25,6 +25,8 @@ public class Limelight extends SubsystemGroup {
     static boolean assistOn = false;
     private static boolean requestReadLimelight = true;
 
+    static  boolean foundTag20 = false;
+    static double targetOffset = 0.0;
     public static void setRequestReadLimelight(boolean toRequest){
         requestReadLimelight = toRequest;
     }
@@ -73,12 +75,14 @@ public class Limelight extends SubsystemGroup {
                     //telemetry.addData("----", "---");
                     //telemetry.addData("APRIL TARGET POSE (CAMERA SPACE) ", fr.getTargetPoseCameraSpace());
 
+                    Logger.add("Limelight", Logger.Level.INFO, "ライームライッと");
                     Logger.add("Limelight", Logger.Level.INFO, "APRIL ID: " + fr.getFiducialId() );
                     Logger.add("Limelight", Logger.Level.INFO, "Pattern " + getPattern(fr.getFiducialId())  );
                     Logger.add("Limelight", Logger.Level.INFO, "APRIL TARGET POSE (CAMERA SPACE): " + fr.getTargetPoseCameraSpace());
 
                     if (fr.getFiducialId() == 20 && assistOn){
-                        Drive.setAimAssist(fr.getTargetPoseCameraSpace().getPosition().x);
+                        foundTag20 = true;
+                        targetOffset = fr.getTargetPoseCameraSpace().getPosition().x;
                     }
 
                 }
@@ -86,6 +90,13 @@ public class Limelight extends SubsystemGroup {
             }
         }
 
+        if (foundTag20){
+            Drive.setAimAssist(targetOffset);
+        }else{
+            Drive.setAimAssist(0.0);
+        }
+
+        foundTag20 = false;
     }
 
     public String getPattern(int id) {
