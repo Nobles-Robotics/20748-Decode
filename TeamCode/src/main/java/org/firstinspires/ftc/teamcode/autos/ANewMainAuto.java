@@ -54,14 +54,14 @@ public class ANewMainAuto extends NextFTCOpMode {
     public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     public static final Pose scorePoseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
-    public static final Pose intakeAlign1Blue = new Pose(68, 84, Math.toRadians(180));
+    public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
-//    public static final Pose intakeAlign2Blue = new Pose(68, 60, Math.toRadians(180));
+//    public static final Pose intakeAlign2Blue = new Pose(45, 60, Math.toRadians(180));
 //    public static final Pose intake2Blue = new Pose(12, 60, Math.toRadians(180));
 
-    public static final Pose intakeAlign3Blue = new Pose(68, 36, Math.toRadians(180));
-    public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
+    public static final Pose intakeAlign3Blue = new Pose(45, 38, Math.toRadians(180));
+    public static final Pose intake3Blue = new Pose(6, 38, Math.toRadians(180));
 
 //
 //    public static final Pose startPoseFarRed = new Pose(87, 8, Math.toRadians(270)); // Start Pose of our robot.
@@ -102,7 +102,7 @@ public class ANewMainAuto extends NextFTCOpMode {
 //    );
 
 
-    double intakeMaxPower = 0.5;
+    //double intakeMaxPower = 0.5;
 
     private Command autonomousRoutine() {
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
@@ -118,55 +118,61 @@ public class ANewMainAuto extends NextFTCOpMode {
         intake3.setLinearHeadingInterpolation(intakeAlign3Blue.getHeading(), intake3Blue.getHeading());
         score3.setLinearHeadingInterpolation(intake3Blue.getHeading(), scorePose.getHeading());
 
-        double standardDelay = 0.25;
+        double standardDelay = 0.025;
 
         return new SequentialGroupFixed(
+                new InstantCommand(Outtake.on),
                 new FollowPath(scorePreload),
                 new Delay(standardDelay),
                 Robot.outtakeAll,
-                Robot.intakeOne,
-                Robot.outtakeAll,
+                //Robot.intakeOne,
+                //Robot.outtakeAll,
                 new Delay(standardDelay),
+                new InstantCommand(Intake.on()),
                 new FollowPath(intakeAlign1),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake1, true, intakeMaxPower),
-                                new Delay (1)
+                                new FollowPath(intake1, true, 0.6),
+                                new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
                         )
 
                 ),
-                new Delay(2),
+                new Delay(standardDelay),
+                new InstantCommand(Outtake.on),
                 new FollowPath(score1),
+                new InstantCommand(Intake.on()),
                 new WaitUntil(() -> !follower().isBusy()),
-                new Delay(standardDelay),
-                Robot.outtakeAll,
-                Robot.intakeOne,
                 Robot.outtakeAll,
                 new Delay(standardDelay),
+                //Robot.intakeOne,
+                //Robot.outtakeAll,
 
                 new FollowPath(intakeAlign3),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake3, true, intakeMaxPower),
-                                new Delay (1)
+                                new FollowPath(intake3, true, 0.6),
+                                new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
                         )
 
                 ),
-                new Delay(2),
+                new Delay(standardDelay),
+                new InstantCommand(Outtake.on),
+                new InstantCommand(Intake.on()),
                 new FollowPath(score3),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                Robot.outtakeAll,
-                Robot.intakeOne,
                 Robot.outtakeAll
+                //Robot.intakeOne,
+                //Robot.outtakeAll
+
         );
     }
 
