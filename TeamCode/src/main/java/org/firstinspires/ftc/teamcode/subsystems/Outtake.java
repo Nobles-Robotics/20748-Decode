@@ -85,6 +85,8 @@ public class Outtake implements Subsystem {
             outtake.setPower(0);
         }
         Logger.add("Outtake", "current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower );
+        Logger.panelsLog("OuttakeCurrentVelocity", currentVelocity);
+        Logger.panelsLog("OuttakeTargetVelocitry", targetVelocity);
     }
 
     public static boolean reachedTargetVelocity(){
