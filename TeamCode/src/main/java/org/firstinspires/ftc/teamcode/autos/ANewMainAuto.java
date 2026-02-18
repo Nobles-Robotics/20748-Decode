@@ -51,8 +51,8 @@ public class ANewMainAuto extends NextFTCOpMode {
     public static Pose endPose;
 
     public static final Pose startPoseFarBlue = new Pose(56, 8, Math.toRadians(270)); // Start Pose of our robot.
-    public static final Pose scorePoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    public static final Pose scorePoseBlue = new Pose(58, 79, Math.toRadians(315)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    //public static final Pose scorePoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    public static final Pose scorePoseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
     public static final Pose intakeAlign1Blue = new Pose(68, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
@@ -61,7 +61,7 @@ public class ANewMainAuto extends NextFTCOpMode {
 //    public static final Pose intake2Blue = new Pose(12, 60, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(68, 36, Math.toRadians(180));
-    public static final Pose intake3Blue = new Pose(12, 36, Math.toRadians(180));
+    public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
 
 //
 //    public static final Pose startPoseFarRed = new Pose(87, 8, Math.toRadians(270)); // Start Pose of our robot.
@@ -83,9 +83,9 @@ public class ANewMainAuto extends NextFTCOpMode {
 //    Path intake2 = new Path(new BezierLine(intakeAlign2Blue, intake2Blue));
 //    Path score2 = new Path(new BezierLine(intake2Blue, scorePose));
 
-    Path intakeAlign3 = new Path(new BezierLine(scorePose, intakeAlign1Blue));
-    Path intake3 = new Path(new BezierLine(intakeAlign1Blue, intake1Blue));
-    Path score3 = new Path(new BezierLine(intake1Blue, scorePose));
+    Path intakeAlign3 = new Path(new BezierLine(scorePose, intakeAlign3Blue));
+    Path intake3 = new Path(new BezierLine(intakeAlign3Blue, intake3Blue));
+    Path score3 = new Path(new BezierLine(intake3Blue, scorePose));
 
 
 //    public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
@@ -114,9 +114,9 @@ public class ANewMainAuto extends NextFTCOpMode {
 //        intake2.setLinearHeadingInterpolation(intakeAlign2Blue.getHeading(), intake2Blue.getHeading());
 //        score2.setLinearHeadingInterpolation(intake2Blue.getHeading(), scorePose.getHeading());
 
-        intakeAlign1.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign1Blue.getHeading());
-        intake1.setLinearHeadingInterpolation(intakeAlign1Blue.getHeading(), intake1Blue.getHeading());
-        score1.setLinearHeadingInterpolation(intake1Blue.getHeading(), scorePose.getHeading());
+        intakeAlign3.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign3Blue.getHeading());
+        intake3.setLinearHeadingInterpolation(intakeAlign3Blue.getHeading(), intake3Blue.getHeading());
+        score3.setLinearHeadingInterpolation(intake3Blue.getHeading(), scorePose.getHeading());
 
         double standardDelay = 0.25;
 
@@ -130,7 +130,7 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new FollowPath(intake1, true, 0.35),
-                                new Delay (2)
+                                new Delay (1)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
@@ -149,7 +149,7 @@ public class ANewMainAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new FollowPath(intake3, true, intakeMaxPower),
-                                new Delay (2)
+                                new Delay (1)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
