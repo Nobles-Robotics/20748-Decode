@@ -203,13 +203,13 @@ public class MainTeleOp extends NextFTCOpMode {
 //        PhotonCore.CONTROL_HUB.clearBulkCache();
 //        PhotonCore.EXPANSION_HUB.clearBulkCache();
 
-        for (String cname : CommandManager.INSTANCE.snapshot()) {
-            Logger.add("Commands", cname);
-        }
-        Logger.update();
-
+//        for (String cname : CommandManager.INSTANCE.snapshot()) {
+//            Logger.add("Commands", cname);
+//        }
+//        Logger.update();
+//
         ActiveOpMode.telemetry().update();
-        panelsTelemetry.getTelemetry().update();
+//        panelsTelemetry.getTelemetry().update();
     }
 
     @Override public void onStop() {

@@ -101,13 +101,12 @@ public class Storage implements Subsystem {
         } else {
             spin.setPower(0);
         }
-        Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
-        Logger.add("Storage", "last press:" + lastPress + "delta: " + lastPressDelta);
-        Logger.add("Storage", "avg:" + totallastPress/howMany);
+//        Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
+//        Logger.add("Storage", "last press:" + lastPress + "delta: " + lastPressDelta);
+//        Logger.add("Storage", "avg:" + totallastPress/howMany);
 
         if (requestReadColorSensor) {
-            Logger.add("Storage", "color:" + getColor());
-
+            //Logger.add("Storage", "color:" + getColor());
         }
 
         if (requestReadLimitSwitch) {
@@ -295,7 +294,7 @@ public class Storage implements Subsystem {
         float g = c.green / divisor;
         float b = c.blue / divisor;
 
-        Logger.add("Storage", "r: " + r + "g:" + g + "b:" + b);
+        //Logger.add("Storage", "r: " + r + "g:" + g + "b:" + b);
 
         if ((g / r) > 2.0 && g > b) {
             return State.GREEN;
