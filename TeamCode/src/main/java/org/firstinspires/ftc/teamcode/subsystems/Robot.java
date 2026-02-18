@@ -14,7 +14,7 @@ import kotlin.time.Instant;
 
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
-    private static final double INTAKE_DELAY = 0.5;
+    private static final double INTAKE_DELAY = 0.25;
     private static final double OUTTAKE_DELAY = 0.66;
     public static final double CACHING_TOLERANCE = 0.03;
 
@@ -47,37 +47,59 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off),
             new InstantCommand(Storage.setManualPowerCommand(0))
     );
+    public static SequentialGroupFixed intakeOne = new SequentialGroupFixed(
+            new InstantCommand(Intake.on()),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Intake.off())
+            );
+
 
     public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(1),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.checkIfStuck(0.5, 2)),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
             new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.checkIfStuck(0.5, 2)),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.checkIfStuck(0.5, 2)),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.checkIfStuck(0.5, 2)),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.checkIfStuck(0.5, 2)),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
-            new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Intake.off())
     );
     public static SequentialGroupFixed intake3 = new SequentialGroupFixed(
