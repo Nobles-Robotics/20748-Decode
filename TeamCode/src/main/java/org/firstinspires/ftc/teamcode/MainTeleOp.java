@@ -140,6 +140,62 @@ public class MainTeleOp extends NextFTCOpMode {
         gp1.leftTrigger().atLeast(.5)
                 .whenBecomesTrue(() -> Drive.setHeadingLockCommand(true).schedule())
                 .whenBecomesFalse(() -> Drive.setHeadingLockCommand(false).schedule());
+
+        gp2.start()
+                .toggleOnBecomesTrue()
+                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true))
+                .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false));
+
+        gp2.a()
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+        gp2.y()
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.3).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
+        gp2.x()
+                .whenBecomesTrue(() -> Storage.assertManualPower(1).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
+        gp2.b()
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.5).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+
+        gp2.dpadLeft()
+                .whenBecomesTrue(() -> {
+                    Storage.spinToNextIntakeIndex().schedule();
+                    Intake.on().schedule();
+                })
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        gp2.dpadRight()
+                .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
+
+        gp2.dpadUp()
+                .whenBecomesTrue(() -> Intake.on().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        gp2.leftBumper()
+                .whenBecomesTrue(() -> Transitions.on().schedule())
+                .whenBecomesFalse(() -> Transitions.off().schedule());
+
+        gp2.back()
+                .whenBecomesTrue(() -> Drive.cornerResetCommand().schedule());
+
+
+
+        // ============================================================================================================================
+
+        gp2.dpadDown()
+                .whenBecomesTrue(() -> Intake.reverse().schedule())
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
+        gp2.rightBumper()
+                .whenBecomesTrue(() -> {
+                    Outtake.on.schedule();
+                    Outtake.setTargetVelocity(2300);
+                })
+                .whenBecomesFalse(() -> Outtake.off.schedule());
     }
 
 
