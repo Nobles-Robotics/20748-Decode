@@ -24,7 +24,7 @@ public class Transitions implements Subsystem {
     @Override
     public void periodic() {
         transition.setPower(currentPower);
-        Logger.add("Transition", "power: " + currentPower);
+        //Logger.add("Transition", "power: " + currentPower);
     }
 
     public static Command on() {

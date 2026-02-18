@@ -23,7 +23,7 @@ public class Limelight extends SubsystemGroup {
     }
     private Limelight3A limelight;
     static boolean assistOn = false;
-    private static boolean requestReadLimelight = true;
+    private static boolean requestReadLimelight = false;
 
     static  boolean foundTag20 = false;
     static double targetOffset = 0.0;
@@ -45,7 +45,7 @@ public class Limelight extends SubsystemGroup {
         //telemetry.setMsTransmissionInterval(110);
 
         limelight.pipelineSwitch(0);
-        limelight.start();
+        //limelight.start();
     }
 
     @Override

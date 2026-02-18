@@ -87,10 +87,10 @@ public class Drive implements Subsystem {
                 else
                     follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
 
-                Logger.add("Drive", "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
-                Logger.add("Drive", "posx: " + Math.round(follower.getPose().getX()*100/100) + " posy: " + Math.round(follower.getPose().getY()*100)/100 + " heading: " + Math.round(follower.getPose().getHeading()*100)/100);
-                Logger.add("Drive", "heading lock?"+ headingLock + "target heading: " + Math.round(targetHeading*100)/100 + "error: " + Math.round(getHeadingError()*100)/100 + "target distance:" + Math.round(Outtake.getDistance()*100)/100);
-                Logger.add("Drive", "slowmode? " + slowMode + "multiplier: " + slowModeMultiplier);
+//                Logger.add("Drive", "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
+//                Logger.add("Drive", "posx: " + Math.round(follower.getPose().getX()*100/100) + " posy: " + Math.round(follower.getPose().getY()*100)/100 + " heading: " + Math.round(follower.getPose().getHeading()*100)/100);
+//                Logger.add("Drive", "heading lock?"+ headingLock + "target heading: " + Math.round(targetHeading*100)/100 + "error: " + Math.round(getHeadingError()*100)/100 + "target distance:" + Math.round(Outtake.getDistance()*100)/100);
+//                Logger.add("Drive", "slowmode? " + slowMode + "multiplier: " + slowModeMultiplier);
             })
             .setStop(interrupted -> {})
             .setIsDone(() -> false)

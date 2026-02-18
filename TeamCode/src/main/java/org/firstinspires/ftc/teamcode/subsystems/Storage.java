@@ -40,8 +40,8 @@ public class Storage implements Subsystem {
     private static double offset;
     public static boolean alignRequested = false;
     private static double newPower;
-    private static boolean requestReadLimitSwitch = true;
-    private static boolean requestReadColorSensor = true;
+    private static boolean requestReadLimitSwitch = false;
+    private static boolean requestReadColorSensor = false;
     private static boolean storageMotorStuck = false;
 
     public static void setRequestReadLimitSwitch(boolean toRequest){

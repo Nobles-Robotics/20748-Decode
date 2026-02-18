@@ -24,7 +24,7 @@ public class Intake implements Subsystem {
     @Override
     public void periodic() {
         intake.setPower(intakePower);
-        Logger.add("Intake", "power: " + intakePower);
+//        Logger.add("Intake", "power: " + intakePower);
     }
 
     public static Command on() {

@@ -41,8 +41,7 @@ public class MainTeleOp extends NextFTCOpMode {
                         Drive.INSTANCE,
                         Intake.INSTANCE,
                         Outtake.INSTANCE,
-                        Transitions.INSTANCE,
-                        Limelight.INSTANCE
+                        Transitions.INSTANCE
                 )
         );
     }
@@ -77,44 +76,44 @@ public class MainTeleOp extends NextFTCOpMode {
          start | back
          */
 
-        gp1.start().or(gp2.start())
+        gp1.start()
                 .toggleOnBecomesTrue()
                 .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true))
                 .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false));
 
-        gp1.a().or(gp2.a())
+        gp1.a()
                 .whenBecomesTrue(() -> Storage.assertManualPower(-0.25).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
-        gp1.b().or(gp2.b())
+        gp1.b()
                 .whenBecomesTrue(() -> Storage.assertManualPower(-0.1).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
-        gp1.x().or(gp2.x()).or(gp1.rightBumper())
+        gp1.x()
                 .whenBecomesTrue(() -> {
                     Storage.spinToNextIntakeIndex().schedule();
                     Intake.on().schedule();
                 })
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp1.y().or(gp2.y())
+        gp1.y()
             .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
-        gp1.dpadUp().or(gp2.dpadUp())
+        gp1.dpadUp()
                 .whenBecomesTrue(() -> Storage.resetEncoderCommand().schedule());
 
-        gp1.dpadDown().or(gp2.dpadDown())
+        gp1.dpadDown()
                 .whenBecomesTrue(() -> Storage.spinToNextIntakeIndex().schedule());
 
-        gp1.dpadLeft().or(gp2.dpadLeft())
+        gp1.dpadLeft()
                 .whenBecomesTrue(() -> Intake.on().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp1.dpadRight().or(gp2.dpadRight())
+        gp1.dpadRight()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
                 .whenBecomesFalse(() -> Transitions.off().schedule());
 
-        gp1.back().or(gp2.back())
+        gp1.back()
                 .whenBecomesTrue(() -> Drive.cornerResetCommand().schedule());
 
         // ============================================================================================================================
@@ -122,13 +121,6 @@ public class MainTeleOp extends NextFTCOpMode {
         gp1.leftBumper()
                 .whenBecomesTrue(() -> Intake.reverse().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
-
-        gp2.rightBumper()
-                .whenBecomesTrue(() -> {
-                    Outtake.on.schedule();
-                    Outtake.setTargetVelocity(2300);
-                })
-                .whenBecomesFalse(() -> Outtake.off.schedule());
 
 //        gamepad2.leftBumper()
 //                .whenBecomesTrue(() -> {
