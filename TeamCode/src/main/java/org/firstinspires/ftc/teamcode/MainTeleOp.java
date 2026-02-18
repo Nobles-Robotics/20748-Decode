@@ -137,14 +137,20 @@ public class MainTeleOp extends NextFTCOpMode {
 //                })
 //                .whenBecomesFalse(() -> Outtake.off.schedule());
 
-        gp1.rightTrigger().atLeast(.5)
+        gp1.rightTrigger().atLeast(.3)
                 .whenBecomesTrue(() -> Drive.setSlowModeCommand(true).schedule())
                 .whenBecomesFalse(() -> Drive.setSlowModeCommand(false).schedule());
 
+        gp1.rightTrigger().atLeast(.9)
+                .whenBecomesTrue(() -> Limelight.setAimAssist(true))
+                .whenBecomesFalse(() -> Limelight.setAimAssist(false));
+
         gp1.leftTrigger().atLeast(.5)
-                .whenBecomesTrue(() -> Drive.setHeadingLockCommand(true).schedule())
-                .whenBecomesFalse(() -> Drive.setHeadingLockCommand(false).schedule());
+                .whenBecomesTrue(() -> Drive.setHeadingLockCommand(true))
+                .whenBecomesFalse(() -> Drive.setHeadingLockCommand(false));
     }
+
+
     @Override public void onUpdate() {
 //        PhotonCore.CONTROL_HUB.clearBulkCache();
 //        PhotonCore.EXPANSION_HUB.clearBulkCache();
