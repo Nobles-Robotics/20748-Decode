@@ -165,7 +165,7 @@ public class AANewMainAuto extends NextFTCOpMode {
             intakeAlign1=intakeAlign1Blue;
             intake1 = intake1Blue;
             intakeAlign3 = intakeAlign3Blue;
-            intake3 = intakeAlign3Blue;
+            intake3 = intake3Blue;
 
             if(close){
                 startPose = startPoseCloseBlue;
@@ -179,7 +179,7 @@ public class AANewMainAuto extends NextFTCOpMode {
             intakeAlign1=intakeAlign1Blue.mirror();
             intake1 = intake1Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
-            intake3 = intakeAlign3Blue.mirror();
+            intake3 = intake3Blue.mirror();
 
             if(close){
                 startPose = startPoseCloseBlue.mirror();
