@@ -69,8 +69,8 @@ public class ANewMainAuto extends NextFTCOpMode {
 //    public static final Pose scorePoseRed = new Pose(76, 76, Math.toRadians(225)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
 
-    private final Pose startPose = startPoseCloseBlue;
-    public static final Pose scorePose = scorePoseBlue;
+    private static Pose startPose;
+    public static Pose scorePose;
     //public static final Pose scorePosebutActually = new Pose(73, 70, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
 
@@ -186,6 +186,11 @@ public class ANewMainAuto extends NextFTCOpMode {
     public void onUpdate(){
         Drive.telemetryM.update();
         follower().update();
+    }
+
+    public void onInit(){
+        scorePose = scorePoseBlue;
+        startPose = startPoseCloseBlue;
     }
 
     public void onStop(){
