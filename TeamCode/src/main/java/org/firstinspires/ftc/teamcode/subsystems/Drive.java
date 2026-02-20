@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -53,7 +54,7 @@ public class Drive implements Subsystem {
 
     @Override
     public void periodic() {
-        controller.setCoefficients(follower.constants.coefficientsHeadingPIDF);
+        controller.setCoefficients(new PIDFCoefficients(1.5, 0, 0.1, 0.04));
         controller.updateError(getHeadingError());
 
         targetHeading = MathFunctions.normalizeAngle(Outtake.getAngle() + Math.PI);

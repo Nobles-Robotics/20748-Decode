@@ -168,6 +168,13 @@ public class MainTeleOp extends NextFTCOpMode {
                 })
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
+        gp1.rightBumper()
+                .whenBecomesTrue(() -> {
+                    Storage.spinToNextIntakeIndex().schedule();
+                    Intake.on().schedule();
+                })
+                .whenBecomesFalse(() -> Intake.off().schedule());
+
         gp2.dpadRight()
                 .whenBecomesTrue(() -> Robot.outtakeAll.schedule());
 
