@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Transitions;
 import org.firstinspires.ftc.teamcode.utils.Alliance;
 import org.firstinspires.ftc.teamcode.utils.Location;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
+import org.firstinspires.ftc.teamcode.utils.components.AllianceManager;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
@@ -41,6 +42,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 BulkReadComponent.INSTANCE, // TODO: make actual MANUAL mode bulkreading (we don't need to also read the expansion hub every loop)
                 BindingsComponent.INSTANCE,
                 CommandManager.INSTANCE,
+                AllianceManager.INSTANCE,
                 new SubsystemComponent(
                         Storage.INSTANCE,
                         Robot.INSTANCE,
