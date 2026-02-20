@@ -167,6 +167,7 @@ public class AANewMainAuto extends NextFTCOpMode {
         );
     }
 
+
     @Override
     public void onStartButtonPressed() {
         if (currentAlliance == Alliance.BLUE){
@@ -203,18 +204,18 @@ public class AANewMainAuto extends NextFTCOpMode {
             }
         }
         else{
-            scorePose = scorePoseBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
-            intakeAlign1=intakeAlign1Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
-            intake1 = intake1Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
-            intakeAlign3 = intakeAlign3Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
-            intake3 = intake3Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
-            targetExitPos = targetExitPosBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+            scorePose = scorePoseBlue.mirror().setHeading((scorePoseBlue.getHeading() + Math.PI));
+            intakeAlign1=intakeAlign1Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+            intake1 = intake1Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+            intakeAlign3 = intakeAlign3Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+            intake3 = intake3Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+            targetExitPos = targetExitPosBlue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
 
             if(close){
-                startPose = startPoseCloseBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+                startPose = startPoseCloseBlue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
             }
             else{
-                startPose = startPoseFarBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+                startPose = startPoseFarBlue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
             }
         }
 
