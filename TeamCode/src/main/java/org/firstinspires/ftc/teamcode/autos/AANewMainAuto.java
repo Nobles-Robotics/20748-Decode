@@ -110,7 +110,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake1Path, true, 0.6),
+                                new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
