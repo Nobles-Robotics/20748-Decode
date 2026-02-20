@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Drive.autoendPose;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
 import com.pedropathing.geometry.BezierLine;
@@ -201,20 +202,25 @@ public class AANewMainAuto extends NextFTCOpMode {
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
         follower().breakFollowing();
+
+        autoendPose = follower().getPose();
     }
 
     public void onUpdate(){
         Drive.telemetryM.update();
         follower().update();
+
+        autoendPose = follower().getPose();
     }
 
     public void onInit(){
-
+        autoendPose = follower().getPose();
     }
 
 
 
     public void onStop(){
         endPose = follower().getPose();
+        autoendPose = follower().getPose();
     }
 }
