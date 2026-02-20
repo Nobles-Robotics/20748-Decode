@@ -46,7 +46,7 @@ public class Drive implements Subsystem {
         controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        cornerReset();
+        //cornerReset();
     }
 
     public static Command cornerResetCommand() {
