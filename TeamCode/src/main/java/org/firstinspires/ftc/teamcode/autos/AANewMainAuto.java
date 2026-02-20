@@ -104,20 +104,6 @@ public class AANewMainAuto extends NextFTCOpMode {
 
 
     private Command autonomousRoutine() {
-        scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
-        intakeAlign1Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign1Blue.getHeading());
-        intake1Path.setLinearHeadingInterpolation(intakeAlign1Blue.getHeading(), intake1Blue.getHeading());
-        score1Path.setLinearHeadingInterpolation(intake1Blue.getHeading(), scorePose.getHeading());
-
-//        intakeAlign2.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign2Blue.getHeading());
-//        intake2.setLinearHeadingInterpolation(intakeAlign2Blue.getHeading(), intake2Blue.getHeading());
-//        score2.setLinearHeadingInterpolation(intake2Blue.getHeading(), scorePose.getHeading());
-
-        intakeAlign3Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign3Blue.getHeading());
-        intake3Path.setLinearHeadingInterpolation(intakeAlign3Blue.getHeading(), intake3Blue.getHeading());
-        score3Path.setLinearHeadingInterpolation(intake3Blue.getHeading(), scorePose.getHeading());
-        finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPosBlue.getHeading());
-
         double standardDelay = 0.025;
 
         return new SequentialGroupFixed(
@@ -248,6 +234,20 @@ public class AANewMainAuto extends NextFTCOpMode {
         intake3Path = new Path(new BezierLine(intakeAlign3, intake3));
         score3Path = new Path(new BezierLine(intake3, scorePose));
         finalExitPath = new Path(new BezierLine(scorePose, targetExitPos));
+
+        scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
+        intakeAlign1Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign1.getHeading());
+        intake1Path.setLinearHeadingInterpolation(intakeAlign1.getHeading(), intake1.getHeading());
+        score1Path.setLinearHeadingInterpolation(intake1.getHeading(), scorePose.getHeading());
+
+//        intakeAlign2.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign2.getHeading());
+//        intake2.setLinearHeadingInterpolation(intakeAlign2.getHeading(), intake2.getHeading());
+//        score2.setLinearHeadingInterpolation(intake2.getHeading(), scorePose.getHeading());
+
+        intakeAlign3Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign3.getHeading());
+        intake3Path.setLinearHeadingInterpolation(intakeAlign3.getHeading(), intake3.getHeading());
+        score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePose.getHeading());
+        finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPos.getHeading());
 
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
