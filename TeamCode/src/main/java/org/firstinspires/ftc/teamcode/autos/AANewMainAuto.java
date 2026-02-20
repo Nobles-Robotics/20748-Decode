@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.autos;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawOnlyCurrent;
 import static org.firstinspires.ftc.teamcode.subsystems.Drive.autoendPose;
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
@@ -135,7 +133,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake1Path, true, 0.6),
+                                new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
@@ -214,6 +212,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 startPose = startPoseFarBlue;
             }
         }
+
         else{
             scorePose = scorePoseBlue.mirror();
             intakeAlign1=intakeAlign1Blue.mirror();
@@ -229,6 +228,16 @@ public class AANewMainAuto extends NextFTCOpMode {
                 startPose = startPoseFarBlue.mirror();
             }
         }
+
+        System.out.println(scorePose.toString());
+        System.out.println(intakeAlign1.toString());
+        System.out.println(intake1.toString());
+        System.out.println(intakeAlign3.toString());
+        System.out.println(intake3.toString());
+        System.out.println(targetExitPos.toString());
+        System.out.println(startPose.toString());
+
+
 
         scorePreloadPath = new Path(new BezierLine(startPose, scorePose));
         intakeAlign1Path = new Path(new BezierLine(scorePose, intakeAlign1));
@@ -252,14 +261,12 @@ public class AANewMainAuto extends NextFTCOpMode {
         follower().update();
 
         autoendPose = follower().getPose();
-        draw();
     }
 
     @Override
     public void onInit(){
         autoendPose = follower().getPose();
         ActiveOpMode.telemetry().update();
-        drawOnlyCurrent();
 
     }
 
@@ -272,18 +279,5 @@ public class AANewMainAuto extends NextFTCOpMode {
     public void onStop(){
         endPose = follower().getPose();
         autoendPose = follower().getPose();
-    }
-
-    public static void drawOnlyCurrent() {
-        try {
-            Drawing2.drawRobot(follower().getPose());
-            Drawing2.sendPacket();
-        } catch (Exception e) {
-            throw new RuntimeException("Drawing failed " + e);
-        }
-    }
-
-    public static void draw() {
-        Drawing2.drawDebug(follower());
     }
 }
