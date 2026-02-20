@@ -61,6 +61,9 @@ public class AANewMainAuto extends NextFTCOpMode {
     public static final Pose intakeAlign3Blue = new Pose(45, 38, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 38, Math.toRadians(180));
 
+    public static final Pose targetExitPosBlue = new Pose(25, 50, Math.toRadians(315));
+
+
     private static Pose startPose;
     public static Pose scorePose;
 
@@ -80,6 +83,7 @@ public class AANewMainAuto extends NextFTCOpMode {
     Path intakeAlign3Path;
     Path intake3Path;
     Path score3Path;
+    Path finalExitPath;
 
 
     private Command autonomousRoutine() {
@@ -95,6 +99,7 @@ public class AANewMainAuto extends NextFTCOpMode {
         intakeAlign3Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign3Blue.getHeading());
         intake3Path.setLinearHeadingInterpolation(intakeAlign3Blue.getHeading(), intake3Blue.getHeading());
         score3Path.setLinearHeadingInterpolation(intake3Blue.getHeading(), scorePose.getHeading());
+        finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPosBlue.getHeading());
 
         double standardDelay = 0.025;
 
@@ -147,9 +152,9 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new FollowPath(score3Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                Robot.outtakeAll
-                //Robot.intakeOne,
-                //Robot.outtakeAll
+                Robot.outtakeAll,
+                new Delay(standardDelay),
+                new FollowPath(finalExitPath)
 
         );
     }
@@ -160,6 +165,7 @@ public class AANewMainAuto extends NextFTCOpMode {
         Pose intake1;
         Pose intakeAlign3;
         Pose intake3;
+        Pose targetExitPos;
 
         if (blue){
             scorePose = scorePoseBlue;
@@ -167,6 +173,7 @@ public class AANewMainAuto extends NextFTCOpMode {
             intake1 = intake1Blue;
             intakeAlign3 = intakeAlign3Blue;
             intake3 = intake3Blue;
+            targetExitPos = targetExitPosBlue;
 
             if(close){
                 startPose = startPoseCloseBlue;
@@ -181,6 +188,7 @@ public class AANewMainAuto extends NextFTCOpMode {
             intake1 = intake1Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
             intake3 = intake3Blue.mirror();
+            targetExitPos = targetExitPosBlue.mirror();
 
             if(close){
                 startPose = startPoseCloseBlue.mirror();
@@ -198,6 +206,7 @@ public class AANewMainAuto extends NextFTCOpMode {
         intakeAlign3Path = new Path(new BezierLine(scorePose, intakeAlign3));
         intake3Path = new Path(new BezierLine(intakeAlign3, intake3));
         score3Path = new Path(new BezierLine(intake3, scorePose));
+        finalExitPath = new Path(new BezierLine(scorePose, targetExitPos));
 
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
