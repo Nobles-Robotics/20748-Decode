@@ -183,18 +183,18 @@ public class AANewMainAuto extends NextFTCOpMode {
             }
         }
         else{
-            scorePose = scorePoseBlue.mirror().rotate(180, true);
-            intakeAlign1=intakeAlign1Blue.mirror();
-            intake1 = intake1Blue.mirror();
-            intakeAlign3 = intakeAlign3Blue.mirror();
-            intake3 = intake3Blue.mirror();
-            targetExitPos = targetExitPosBlue.mirror();
+            scorePose = scorePoseBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+            intakeAlign1=intakeAlign1Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+            intake1 = intake1Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+            intakeAlign3 = intakeAlign3Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+            intake3 = intake3Blue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
+            targetExitPos = targetExitPosBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
 
             if(close){
-                startPose = startPoseCloseBlue.mirror();
+                startPose = startPoseCloseBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
             }
             else{
-                startPose = startPoseFarBlue.mirror();
+                startPose = startPoseFarBlue.mirror().setHeading(scorePoseBlue.getHeading() + 180);
             }
         }
 
