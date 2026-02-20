@@ -67,8 +67,8 @@ public class AANewMainAuto extends NextFTCOpMode {
     private static Pose startPose;
     public static Pose scorePose;
 
-    boolean blue = true;
-    boolean close = true;
+    boolean blue = false;
+    boolean close = false;
 
 
     Path scorePreloadPath;
@@ -116,7 +116,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new FollowPath(intake1Path, true, 0.5),
+                                new FollowPath(intake1Path, true, 0.6),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
@@ -183,7 +183,7 @@ public class AANewMainAuto extends NextFTCOpMode {
             }
         }
         else{
-            scorePose = scorePoseBlue.mirror();
+            scorePose = scorePoseBlue.mirror().rotate(180, true);
             intakeAlign1=intakeAlign1Blue.mirror();
             intake1 = intake1Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
