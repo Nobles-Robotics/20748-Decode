@@ -248,7 +248,7 @@ public class AANewMainAuto extends NextFTCOpMode {
     }
 
     public void onUpdate(){
-        Drive.telemetryM.update();
+        PanelsTelemetry.INSTANCE.getTelemetry().update();
         follower().update();
 
         autoendPose = follower().getPose();
