@@ -73,6 +73,7 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
+        currentPosition = 0;
         spin.setCurrentPosition(0);
         spin.zero();
         targetPosition = currentPosition;
