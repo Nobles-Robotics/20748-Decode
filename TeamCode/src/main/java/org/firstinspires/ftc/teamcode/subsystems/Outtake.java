@@ -87,12 +87,12 @@ public class Outtake implements Subsystem {
         }
         ActiveOpMode.telemetry().addLine("current distance:" + getDistance());
         ActiveOpMode.telemetry().addLine("current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower);
-//        Logger.panelsLog("OuttakeCurrentVelocity", currentVelocity);
-//        Logger.panelsLog("OuttakeTargetVelocitry", targetVelocity);
+        Logger.panelsLog("OuttakeCurrentVelocity", currentVelocity);
+        Logger.panelsLog("OuttakeTargetVelocitry", targetVelocity);
     }
 
     public static boolean reachedTargetVelocity(){
-        return outtake.getVelocity() > (targetVelocity - 150);
+        return currentVelocity > (targetVelocity - 150);
     }
 
     public static void setTargetVelocity(double newTargetVelocity){
