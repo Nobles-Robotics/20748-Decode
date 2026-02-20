@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -32,6 +33,7 @@ import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
@@ -240,8 +242,14 @@ public class AANewMainAuto extends NextFTCOpMode {
         autoendPose = follower().getPose();
     }
 
+    @Override
     public void onInit(){
         autoendPose = follower().getPose();
+        ActiveOpMode.telemetry().update();
+    }
+
+    @Override public void onWaitForStart() {
+        ActiveOpMode.telemetry().update();
     }
 
 

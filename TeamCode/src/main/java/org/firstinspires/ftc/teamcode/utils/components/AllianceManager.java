@@ -14,7 +14,6 @@ public class AllianceManager implements Component {
     private static boolean lastState;
     private static boolean lastStateY;
 
-
     @Override public void preWaitForStart() {
         ActiveOpMode.telemetry().addData("Alliance", currentAlliance);
         ActiveOpMode.telemetry().addLine("Press 'X' to toggle current alliance");
