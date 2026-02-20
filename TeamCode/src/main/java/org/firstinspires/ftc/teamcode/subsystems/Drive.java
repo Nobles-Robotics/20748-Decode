@@ -28,6 +28,7 @@ public class Drive implements Subsystem {
     private static final double slowModeMultiplier = 0.25;
     private static final boolean robotCentric = true;
     private static double targetHeading = Math.toRadians(180); // Radians
+    private static Pose autoendPose;
     private static PIDFController controller;
     private static boolean headingLock = false;
 
@@ -37,10 +38,11 @@ public class Drive implements Subsystem {
     @Override
     public void initialize() {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
-        follower.setStartingPose(new Pose(8, 6.25, Math.toRadians(0)).mirror());
+        follower.setStartingPose(autoendPose);
         follower.update();
         controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
         cornerReset();
     }
 

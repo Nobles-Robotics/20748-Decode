@@ -8,6 +8,7 @@ import dev.nextftc.core.commands.conditionals.IfElseCommand;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
+import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 import kotlin.time.Instant;
@@ -122,6 +123,10 @@ public class Robot extends SubsystemGroup {
     public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
             new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
+            new ParallelRaceGroup(
+                    new Delay(1),
+                    new WaitUntil(Outtake::reachedTargetVelocity)
+            ),
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new InstantCommand(Transitions.on()),
