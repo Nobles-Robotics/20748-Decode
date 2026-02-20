@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawOnlyCurrent;
 import static org.firstinspires.ftc.teamcode.subsystems.Drive.autoendPose;
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
@@ -36,6 +38,15 @@ import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
+
+import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.configurables.PanelsConfigurables;
+import com.bylazar.field.FieldManager;
+import com.bylazar.field.PanelsField;
+import com.bylazar.field.Style;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 
 @Autonomous
 public class AANewMainAuto extends NextFTCOpMode {
@@ -204,18 +215,18 @@ public class AANewMainAuto extends NextFTCOpMode {
             }
         }
         else{
-            scorePose = scorePoseBlue.mirror().setHeading((scorePoseBlue.getHeading() + Math.PI));
-            intakeAlign1=intakeAlign1Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
-            intake1 = intake1Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
-            intakeAlign3 = intakeAlign3Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
-            intake3 = intake3Blue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
-            targetExitPos = targetExitPosBlue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+            scorePose = scorePoseBlue.mirror();
+            intakeAlign1=intakeAlign1Blue.mirror();
+            intake1 = intake1Blue.mirror();
+            intakeAlign3 = intakeAlign3Blue.mirror();
+            intake3 = intake3Blue.mirror();
+            targetExitPos = targetExitPosBlue.mirror();
 
             if(close){
-                startPose = startPoseCloseBlue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+                startPose = startPoseCloseBlue.mirror();
             }
             else{
-                startPose = startPoseFarBlue.mirror().setHeading(scorePoseBlue.getHeading() + Math.PI);
+                startPose = startPoseFarBlue.mirror();
             }
         }
 
@@ -241,12 +252,15 @@ public class AANewMainAuto extends NextFTCOpMode {
         follower().update();
 
         autoendPose = follower().getPose();
+        draw();
     }
 
     @Override
     public void onInit(){
         autoendPose = follower().getPose();
         ActiveOpMode.telemetry().update();
+        drawOnlyCurrent();
+
     }
 
     @Override public void onWaitForStart() {
@@ -258,5 +272,18 @@ public class AANewMainAuto extends NextFTCOpMode {
     public void onStop(){
         endPose = follower().getPose();
         autoendPose = follower().getPose();
+    }
+
+    public static void drawOnlyCurrent() {
+        try {
+            Drawing2.drawRobot(follower().getPose());
+            Drawing2.sendPacket();
+        } catch (Exception e) {
+            throw new RuntimeException("Drawing failed " + e);
+        }
+    }
+
+    public static void draw() {
+        Drawing2.drawDebug(follower());
     }
 }
