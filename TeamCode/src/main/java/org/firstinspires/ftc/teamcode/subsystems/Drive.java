@@ -40,7 +40,7 @@ public class Drive implements Subsystem {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
         follower.setStartingPose(new Pose(135, 9, Math.toRadians(0)));
         if (!(autoendPose == null)) {
-            follower.setStartingPose(autoendPose);
+            follower.setPose(autoendPose);
         }
         follower.update();
         controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
