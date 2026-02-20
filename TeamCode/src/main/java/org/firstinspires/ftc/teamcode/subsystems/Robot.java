@@ -15,7 +15,7 @@ import kotlin.time.Instant;
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     private static final double INTAKE_DELAY = 0.1;
-    private static final double OUTTAKE_DELAY = 0.66;
+    private static final double OUTTAKE_DELAY = 0.25;
     public static final double CACHING_TOLERANCE = 0.03;
 
     private Robot() {
@@ -121,11 +121,8 @@ public class Robot extends SubsystemGroup {
 
     public static SequentialGroupFixed outtakeAll = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
-            new ParallelDeadlineGroup(
-                    new Delay(1),
-                    new WaitUntil(Outtake::reachedTargetVelocity)
-                    ),
-            new WaitUntil(Outtake::reachedTargetVelocity),
+            new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
+            new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new InstantCommand(Transitions.on()),
             new Delay(OUTTAKE_DELAY),
@@ -134,7 +131,7 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
-            new Delay(OUTTAKE_DELAY/2),
+            new Delay(OUTTAKE_DELAY),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );

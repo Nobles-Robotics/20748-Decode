@@ -13,6 +13,7 @@ import dev.nextftc.control.ControlSystem;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 
 import org.firstinspires.ftc.teamcode.utils.Alliance;
@@ -84,13 +85,14 @@ public class Outtake implements Subsystem {
         } else {
             outtake.setPower(0);
         }
-//        Logger.add("Outtake", "current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower );
+        ActiveOpMode.telemetry().addLine("current distance:" + getDistance());
+        ActiveOpMode.telemetry().addLine("current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower);
 //        Logger.panelsLog("OuttakeCurrentVelocity", currentVelocity);
 //        Logger.panelsLog("OuttakeTargetVelocitry", targetVelocity);
     }
 
     public static boolean reachedTargetVelocity(){
-        return outtake.getVelocity() > (targetVelocity - 50);
+        return outtake.getVelocity() > (targetVelocity - 150);
     }
 
     public static void setTargetVelocity(double newTargetVelocity){
