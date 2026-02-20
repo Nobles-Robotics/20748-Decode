@@ -17,6 +17,8 @@ public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
     private static final double INTAKE_DELAY = 0.1;
     private static final double OUTTAKE_DELAY = 0.45;
+    private static final double SMALL_DELAY = 0.1;
+
     public static final double CACHING_TOLERANCE = 0.03;
 
     private Robot() {
@@ -124,8 +126,8 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.on),
             new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
             new ParallelRaceGroup(
-                    new Delay(1),
-                    new WaitUntil(Outtake::reachedTargetVelocity)
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
             ),
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
@@ -137,6 +139,78 @@ public class Robot extends SubsystemGroup {
             new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
+    );
+
+    public static SequentialGroupFixed outtakeAllClose = new SequentialGroupFixed(
+            new InstantCommand(Outtake.on),
+            new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new InstantCommand(Transitions.on()),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
+    );
+
+    public static SequentialGroupFixed outtakeAllFar = new SequentialGroupFixed(
+            new InstantCommand(Outtake.on),
+            new InstantCommand(() -> Outtake.setTargetVelocity(2125)),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new InstantCommand(Transitions.on()),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(SMALL_DELAY),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );
