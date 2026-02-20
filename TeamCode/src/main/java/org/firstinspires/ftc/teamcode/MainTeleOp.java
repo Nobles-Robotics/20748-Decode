@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.utils.photoncore.PhotonCore;
 public class MainTeleOp extends NextFTCOpMode {
     {
         addComponents(
-                BulkReadComponent.INSTANCE,
+                //BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE,
                 CommandManager.INSTANCE,
                 AllianceManager.INSTANCE,
@@ -49,10 +49,10 @@ public class MainTeleOp extends NextFTCOpMode {
     private static final PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;
 
     @Override public void onInit() {
-//        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        PhotonCore.experimental.setMaximumParallelCommands(8); // Can be adjusted based on user preference - but raising this number further can cause issues
-//        PhotonCore.enable();
+        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        PhotonCore.experimental.setMaximumParallelCommands(8); // Can be adjusted based on user preference - but raising this number further can cause issues
+        PhotonCore.enable();
     }
 
     @Override public void onWaitForStart() {
@@ -207,8 +207,8 @@ public class MainTeleOp extends NextFTCOpMode {
 
 
     @Override public void onUpdate() {
-//        PhotonCore.CONTROL_HUB.clearBulkCache();
-//        PhotonCore.EXPANSION_HUB.clearBulkCache();
+        PhotonCore.CONTROL_HUB.clearBulkCache();
+        PhotonCore.EXPANSION_HUB.clearBulkCache();
 
 //        for (String cname : CommandManager.INSTANCE.snapshot()) {
 //            Logger.add("Commands", cname);
