@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.autos;
 
 import static org.firstinspires.ftc.teamcode.subsystems.Drive.autoendPose;
+import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
+import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
 import com.pedropathing.geometry.BezierLine;
@@ -15,6 +17,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.subsystems.Transitions;
+import org.firstinspires.ftc.teamcode.utils.Alliance;
+import org.firstinspires.ftc.teamcode.utils.Location;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
 import dev.nextftc.core.commands.Command;
@@ -161,6 +165,18 @@ public class AANewMainAuto extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
+        if (currentAlliance == Alliance.BLUE){
+            blue = true;
+        } else {
+            blue = false;
+        }
+
+        if (currentLocation == Location.FAR){
+            close = false;
+        } else {
+            close = true;
+        }
+
         Pose intakeAlign1;
         Pose intake1;
         Pose intakeAlign3;
