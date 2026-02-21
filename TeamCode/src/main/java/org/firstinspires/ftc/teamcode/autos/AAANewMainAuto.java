@@ -29,6 +29,7 @@ import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
+import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
@@ -68,7 +69,7 @@ public class AAANewMainAuto extends NextFTCOpMode {
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(45, 34, Math.toRadians(180));
-    public static final Pose intake3Blue = new Pose(9, 34, Math.toRadians(180));
+    public static final Pose intake3Blue = new Pose(9, 35, Math.toRadians(180));
 
     public static final Pose targetExitPosBlue = new Pose(25, 50, Math.toRadians(315));
 
@@ -111,8 +112,8 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new FollowPath(intakeAlign1Path),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
-                new ParallelDeadlineGroup(
-                        new Delay(2),
+                new ParallelRaceGroup(
+                        new Delay(1),
                         new ParallelGroup(
                             new SequentialGroupFixed(
                                     new InstantCommand(Intake.on()),
@@ -135,8 +136,8 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new FollowPath(intakeAlign3Path),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
-                new ParallelDeadlineGroup(
-                        new Delay(2),
+                new ParallelRaceGroup(
+                        new Delay(1),
                         new ParallelGroup(
                                 new SequentialGroupFixed(
                                         new InstantCommand(Intake.on()),
