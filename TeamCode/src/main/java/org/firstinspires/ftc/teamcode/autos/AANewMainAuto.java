@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
-import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -37,14 +36,7 @@ import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
 
 @Autonomous
 public class AANewMainAuto extends NextFTCOpMode {
@@ -111,9 +103,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
-                Robot.outtakeAll,
-                //Robot.intakeOne,
-                //Robot.outtakeAll,
+                Robot.outtakeAllAuto,
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new FollowPath(intakeAlign1Path),
@@ -135,10 +125,8 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new FollowPath(score1Path),
                 new InstantCommand(Intake.on()),
                 new WaitUntil(() -> !follower().isBusy()),
-                Robot.outtakeAll,
+                Robot.outtakeAllAuto,
                 new Delay(standardDelay),
-                //Robot.intakeOne,
-                //Robot.outtakeAll,
 
                 new FollowPath(intakeAlign3Path),
                 new InstantCommand(Intake.on()),
@@ -160,7 +148,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new FollowPath(score3Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                Robot.outtakeAll,
+                Robot.outtakeAllAuto,
                 new Delay(standardDelay),
                 new FollowPath(finalExitPath)
 

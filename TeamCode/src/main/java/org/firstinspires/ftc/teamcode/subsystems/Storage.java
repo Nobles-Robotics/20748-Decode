@@ -233,6 +233,10 @@ public class Storage implements Subsystem {
         return new InstantCommand(() -> resetEncoder(0));
     }
 
+    public static Command resetEncoderCommand(double input) {
+        return new InstantCommand(() -> resetEncoder(input));
+    }
+
     public static Command resetEncoderAtOuttakeCommand() {
         return new InstantCommand(() -> resetEncoder(OUTTAKE_POSITION));
     }
