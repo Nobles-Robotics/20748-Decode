@@ -150,7 +150,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
         gp2.y()
-                .whenBecomesTrue(() -> Storage.assertManualPower(0.35).schedule())
+                .whenBecomesTrue(() -> Storage.assertManualPower(0.3).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp2.x()
