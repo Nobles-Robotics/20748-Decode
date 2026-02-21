@@ -84,16 +84,13 @@ public class AANewMainAuto extends NextFTCOpMode {
     Path intakeAlign1Path;
     Path intake1Path;
     Path score1Path;
-
 //    Path intakeAlign2 = new Path(new BezierLine(scorePose, intakeAlign2Blue));
 //    Path intake2 = new Path(new BezierLine(intakeAlign2Blue, intake2Blue));
 //    Path score2 = new Path(new BezierLine(intake2Blue, scorePose));
-
     Path intakeAlign3Path;
     Path intake3Path;
     Path score3Path;
     Path finalExitPath;
-
 
     private Command autonomousRoutine() {
         double standardDelay = 0.025;
@@ -154,7 +151,6 @@ public class AANewMainAuto extends NextFTCOpMode {
 
         );
     }
-
 
     @Override
     public void onStartButtonPressed() {
