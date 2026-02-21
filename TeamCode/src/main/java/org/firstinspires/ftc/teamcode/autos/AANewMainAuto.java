@@ -116,9 +116,11 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new FollowPath(intakeAlign1Path),
+                new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
+                                new InstantCommand(Intake.on()),
                                 new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
@@ -138,9 +140,11 @@ public class AANewMainAuto extends NextFTCOpMode {
                 //Robot.outtakeAll,
 
                 new FollowPath(intakeAlign3Path),
+                new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
+                                new InstantCommand(Intake.on()),
                                 new FollowPath(intake3Path, true, 0.6),
                                 new Delay (0.05)
                         ),
