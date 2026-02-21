@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -36,8 +37,6 @@ import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-import com.bylazar.telemetry.PanelsTelemetry;
-
 @Autonomous
 public class AANewMainAuto extends NextFTCOpMode {
     {
@@ -67,8 +66,8 @@ public class AANewMainAuto extends NextFTCOpMode {
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
-    public static final Pose intakeAlign3Blue = new Pose(45, 38, Math.toRadians(180));
-    public static final Pose intake3Blue = new Pose(6, 38, Math.toRadians(180));
+    public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
+    public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
 
     public static final Pose targetExitPosBlue = new Pose(25, 50, Math.toRadians(315));
 
@@ -84,23 +83,27 @@ public class AANewMainAuto extends NextFTCOpMode {
     Path intakeAlign1Path;
     Path intake1Path;
     Path score1Path;
+
 //    Path intakeAlign2 = new Path(new BezierLine(scorePose, intakeAlign2Blue));
 //    Path intake2 = new Path(new BezierLine(intakeAlign2Blue, intake2Blue));
 //    Path score2 = new Path(new BezierLine(intake2Blue, scorePose));
+
     Path intakeAlign3Path;
     Path intake3Path;
     Path score3Path;
     Path finalExitPath;
+
 
     private Command autonomousRoutine() {
         double standardDelay = 0.025;
 
         return new SequentialGroupFixed(
                 new InstantCommand(Intake.off()),
+                new InstantCommand(Transitions.off()),
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
-                Robot.outtakeAllAuto,
+                Robot.outtakeAllSmooth,
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
@@ -110,21 +113,21 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new InstantCommand(Intake.on()),
-                                new FollowPath(intake1Path, true, 0.7),
+                                new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
                         )
-
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(Intake.on()),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score1Path),
-                new InstantCommand(Intake.on()),
+                new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
-                Robot.outtakeAllAuto,
+                new InstantCommand(Intake.off()),
+                Robot.outtakeAllSmooth,
                 new Delay(standardDelay),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
@@ -132,7 +135,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new InstantCommand(Intake.on()),
+                                new InstantCommand(Intake.off()),
                                 new FollowPath(intake3Path, true, 0.7),
                                 new Delay (0.05)
                         ),
@@ -143,16 +146,19 @@ public class AANewMainAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(Intake.on()),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score3Path),
+                new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
+                new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
-                Robot.outtakeAllAuto,
+                Robot.outtakeAllSmooth,
                 new Delay(standardDelay),
                 new FollowPath(finalExitPath)
 
         );
     }
+
 
     @Override
     public void onStartButtonPressed() {
@@ -240,6 +246,9 @@ public class AANewMainAuto extends NextFTCOpMode {
         score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePose.getHeading());
         finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPos.getHeading());
 
+        intake1Path.setTimeoutConstraint(500);
+        intake3Path.setTimeoutConstraint(500);
+
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
         follower().breakFollowing();
@@ -268,6 +277,7 @@ public class AANewMainAuto extends NextFTCOpMode {
 
 
     public void onStop(){
+        CommandManager.INSTANCE.cancelAll();
         endPose = follower().getPose();
         autoendPose = follower().getPose();
     }
