@@ -167,9 +167,9 @@ public class MainTeleOp extends NextFTCOpMode {
 //                })
 //                .whenBecomesFalse(() -> Intake.off().schedule());
 
-//        gp2.dpadLeft()
-//                .whenBecomesTrue(() -> Storage.assertManualPower(-0.6).schedule())
-//                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+        gp2.dpadLeft()
+                .whenBecomesTrue(() -> Storage.assertManualPower(-0.6).schedule())
+                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp1.rightBumper()
                 .whenBecomesTrue(() -> {
