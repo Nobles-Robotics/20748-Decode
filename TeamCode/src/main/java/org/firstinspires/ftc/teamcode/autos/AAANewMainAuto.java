@@ -102,16 +102,16 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
-                Robot.outtakeAllSmooth,
+                Robot.outtakeAllAuto,
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign1Path),
-                new InstantCommand(Intake.on()),
+                new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new InstantCommand(Intake.on()),
+                                new InstantCommand(Intake.off()),
                                 new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
@@ -123,9 +123,9 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
                 new FollowPath(score1Path),
-                new InstantCommand(Intake.on()),
+                new InstantCommand(Intake.off()),
                 new WaitUntil(() -> !follower().isBusy()),
-                Robot.outtakeAllSmooth,
+                Robot.outtakeAllAuto,
                 new Delay(standardDelay),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
@@ -133,7 +133,7 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new InstantCommand(Intake.on()),
+                                new InstantCommand(Intake.off()),
                                 new FollowPath(intake3Path, true, 0.7),
                                 new Delay (0.05)
                         ),
@@ -144,11 +144,11 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(Intake.on()),
+                new InstantCommand(Intake.off()),
                 new FollowPath(score3Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                Robot.outtakeAllSmooth,
+                Robot.outtakeAllAuto,
                 new Delay(standardDelay),
                 new FollowPath(finalExitPath)
 
