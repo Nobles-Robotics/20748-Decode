@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -36,10 +37,8 @@ import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-import com.bylazar.telemetry.PanelsTelemetry;
-
 @Autonomous
-public class AANewMainAuto extends NextFTCOpMode {
+public class AAANewMainAuto extends NextFTCOpMode {
     {
         addComponents(
                 BulkReadComponent.INSTANCE, // TODO: make actual MANUAL mode bulkreading (we don't need to also read the expansion hub every loop)
@@ -65,7 +64,11 @@ public class AANewMainAuto extends NextFTCOpMode {
     public static final Pose scorePoseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
 
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
-    public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
+    public static final Pose intake11Blue = new Pose(37, 84, Math.toRadians(180));
+    public static final Pose intake12Blue = new Pose(32, 84, Math.toRadians(180));
+    public static final Pose intake13Blue = new Pose(12, 84, Math.toRadians(180));
+
+
 
     public static final Pose intakeAlign3Blue = new Pose(45, 38, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 38, Math.toRadians(180));
@@ -84,13 +87,16 @@ public class AANewMainAuto extends NextFTCOpMode {
     Path intakeAlign1Path;
     Path intake1Path;
     Path score1Path;
+
 //    Path intakeAlign2 = new Path(new BezierLine(scorePose, intakeAlign2Blue));
 //    Path intake2 = new Path(new BezierLine(intakeAlign2Blue, intake2Blue));
 //    Path score2 = new Path(new BezierLine(intake2Blue, scorePose));
+
     Path intakeAlign3Path;
     Path intake3Path;
     Path score3Path;
     Path finalExitPath;
+
 
     private Command autonomousRoutine() {
         double standardDelay = 0.025;
@@ -110,11 +116,11 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new InstantCommand(Intake.on()),
-                                new FollowPath(intake1Path, true, 0.7),
+                                new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
-                                Robot.intakeAll
+                                new InstantCommand(Storage.spinToNextIntakeIndex())
                         )
 
                 ),
@@ -154,6 +160,7 @@ public class AANewMainAuto extends NextFTCOpMode {
         );
     }
 
+
     @Override
     public void onStartButtonPressed() {
         if (currentAlliance == Alliance.BLUE){
@@ -169,7 +176,10 @@ public class AANewMainAuto extends NextFTCOpMode {
         }
 
         Pose intakeAlign1;
-        Pose intake1;
+        Pose intake11;
+        Pose intake12;
+        Pose intake13;
+
         Pose intakeAlign3;
         Pose intake3;
         Pose targetExitPos;
@@ -177,7 +187,9 @@ public class AANewMainAuto extends NextFTCOpMode {
         if (blue){
             scorePose = scorePoseBlue;
             intakeAlign1=intakeAlign1Blue;
-            intake1 = intake1Blue;
+            intake11 = intake11Blue;
+            intake12 = intake12Blue;
+            intake13 = intake13Blue;
             intakeAlign3 = intakeAlign3Blue;
             intake3 = intake3Blue;
             targetExitPos = targetExitPosBlue;
