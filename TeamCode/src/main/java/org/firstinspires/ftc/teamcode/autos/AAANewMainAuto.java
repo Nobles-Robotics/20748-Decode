@@ -68,7 +68,7 @@ public class AAANewMainAuto extends NextFTCOpMode {
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
-    public static final Pose intakeAlign3Blue = new Pose(45, 34, Math.toRadians(180));
+    public static final Pose intakeAlign3Blue = new Pose(45, 35, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(9, 35, Math.toRadians(180));
 
     public static final Pose targetExitPosBlue = new Pose(25, 50, Math.toRadians(315));
