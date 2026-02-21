@@ -20,7 +20,9 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
+import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
+import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
@@ -122,7 +124,10 @@ public class AANewMainAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
-                new FollowPath(score1Path),
+                new ParallelDeadlineGroup(
+                    new FollowPath(score1Path),
+                    Robot.intakeAll
+                ),
                 new InstantCommand(Intake.on()),
                 new WaitUntil(() -> !follower().isBusy()),
                 Robot.outtakeAll,
@@ -144,8 +149,11 @@ public class AANewMainAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
+                new ParallelDeadlineGroup(
+                        new FollowPath(score1Path),
+                        Robot.intakeAll
+                ),
                 new InstantCommand(Intake.on()),
-                new FollowPath(score3Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
                 Robot.outtakeAll
