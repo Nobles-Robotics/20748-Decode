@@ -103,7 +103,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
-                Robot.outtakeAllAuto,
+                Robot.outtakeAll,
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new FollowPath(intakeAlign1Path),
@@ -125,7 +125,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new FollowPath(score1Path),
                 new InstantCommand(Intake.on()),
                 new WaitUntil(() -> !follower().isBusy()),
-                Robot.outtakeAllAuto,
+                Robot.outtakeAll,
                 new Delay(standardDelay),
 
                 new FollowPath(intakeAlign3Path),
@@ -134,7 +134,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new InstantCommand(Intake.on()),
-                                new FollowPath(intake3Path, true, 0.6),
+                                new FollowPath(intake3Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
@@ -148,7 +148,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new FollowPath(score3Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                Robot.outtakeAllAuto,
+                Robot.outtakeAll,
                 new Delay(standardDelay),
                 new FollowPath(finalExitPath)
 
@@ -158,6 +158,7 @@ public class AANewMainAuto extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
+        Storage.zeroEncoderCommand();
         if (currentAlliance == Alliance.BLUE){
             blue = true;
         } else {
