@@ -113,7 +113,7 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelRaceGroup(
-                        new Delay(1),
+                        new Delay(3),
                         new ParallelGroup(
                             new SequentialGroupFixed(
                                     new InstantCommand(Intake.on()),
@@ -137,7 +137,7 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelRaceGroup(
-                        new Delay(1),
+                        new Delay(3),
                         new ParallelGroup(
                                 new SequentialGroupFixed(
                                         new InstantCommand(Intake.on()),
