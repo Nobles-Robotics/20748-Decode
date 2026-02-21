@@ -73,10 +73,6 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
-//        currentPosition = 0;
-//        spin.setCurrentPosition(0);
-//        spin.zero();
-//        targetPosition = currentPosition;
 
         limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
                 "limitSwitch");
@@ -237,6 +233,15 @@ public class Storage implements Subsystem {
         return new InstantCommand(() -> resetEncoder(input));
     }
 
+    public static Command zeroEncoderCommand() {
+        return new InstantCommand(() -> {
+            currentPosition = 0;
+            spin.setCurrentPosition(0);
+            spin.zero();
+            targetPosition = currentPosition;
+        });
+    }
+
     public static Command resetEncoderAtOuttakeCommand() {
         return new InstantCommand(() -> resetEncoder(OUTTAKE_POSITION));
     }
@@ -272,7 +277,6 @@ public class Storage implements Subsystem {
     public static boolean isStorageMotorStuck() {
         return storageMotorStuck;
     }
-
 
     private static void setManualPower(double newPower) {
         manualPower = newPower;
