@@ -11,7 +11,6 @@ import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
-import kotlin.time.Instant;
 
 public class Robot extends SubsystemGroup {
     public static final Robot INSTANCE = new Robot();
@@ -75,14 +74,18 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
             new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
@@ -109,6 +112,36 @@ public class Robot extends SubsystemGroup {
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
+            new InstantCommand(Intake.off())
+    );
+
+    public static SequentialGroupFixed intakeAllSmooth = new SequentialGroupFixed(
+            new InstantCommand(Intake.on()),
+            new InstantCommand(Storage.assertManualPower(0.6)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.assertManualPower(0.6)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.assertManualPower(0.6)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.assertManualPower(0.6)),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new Delay(INTAKE_DELAY),
+            new IfElseCommand(() -> Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(0.2),
+            new InstantCommand(Storage.assertManualPower(0)),
             new InstantCommand(Intake.off())
     );
     public static SequentialGroupFixed intake3 = new SequentialGroupFixed(
@@ -142,6 +175,60 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.off)
     );
+
+    public static SequentialGroupFixed outtakeAllAuto = new SequentialGroupFixed(
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.on),
+            new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Transitions.on()),
+            new Delay(1),
+
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
+    );
+
+    public static SequentialGroupFixed outtakeAllSmooth = new SequentialGroupFixed(
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.on),
+            new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
+            new ParallelRaceGroup(
+                    new WaitUntil(Outtake::reachedTargetVelocity),
+                    new Delay(1)
+            ),
+            new InstantCommand(Transitions.on()),
+
+            new InstantCommand(Storage.assertManualPower(0.3)),
+            new Delay(1),
+
+//            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+//            new Delay(OUTTAKE_DELAY),
+//            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+//            new Delay(OUTTAKE_DELAY),
+//            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+//            new Delay(OUTTAKE_DELAY),
+//            new InstantCommand(Storage.spinToNextOuttakeIndex()),
+//            new Delay(OUTTAKE_DELAY),
+            new InstantCommand(Storage.assertManualPower(0)),
+            new InstantCommand(Transitions.off()),
+            new InstantCommand(Outtake.off)
+    );
+
 
     public static SequentialGroupFixed outtakeAllClose = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
