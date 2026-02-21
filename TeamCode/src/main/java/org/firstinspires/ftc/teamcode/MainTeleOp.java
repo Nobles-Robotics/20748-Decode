@@ -34,7 +34,6 @@ public class MainTeleOp extends NextFTCOpMode {
                 BindingsComponent.INSTANCE,
                 CommandManager.INSTANCE,
                 AllianceManager.INSTANCE,
-                LoopTimeComponent.INSTANCE,
                 new SubsystemComponent(
                         Storage.INSTANCE,
                         Robot.INSTANCE,
@@ -167,6 +166,10 @@ public class MainTeleOp extends NextFTCOpMode {
 //                    Intake.on().schedule();
 //                })
 //                .whenBecomesFalse(() -> Intake.off().schedule());
+
+//        gp2.dpadLeft()
+//                .whenBecomesTrue(() -> Storage.assertManualPower(-0.6).schedule())
+//                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp1.rightBumper()
                 .whenBecomesTrue(() -> {
