@@ -107,6 +107,7 @@ public class AANewMainAuto extends NextFTCOpMode {
         double standardDelay = 0.025;
 
         return new SequentialGroupFixed(
+                new InstantCommand(Intake.off()),
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),

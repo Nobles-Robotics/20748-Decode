@@ -108,10 +108,10 @@ public class Outtake implements Subsystem {
     }
 
     public void setShootTarget() {
-        if (currentAlliance == Alliance.BLUE&& shootTarget.getX() != 6)
+        if (currentAlliance == Alliance.BLUE)
             shootTarget = new Pose(6, 144 - 6, 0);
-        else if (currentAlliance == Alliance.RED && shootTarget.getX() != (144 - 6))
-            shootTarget = shootTarget.mirror();
+        else if (currentAlliance == Alliance.RED)
+            shootTarget = new Pose(144-6, 144 - 6, 0);
     }
 
     public static Pose getShootTarget() {
