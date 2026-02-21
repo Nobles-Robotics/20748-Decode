@@ -66,8 +66,8 @@ public class AAANewMainAuto extends NextFTCOpMode {
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
-    public static final Pose intakeAlign3Blue = new Pose(45, 38, Math.toRadians(180));
-    public static final Pose intake3Blue = new Pose(6, 38, Math.toRadians(180));
+    public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
+    public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
 
     public static final Pose targetExitPosBlue = new Pose(25, 50, Math.toRadians(315));
 
@@ -99,6 +99,7 @@ public class AAANewMainAuto extends NextFTCOpMode {
 
         return new SequentialGroupFixed(
                 new InstantCommand(Intake.off()),
+                new InstantCommand(Transitions.off()),
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
@@ -107,25 +108,26 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign1Path),
-                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
-                                new InstantCommand(Intake.off()),
+                                new InstantCommand(Intake.on()),
                                 new FollowPath(intake1Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
                         )
-
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score1Path),
-                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
-                Robot.outtakeAllAuto,
+                new InstantCommand(Intake.off()),
+                Robot.outtakeAllSmooth,
                 new Delay(standardDelay),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
@@ -144,8 +146,9 @@ public class AAANewMainAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(Intake.off()),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score3Path),
+                new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
                 Robot.outtakeAllAuto,
@@ -241,6 +244,9 @@ public class AAANewMainAuto extends NextFTCOpMode {
         intake3Path.setLinearHeadingInterpolation(intakeAlign3.getHeading(), intake3.getHeading());
         score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePose.getHeading());
         finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPos.getHeading());
+
+        intake1Path.setTimeoutConstraint(500);
+        intake3Path.setTimeoutConstraint(500);
 
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
