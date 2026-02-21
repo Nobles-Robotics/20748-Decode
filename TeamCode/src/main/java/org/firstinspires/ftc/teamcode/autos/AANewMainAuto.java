@@ -99,6 +99,8 @@ public class AANewMainAuto extends NextFTCOpMode {
 
         return new SequentialGroupFixed(
                 new InstantCommand(Outtake.on),
+                new InstantCommand(Intake.off()),
+                new InstantCommand(Transitions.off()),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
                 Robot.outtakeAll,
