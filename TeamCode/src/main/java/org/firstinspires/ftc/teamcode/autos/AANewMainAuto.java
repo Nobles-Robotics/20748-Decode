@@ -106,6 +106,7 @@ public class AANewMainAuto extends NextFTCOpMode {
                 Robot.outtakeAll,
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
+                new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign1Path),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
@@ -127,14 +128,14 @@ public class AANewMainAuto extends NextFTCOpMode {
                 new WaitUntil(() -> !follower().isBusy()),
                 Robot.outtakeAll,
                 new Delay(standardDelay),
-
+                new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new InstantCommand(Intake.on()),
-                                new FollowPath(intake3Path, true, 0.5),
+                                new FollowPath(intake3Path, true, 0.7),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
@@ -158,7 +159,6 @@ public class AANewMainAuto extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
-        Storage.zeroEncoderCommand();
         if (currentAlliance == Alliance.BLUE){
             blue = true;
         } else {
@@ -259,9 +259,9 @@ public class AANewMainAuto extends NextFTCOpMode {
 
     @Override
     public void onInit(){
+        Storage.zeroEncoderCommand().schedule();
         autoendPose = follower().getPose();
         ActiveOpMode.telemetry().update();
-
     }
 
     @Override public void onWaitForStart() {

@@ -64,7 +64,7 @@ public class Robot extends SubsystemGroup {
     public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
-            new Delay(0.3),
+            new Delay(0.15),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
@@ -166,7 +166,6 @@ public class Robot extends SubsystemGroup {
                     new WaitUntil(Outtake::reachedTargetVelocity),
                     new Delay(1)
             ),
-            new Delay(OUTTAKE_DELAY),
             new InstantCommand(Storage.spinToNextOuttakeIndex()),
             new InstantCommand(Transitions.on()),
             new Delay(OUTTAKE_DELAY),
