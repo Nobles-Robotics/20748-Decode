@@ -100,8 +100,8 @@ public class Storage implements Subsystem {
             spin.setPower(0);
         }
 
-        Logger.panelsLog("StorageCurrentPosition", currentPosition);
-        Logger.panelsLog("StorageTargetPosition", targetPosition);
+//        Logger.panelsLog("StorageCurrentPosition", currentPosition);
+//        Logger.panelsLog("StorageTargetPosition", targetPosition);
 
 //        Logger.add("Storage", "target position: " + targetPosition + "current position:" + currentPosition + "current power:" + newPower);
 //        Logger.add("Storage", "last press:" + lastPress + "delta: " + lastPressDelta);

@@ -92,10 +92,10 @@ public class Outtake implements Subsystem {
         } else {
             outtake.setPower(0);
         }
-        ActiveOpMode.telemetry().addLine("current distance:" + getDistance());
-        ActiveOpMode.telemetry().addLine("current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower);
-        Logger.panelsLog("OuttakeCurrentVelocity", currentVelocity);
-        Logger.panelsLog("OuttakeTargetVelocitry", targetVelocity);
+//        ActiveOpMode.telemetry().addLine("current distance:" + getDistance());
+//        ActiveOpMode.telemetry().addLine("current velo:" + currentVelocity + "target velo:" + targetVelocity + "current power:" + newPower);
+//        Logger.panelsLog("OuttakeCurrentVelocity", currentVelocity);
+//        Logger.panelsLog("OuttakeTargetVelocitry", targetVelocity);
     }
 
     public static boolean reachedTargetVelocity(){

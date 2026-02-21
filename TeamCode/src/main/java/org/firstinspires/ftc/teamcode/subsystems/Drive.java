@@ -80,7 +80,7 @@ public class Drive implements Subsystem {
             .setStart(() -> follower.startTeleopDrive())
             .setUpdate(() -> {
                 follower.update();
-                telemetryM.update();
+              //  telemetryM.update();
 
                 double forward = slowMode ? -ActiveOpMode.gamepad1().left_stick_y * slowModeMultiplier: -ActiveOpMode.gamepad1().left_stick_y;
                 forward = -forward;

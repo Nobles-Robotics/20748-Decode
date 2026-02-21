@@ -161,12 +161,12 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.5).schedule())
                 .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
-        gp2.dpadLeft()
-                .whenBecomesTrue(() -> {
-                    Storage.spinToNextIntakeIndex().schedule();
-                    Intake.on().schedule();
-                })
-                .whenBecomesFalse(() -> Intake.off().schedule());
+//        gp2.dpadLeft()
+//                .whenBecomesTrue(() -> {
+//                    Storage.spinToNextIntakeIndex().schedule();
+//                    Intake.on().schedule();
+//                })
+//                .whenBecomesFalse(() -> Intake.off().schedule());
 
         gp1.rightBumper()
                 .whenBecomesTrue(() -> {
@@ -175,10 +175,10 @@ public class MainTeleOp extends NextFTCOpMode {
                 })
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp2.dpadRight()
-                .whenBecomesTrue(() -> Robot.outtakeAllClose.schedule());
-        gp2.dpadLeft()
-                .whenBecomesTrue(() -> Robot.outtakeAllFar.schedule());
+//        gp2.dpadRight()
+//                .whenBecomesTrue(() -> Robot.outtakeAllClose.schedule());
+//        gp2.dpadLeft()
+//                .whenBecomesTrue(() -> Robot.outtakeAllFar.schedule());
 
         gp2.dpadUp()
                 .whenBecomesTrue(() -> Intake.on().schedule())
