@@ -63,6 +63,13 @@ public class Outtake implements Subsystem {
         return new InstantCommand(() -> setManualMode(newMode));
     }
 
+    public static Command assertManualPower(double newPower) {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            setManualPower(newPower);
+        });
+    }
+
     @Override
     public void initialize() {
         manualMode = false;

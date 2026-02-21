@@ -134,8 +134,8 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesFalse(() -> Drive.setSlowModeCommand(false).schedule());
 
         gp2.leftTrigger().atLeast(.9)
-                .whenBecomesTrue(() -> Limelight.setAimAssist(true))
-                .whenBecomesFalse(() -> Limelight.setAimAssist(false));
+                .whenBecomesTrue(() -> Outtake.assertManualPower(-1).schedule())
+                .whenBecomesFalse(() -> Outtake.assertManualPower(0).schedule());
 
         gp1.leftTrigger().atLeast(.5)
                 .whenBecomesTrue(() -> Drive.setHeadingLockCommand(true).schedule())
