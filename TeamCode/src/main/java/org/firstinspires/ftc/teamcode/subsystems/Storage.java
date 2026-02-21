@@ -73,10 +73,10 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
-        currentPosition = 0;
-        spin.setCurrentPosition(0);
-        spin.zero();
-        targetPosition = currentPosition;
+//        currentPosition = 0;
+//        spin.setCurrentPosition(0);
+//        spin.zero();
+//        targetPosition = currentPosition;
 
         limitSwitch = ActiveOpMode.hardwareMap().get(DigitalChannel.class,
                 "limitSwitch");
@@ -85,7 +85,6 @@ public class Storage implements Subsystem {
         colorSensor = ActiveOpMode.hardwareMap().get(RevColorSensorV3.class,
                 "colorSensor");
     }
-
     @Override
     public void periodic() {
         currentPosition = spin.getCurrentPosition();
