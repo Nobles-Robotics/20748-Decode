@@ -206,7 +206,7 @@ public class Robot extends SubsystemGroup {
     public static SequentialGroupFixed outtakeAllSmooth = new SequentialGroupFixed(
             new InstantCommand(Transitions.off()),
             new InstantCommand(Outtake.on),
-            new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
+            new InstantCommand(() -> Outtake.setTargetVelocity(2125)),
             new ParallelRaceGroup(
                     new WaitUntil(Outtake::reachedTargetVelocity),
                     new Delay(1)
@@ -215,7 +215,7 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Transitions.on()),
 
             new ParallelGroup(
-                    new InstantCommand(Storage.assertManualPower(0.3)),
+                    new InstantCommand(Storage.assertManualPower(0.2)),
                     new SequentialGroupFixed(
                             new Delay(0.5),
                             new InstantCommand(Intake.on())
