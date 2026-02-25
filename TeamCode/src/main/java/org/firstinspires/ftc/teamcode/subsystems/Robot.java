@@ -108,6 +108,16 @@ public class Robot extends SubsystemGroup {
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new Delay(INTAKE_DELAY),
+            new InstantCommand(Storage.spinToNextIntakeIndex()),
+            new Delay(INTAKE_DELAY),
             new InstantCommand(Intake.off())
     );
 
