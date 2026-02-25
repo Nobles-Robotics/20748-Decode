@@ -175,6 +175,7 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> {
                     Storage.spinToNextIntakeIndex().schedule();
                     Intake.on().schedule();
+                    Storage.zeroEncoderCommand()
                 })
                 .whenBecomesFalse(() -> Intake.off().schedule());
 

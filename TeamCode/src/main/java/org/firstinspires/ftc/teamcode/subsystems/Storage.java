@@ -242,6 +242,15 @@ public class Storage implements Subsystem {
         });
     }
 
+    public static Command logTime() {
+        return new InstantCommand(() -> {
+            currentPosition = 0;
+            spin.setCurrentPosition(0);
+            spin.zero();
+            targetPosition = currentPosition;
+        });
+    }
+
     public static Command resetEncoderAtOuttakeCommand() {
         return new InstantCommand(() -> resetEncoder(OUTTAKE_POSITION));
     }
