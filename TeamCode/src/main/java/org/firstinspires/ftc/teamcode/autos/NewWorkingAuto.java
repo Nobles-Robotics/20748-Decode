@@ -59,16 +59,17 @@ public class NewWorkingAuto extends NextFTCOpMode {
 
     public static Pose endPose;
     public static final Pose startPoseFarBlue = new Pose(56, 8, Math.toRadians(270)); // Start Pose of our robot.
-    public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    public static final Pose scorePoseBlue = new Pose(61, 18, Math.toRadians(295)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot.
+    public static final Pose scorePoseCloseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot.
+    static final Pose scorePoseFarBlue = new Pose(61, 18, Math.toRadians(295));
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
 
-    public static final Pose IntakePlayerRed = new Pose(137.6, 8.3, Math.toRadians(0));
-    public static final Pose IntakeAlignPlayerRed = new Pose(115,8.3, Math.toRadians(0)).mirror();
+    public static final Pose IntakePlayerBlue = new Pose(137.6, 8.3, Math.toRadians(0)).mirror();
+    public static final Pose IntakeAlignPlayerBlue = new Pose(115,8.3, Math.toRadians(0)).mirror();
 
 
     public static final Pose targetExitPosBlue = new Pose(50, 35, Math.toRadians(295));
@@ -112,36 +113,37 @@ public class NewWorkingAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
-                //new FollowPath(intakeAlign1Path),
-                //new InstantCommand(Intake.on()),
-//                new Delay(standardDelay),
-//                new ParallelGroup(
-//                        new SequentialGroupFixed(
-//                                new InstantCommand(Intake.on()),
-//                                new FollowPath(intake1Path, true, 0.5),
-//                                new Delay (0.05)
-//                        ),
-//                        new SequentialGroupFixed(
-//                                Robot.intakeAll
-//                        )
-//                ),
-//                new Delay(standardDelay),
-//                new InstantCommand(Outtake.on),
-//                new InstantCommand(Storage.spinToNextOuttakeIndex()),
-//                new FollowPath(score1Path),
-//                new InstantCommand(Intake.reverse()),
-//                new WaitUntil(() -> !follower().isBusy()),
-//                new InstantCommand(Intake.off()),
-//                Robot.outtakeAllSmooth,
-//                new Delay(standardDelay),
-//                new InstantCommand(Storage.spinToNextIntakeIndex()),
+                new FollowPath(intakeAlign1Path),
+                new InstantCommand(Intake.on()),
+                new Delay(standardDelay),
+                new ParallelGroup(
+                        new SequentialGroupFixed(
+                                new InstantCommand(Intake.on()),
+                                new FollowPath(intake1Path, true, 0.5),
+                                new Delay (0.05)
+                        ),
+                        new SequentialGroupFixed(
+                                Robot.intakeAll
+                        )
+                ),
+                new Delay(standardDelay),
+                new InstantCommand(Outtake.on),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
+                new FollowPath(score1Path),
+                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.reverse()),
+                new WaitUntil(() -> !follower().isBusy()),
+                new InstantCommand(Intake.off()),
+                Robot.outtakeAllSmooth,
+                new Delay(standardDelay),
+                new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new InstantCommand(Intake.off()),
-                                new FollowPath(intake3Path, true, 0.7),
+                                new FollowPath(intake3Path, true, 0.5),
                                 new Delay (0.05)
                         ),
                         new SequentialGroupFixed(
@@ -153,6 +155,7 @@ public class NewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score3Path),
+                new InstantCommand(Intake.off()),
                 new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
@@ -179,6 +182,7 @@ public class NewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(scorePlayerPath),
+                new InstantCommand(Intake.off()),
                 new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
@@ -214,39 +218,45 @@ public class NewWorkingAuto extends NextFTCOpMode {
         Pose intakePlayer;
 
         if (blue){
-            scorePose = scorePoseBlue;
             intakeAlign1=intakeAlign1Blue;
             intake1 = intake1Blue;
             intakeAlign3 = intakeAlign3Blue;
             intake3 = intake3Blue;
             targetExitPos = targetExitPosBlue;
-            intakeAlignPlayer = IntakeAlignPlayerRed;
-            intakePlayer = IntakePlayerRed;
+            intakeAlignPlayer = IntakeAlignPlayerBlue;
+            intakePlayer = IntakePlayerBlue;
 
 
             if(close){
                 startPose = startPoseCloseBlue;
+                scorePose = scorePoseCloseBlue;
             }
             else{
                 startPose = startPoseFarBlue;
+                scorePose = scorePoseFarBlue;
+
             }
         }
 
         else{
-            scorePose = scorePoseBlue.mirror();
+            scorePose = scorePoseFarBlue.mirror();
             intakeAlign1=intakeAlign1Blue.mirror();
             intake1 = intake1Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
             intake3 = intake3Blue.mirror();
             targetExitPos = targetExitPosBlue.mirror();
-            intakeAlignPlayer = IntakeAlignPlayerRed.mirror();
-            intakePlayer = IntakePlayerRed.mirror();
+            intakeAlignPlayer = IntakeAlignPlayerBlue.mirror();
+            intakePlayer = IntakePlayerBlue.mirror();
 
             if(close){
                 startPose = startPoseCloseBlue.mirror();
+                scorePose = scorePoseCloseBlue.mirror();
+
             }
             else{
                 startPose = startPoseFarBlue.mirror();
+                scorePose = scorePoseFarBlue.mirror();
+
             }
         }
 
@@ -308,6 +318,7 @@ public class NewWorkingAuto extends NextFTCOpMode {
         follower().update();
 
         autoendPose = follower().getPose();
+        Drawing.drawDebug(follower());
     }
 
     @Override
@@ -315,6 +326,7 @@ public class NewWorkingAuto extends NextFTCOpMode {
         Storage.zeroEncoderCommand().schedule();
         autoendPose = follower().getPose();
         ActiveOpMode.telemetry().update();
+        Drawing.init();
     }
 
     @Override public void onWaitForStart() {
