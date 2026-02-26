@@ -227,7 +227,7 @@ public class Robot extends SubsystemGroup {
             new ParallelGroup(
                     new InstantCommand(Storage.assertManualPower(0.2)),
                     new SequentialGroupFixed(
-                            new Delay(0.5),
+                            new Delay(0.75),
                             new InstantCommand(Intake.on())
                     )
             ),
