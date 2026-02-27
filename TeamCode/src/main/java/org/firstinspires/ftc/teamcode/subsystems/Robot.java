@@ -65,7 +65,7 @@ public class Robot extends SubsystemGroup {
     public static SequentialGroupFixed intakeAll = new SequentialGroupFixed(
             new InstantCommand(Intake.on()),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
-            new Delay(0.2),
+            new Delay(0.1),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
@@ -213,25 +213,33 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off)
     );
 
-    public static SequentialGroupFixed outtakeAllSmoothFar = new SequentialGroupFixed(
-            new InstantCommand(Transitions.off()),
-            new InstantCommand(Outtake.on),
-            new InstantCommand(() -> Outtake.setTargetVelocity(1750)), //1950 far, 1750 close
-            new ParallelRaceGroup(
-                    new WaitUntil(Outtake::reachedTargetVelocity),
-                    new Delay(1)
-            ),
-            new InstantCommand(Intake.off()),
-            new InstantCommand(Transitions.on()),
+    public static SequentialGroupFixed outtakeAllSmooth (boolean close){
+        double targetVelocity;
+        if (close){
+            targetVelocity = 1750;
+        }
+        else{
+            targetVelocity = 1975;
+        }
+        return new SequentialGroupFixed(
+                new InstantCommand(Transitions.off()),
+                new InstantCommand(Outtake.on),
+                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)), //1950 far, 1750 close
+                new ParallelRaceGroup(
+                        new WaitUntil(Outtake::reachedTargetVelocity),
+                        new Delay(1)
+                ),
+                new InstantCommand(Intake.off()),
+                new InstantCommand(Transitions.on()),
 
-            new ParallelGroup(
-                    new InstantCommand(Storage.assertManualPower(0.3)),
-                    new SequentialGroupFixed(
-                            new Delay(0.75),
-                            new InstantCommand(Intake.on())
-                    )
-            ),
-            new Delay(1),
+                new ParallelGroup(
+                        new InstantCommand(Storage.assertManualPower(0.25)),
+                        new SequentialGroupFixed(
+                                new Delay(0.75)
+                                //new InstantCommand(Intake.on())
+                        )
+                ),
+                new Delay(1),
 
 //            new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //            new Delay(OUTTAKE_DELAY),
@@ -241,48 +249,12 @@ public class Robot extends SubsystemGroup {
 //            new Delay(OUTTAKE_DELAY),
 //            new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //            new Delay(OUTTAKE_DELAY),
-            new InstantCommand(Storage.assertManualPower(0)),
-            new InstantCommand(Transitions.off()),
-            new InstantCommand(Outtake.off)
-    );
+                new InstantCommand(Storage.assertManualPower(0)),
+                new InstantCommand(Transitions.off()),
+                new InstantCommand(Outtake.off)
+        );
+    }
 
-
-
-    public static SequentialGroupFixed outtakeAllClose = new SequentialGroupFixed(
-            new InstantCommand(Outtake.on),
-            new InstantCommand(() -> Outtake.setTargetVelocity(1850)),
-            new ParallelRaceGroup(
-                    new WaitUntil(Outtake::reachedTargetVelocity),
-                    new Delay(1)
-            ),
-            new Delay(SMALL_DELAY),
-            new ParallelRaceGroup(
-                    new WaitUntil(Outtake::reachedTargetVelocity),
-                    new Delay(1)
-            ),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
-            new InstantCommand(Transitions.on()),
-            new Delay(SMALL_DELAY),
-            new ParallelRaceGroup(
-                    new WaitUntil(Outtake::reachedTargetVelocity),
-                    new Delay(1)
-            ),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
-            new Delay(SMALL_DELAY),
-            new ParallelRaceGroup(
-                    new WaitUntil(Outtake::reachedTargetVelocity),
-                    new Delay(1)
-            ),
-            new InstantCommand(Storage.spinToNextOuttakeIndex()),
-            new Delay(SMALL_DELAY),
-            new ParallelRaceGroup(
-                    new WaitUntil(Outtake::reachedTargetVelocity),
-                    new Delay(1)
-            ),
-            new InstantCommand(Transitions.off()),
-            new InstantCommand(Outtake.off)
-    );
 
     public static SequentialGroupFixed outtakeAllFar = new SequentialGroupFixed(
             new InstantCommand(Outtake.on),
