@@ -205,13 +205,13 @@ public class MainTeleOp extends NextFTCOpMode {
         gp2.rightBumper()
                 .whenBecomesTrue(() -> {
                     Outtake.on.schedule();
-                    Outtake.setTargetVelocity(1850);
+                    Outtake.setTargetVelocity(1750);
                 })
                 .whenBecomesFalse(() -> Outtake.off.schedule());
         gp2.rightTrigger().atLeast(.5)
                 .whenBecomesTrue(() -> {
                     Outtake.on.schedule();
-                    Outtake.setTargetVelocity(2125);
+                    Outtake.setTargetVelocity(1950);
                 })
                 .whenBecomesFalse(() -> Outtake.off.schedule());
 
