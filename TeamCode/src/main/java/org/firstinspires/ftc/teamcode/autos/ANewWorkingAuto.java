@@ -61,24 +61,29 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     public static final Pose startPoseFarBlue = new Pose(56, 8, Math.toRadians(270)); // Start Pose of our robot.
     public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot.
     public static final Pose scorePoseCloseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot.
-    static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(292));
+    static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(294));
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
 
-    public static final Pose IntakePlayerBlue = new Pose(137.6, 8.3, Math.toRadians(0)).mirror();
-    public static final Pose IntakeAlignPlayerBlue = new Pose(115,8.3, Math.toRadians(0)).mirror();
+    public static final Pose IntakePlayerBlue = new Pose(12, 10, Math.toRadians(210));
+    public static final Pose IntakeAlignPlayerBlue = new Pose(11,17, Math.toRadians(185));
 
 
     public static final Pose targetExitPosBlue = new Pose(50, 35, Math.toRadians(295));
 
     private static Pose startPose;
-    public static Pose scorePose;
+    public static Pose scorePose1;
+    public static Pose scorePoseGeneral;
 
     boolean blue = false;
     boolean close = false;
+
+
+    // CHANGE THIS TO MANIPULATE PATHING
+    boolean forceCloseScore1 = true;
 
 
     Path scorePreloadPath;
@@ -109,7 +114,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
-                Robot.outtakeAllSmoothFar,
+                Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
@@ -134,7 +139,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.reverse()),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
-                Robot.outtakeAllSmoothFar,
+                Robot.outtakeAllSmooth(forceCloseScore1),
                 new Delay(standardDelay),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
@@ -160,7 +165,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
-                Robot.outtakeAllSmoothFar,
+                Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
@@ -170,7 +175,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new SequentialGroupFixed(
                                 new InstantCommand(Intake.off()),
-                                new FollowPath(intakePlayerPath, true, 0.6),
+                                new FollowPath(intakePlayerPath, true, 0.5),
                                 new Delay (0.5)
                         ),
                         new SequentialGroupFixed(
@@ -187,7 +192,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
-                Robot.outtakeAllSmoothFar,
+                Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
                 new FollowPath(finalExitPath)
 
@@ -227,19 +232,26 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             intakePlayer = IntakePlayerBlue;
 
 
+
             if(close){
                 startPose = startPoseCloseBlue;
-                scorePose = scorePoseCloseBlue;
+                scorePoseGeneral = scorePoseCloseBlue;
             }
             else{
                 startPose = startPoseFarBlue;
-                scorePose = scorePoseFarBlue;
+                scorePoseGeneral = scorePoseFarBlue;
+            }
 
+            if (forceCloseScore1){
+                scorePose1 = scorePoseCloseBlue;
+            }
+            else{
+                scorePose1 = scorePoseGeneral;
             }
         }
 
         else{
-            scorePose = scorePoseFarBlue.mirror();
+            scorePoseGeneral = scorePoseFarBlue.mirror();
             intakeAlign1=intakeAlign1Blue.mirror();
             intake1 = intake1Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
@@ -250,17 +262,23 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
             if(close){
                 startPose = startPoseCloseBlue.mirror();
-                scorePose = scorePoseCloseBlue.mirror();
+                scorePoseGeneral = scorePoseCloseBlue.mirror();
 
             }
             else{
                 startPose = startPoseFarBlue.mirror();
-                scorePose = scorePoseFarBlue.mirror();
+                scorePoseGeneral = scorePoseFarBlue.mirror();
+            }
 
+            if (forceCloseScore1){
+                scorePose1 = scorePoseCloseBlue.mirror();
+            }
+            else{
+                scorePose1 = scorePoseGeneral;
             }
         }
 
-        System.out.println(scorePose.toString());
+        System.out.println(scorePoseGeneral.toString());
         System.out.println(intakeAlign1.toString());
         System.out.println(intake1.toString());
         System.out.println(intakeAlign3.toString());
@@ -270,41 +288,42 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
 
-        scorePreloadPath = new Path(new BezierLine(startPose, scorePose));
-        intakeAlign1Path = new Path(new BezierLine(scorePose, intakeAlign1));
+        scorePreloadPath = new Path(new BezierLine(startPose, scorePoseGeneral));
+        intakeAlign1Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign1));
         intake1Path = new Path(new BezierLine(intakeAlign1, intake1));
-        score1Path = new Path(new BezierLine(intake1, scorePose));
+        score1Path = new Path(new BezierLine(intake1, scorePose1));
 
-        intakeAlign3Path = new Path(new BezierLine(scorePose, intakeAlign3));
+        intakeAlign3Path = new Path(new BezierLine(scorePose1, intakeAlign3));
         intake3Path = new Path(new BezierLine(intakeAlign3, intake3));
-        score3Path = new Path(new BezierLine(intake3, scorePose));
-        finalExitPath = new Path(new BezierLine(scorePose, targetExitPos));
+        score3Path = new Path(new BezierLine(intake3, scorePoseGeneral));
+        finalExitPath = new Path(new BezierLine(scorePoseGeneral, targetExitPos));
 
-        intakeAlignPlayerPath = new Path(new BezierLine(scorePose, intakeAlignPlayer));
+        intakeAlignPlayerPath = new Path(new BezierLine(scorePoseGeneral, intakeAlignPlayer));
         intakePlayerPath = new Path(new BezierLine(intakeAlignPlayer, intakePlayer));
-        scorePlayerPath = new Path(new BezierLine(intakePlayer, scorePose));
+        scorePlayerPath = new Path(new BezierLine(intakePlayer, scorePoseGeneral));
 
 
-        scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
-        intakeAlign1Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign1.getHeading());
+        scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePoseGeneral.getHeading());
+        intakeAlign1Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign1.getHeading());
         intake1Path.setLinearHeadingInterpolation(intakeAlign1.getHeading(), intake1.getHeading());
-        score1Path.setLinearHeadingInterpolation(intake1.getHeading(), scorePose.getHeading());
+        score1Path.setLinearHeadingInterpolation(intake1.getHeading(), scorePose1.getHeading());
 
 //        intakeAlign2.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign2.getHeading());
 //        intake2.setLinearHeadingInterpolation(intakeAlign2.getHeading(), intake2.getHeading());
 //        score2.setLinearHeadingInterpolation(intake2.getHeading(), scorePose.getHeading());
 
-        intakeAlign3Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign3.getHeading());
+        intakeAlign3Path.setLinearHeadingInterpolation(scorePose1.getHeading(), intakeAlign3.getHeading());
         intake3Path.setLinearHeadingInterpolation(intakeAlign3.getHeading(), intake3.getHeading());
-        score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePose.getHeading());
-        finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPos.getHeading());
-        intakeAlignPlayerPath.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlignPlayer.getHeading());
+        score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePoseGeneral.getHeading());
+        finalExitPath.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), targetExitPos.getHeading());
+        intakeAlignPlayerPath.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlignPlayer.getHeading());
         intakePlayerPath.setLinearHeadingInterpolation(intakeAlignPlayer.getHeading(), intakePlayer.getHeading());
-        scorePlayerPath.setLinearHeadingInterpolation(intakePlayer.getHeading(), scorePose.getHeading());
+        scorePlayerPath.setLinearHeadingInterpolation(intakePlayer.getHeading(), scorePoseGeneral.getHeading());
 
 
-        intake1Path.setTimeoutConstraint(500);
-        intake3Path.setTimeoutConstraint(500);
+        intake1Path.setTimeoutConstraint(1000);
+        intake3Path.setTimeoutConstraint(1000);
+        scorePlayerPath.setTimeoutConstraint(1000);
 
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
