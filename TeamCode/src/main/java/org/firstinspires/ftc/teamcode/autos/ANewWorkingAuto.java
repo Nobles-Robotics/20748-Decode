@@ -220,6 +220,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
+
+        // Start position management set during init
         if (currentAlliance == Alliance.BLUE){
             blue = true;
         } else {
@@ -240,6 +242,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         Pose intakeAlignPlayer;
         Pose intakePlayer;
 
+        // Build auto commands based on settings
+
         if (blue){
             intakeAlign1=intakeAlign1Blue;
             intake1 = intake1Blue;
@@ -248,8 +252,6 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             targetExitPos = targetExitPosBlue;
             intakeAlignPlayer = IntakeAlignPlayerBlue;
             intakePlayer = IntakePlayerBlue;
-
-
 
             if(close){
                 startPose = startPoseCloseBlue;
@@ -296,13 +298,14 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             }
         }
 
-        System.out.println(scorePoseGeneral.toString());
-        System.out.println(intakeAlign1.toString());
-        System.out.println(intake1.toString());
-        System.out.println(intakeAlign3.toString());
-        System.out.println(intake3.toString());
-        System.out.println(targetExitPos.toString());
-        System.out.println(startPose.toString());
+
+//        System.out.println(scorePoseGeneral.toString());
+//        System.out.println(intakeAlign1.toString());
+//        System.out.println(intake1.toString());
+//        System.out.println(intakeAlign3.toString());
+//        System.out.println(intake3.toString());
+//        System.out.println(targetExitPos.toString());
+//        System.out.println(startPose.toString());
 
 
 
@@ -320,6 +323,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         intakePlayerPath = new Path(new BezierLine(intakeAlignPlayer, intakePlayer));
         scorePlayerPath = new Path(new BezierLine(intakePlayer, scorePoseGeneral));
 
+
+        // Sets all the headings
 
         scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePoseGeneral.getHeading());
         intakeAlign1Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign1.getHeading());
@@ -339,14 +344,17 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         scorePlayerPath.setLinearHeadingInterpolation(intakePlayer.getHeading(), scorePoseGeneral.getHeading());
 
 
+        // Ensures the robot doesn't get stuck on an intake cycle if the balls are jammed in front of it
         intake1Path.setTimeoutConstraint(1000);
         intake3Path.setTimeoutConstraint(1000);
         scorePlayerPath.setTimeoutConstraint(1000);
 
+        // Starts auto
         follower().setStartingPose(startPose);
         autonomousRoutine().schedule();
         follower().breakFollowing();
 
+        // Sets autoendPose to correctly initiate the teleop
         autoendPose = follower().getPose();
     }
 
@@ -360,7 +368,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     @Override
     public void onInit(){
-        Storage.zeroEncoderCommand().schedule();
+        Storage.zeroEncoderCommand().schedule(); // Storage spindexer starts in intake position
         autoendPose = follower().getPose();
         ActiveOpMode.telemetry().update();
         Drawing.init();
