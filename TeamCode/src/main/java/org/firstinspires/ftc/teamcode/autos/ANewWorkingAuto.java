@@ -80,6 +80,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     boolean blue = false;
     boolean close = false;
 
+    private Pose intakeAlign1;
+    private Pose intake1;
+    private Pose intakeAlign3;
+    private Pose intake3;
+    private Pose targetExitPos;
+    private Pose intakeAlignPlayer;
+    private Pose intakePlayer;
 
     Path scorePreloadPath;
     Path intakeAlign1Path;
@@ -127,6 +134,28 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                         )
                 ),
                 new Delay(standardDelay),
+                new InstantCommand(() -> {
+                    // Always use close score position after intake1
+                    if (blue) {
+                        scorePose = scorePoseCloseBlue;
+                    } else {
+                        scorePose = scorePoseCloseBlue.mirror();
+                    }
+                    // Rebuild paths that depend on scorePose
+                    score1Path = new Path(new BezierLine(intake1, scorePose));
+                    intakeAlign3Path = new Path(new BezierLine(scorePose, intakeAlign3));
+                    score3Path = new Path(new BezierLine(intake3, scorePose));
+                    finalExitPath = new Path(new BezierLine(scorePose, targetExitPos));
+                    intakeAlignPlayerPath = new Path(new BezierLine(scorePose, intakeAlignPlayer));
+                    scorePlayerPath = new Path(new BezierLine(intakePlayer, scorePose));
+
+                    score1Path.setLinearHeadingInterpolation(intake1.getHeading(), scorePose.getHeading());
+                    intakeAlign3Path.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign3.getHeading());
+                    score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePose.getHeading());
+                    finalExitPath.setLinearHeadingInterpolation(scorePose.getHeading(), targetExitPos.getHeading());
+                    intakeAlignPlayerPath.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlignPlayer.getHeading());
+                    scorePlayerPath.setLinearHeadingInterpolation(intakePlayer.getHeading(), scorePose.getHeading());
+                }),
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score1Path),
@@ -208,14 +237,6 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         } else {
             close = true;
         }
-
-        Pose intakeAlign1;
-        Pose intake1;
-        Pose intakeAlign3;
-        Pose intake3;
-        Pose targetExitPos;
-        Pose intakeAlignPlayer;
-        Pose intakePlayer;
 
         if (blue){
             intakeAlign1=intakeAlign1Blue;
