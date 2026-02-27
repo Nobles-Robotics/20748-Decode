@@ -106,16 +106,22 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
     private Command autonomousRoutine() {
-        double standardDelay = 0.025;
+        double standardDelay = 0.025; // Slight delay to ensure that everything is settled before moving on
 
         return new SequentialGroupFixed(
+
+                // Setup
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.off()),
+
+                // Scoring Preload
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
+
+                // Intake1
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign1Path),
@@ -132,6 +138,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                         )
                 ),
                 new Delay(standardDelay),
+
+                // Scoring after Intake1
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score1Path),
@@ -141,6 +149,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.off()),
                 Robot.outtakeAllSmooth(forceCloseScore1),
                 new Delay(standardDelay),
+
+                // Intake3
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlign3Path),
                 new InstantCommand(Intake.on()),
@@ -157,6 +167,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 ),
                 new Delay(standardDelay),
+
+                // Scoring after Intake3
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(score3Path),
@@ -167,6 +179,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
+
+                // IntakePlayer
                 new InstantCommand(Intake.on()),
                 new InstantCommand(Storage.spinToNextIntakeIndex()),
                 new FollowPath(intakeAlignPlayerPath),
@@ -184,6 +198,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 ),
                 new Delay(standardDelay),
+
+                // Scoring after IntakePlayer
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new FollowPath(scorePlayerPath),
@@ -194,6 +210,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
+
+                // Park for leave points
                 new FollowPath(finalExitPath)
 
         );
