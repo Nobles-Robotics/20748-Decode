@@ -38,7 +38,7 @@ import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
 @Autonomous
-public class NewWorkingAuto extends NextFTCOpMode {
+public class ANewWorkingAuto extends NextFTCOpMode {
     {
         addComponents(
                 BulkReadComponent.INSTANCE, // TODO: make actual MANUAL mode bulkreading (we don't need to also read the expansion hub every loop)
