@@ -180,36 +180,36 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
 
-                // IntakePlayer
-                new InstantCommand(Intake.on()),
-                new InstantCommand(Storage.spinToNextIntakeIndex()),
-                new FollowPath(intakeAlignPlayerPath),
-                new InstantCommand(Intake.on()),
-                new Delay(standardDelay),
-                new ParallelGroup(
-                        new SequentialGroupFixed(
-                                new InstantCommand(Intake.off()),
-                                new FollowPath(intakePlayerPath, true, 0.5),
-                                new Delay (0.5)
-                        ),
-                        new SequentialGroupFixed(
-                                Robot.intakeAll
-                        )
-
-                ),
-                new Delay(standardDelay),
-
-                // Scoring after IntakePlayer
-                new InstantCommand(Outtake.on),
-                new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                new FollowPath(scorePlayerPath),
-                new InstantCommand(Intake.off()),
-                new InstantCommand(Intake.reverse()),
-                new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
-                new Delay(standardDelay),
-                Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
+//                // IntakePlayer
+//                new InstantCommand(Intake.on()),
+//                new InstantCommand(Storage.spinToNextIntakeIndex()),
+//                new FollowPath(intakeAlignPlayerPath),
+//                new InstantCommand(Intake.on()),
+//                new Delay(standardDelay),
+//                new ParallelGroup(
+//                        new SequentialGroupFixed(
+//                                new InstantCommand(Intake.off()),
+//                                new FollowPath(intakePlayerPath, true, 0.5),
+//                                new Delay (0.5)
+//                        ),
+//                        new SequentialGroupFixed(
+//                                Robot.intakeAll
+//                        )
+//
+//                ),
+//                new Delay(standardDelay),
+//
+//                // Scoring after IntakePlayer
+//                new InstantCommand(Outtake.on),
+//                new InstantCommand(Storage.spinToNextOuttakeIndex()),
+//                new FollowPath(scorePlayerPath),
+//                new InstantCommand(Intake.off()),
+//                new InstantCommand(Intake.reverse()),
+//                new WaitUntil(() -> !follower().isBusy()),
+//                new InstantCommand(Intake.off()),
+//                new Delay(standardDelay),
+//                Robot.outtakeAllSmooth(close),
+//                new Delay(standardDelay),
 
                 // Park for leave points
                 new FollowPath(finalExitPath)
