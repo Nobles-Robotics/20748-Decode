@@ -86,6 +86,15 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     boolean forceCloseScore1 = true;
 
 
+    Pose intakeAlign1;
+    Pose intake1;
+    Pose intakeAlign3;
+    Pose intake3;
+    Pose targetExitPos;
+    Pose intakeAlignPlayer;
+    Pose intakePlayer;
+
+
     Path scorePreloadPath;
     Path intakeAlign1Path;
     Path intake1Path;
@@ -234,13 +243,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             close = true;
         }
 
-        Pose intakeAlign1;
-        Pose intake1;
-        Pose intakeAlign3;
-        Pose intake3;
-        Pose targetExitPos;
-        Pose intakeAlignPlayer;
-        Pose intakePlayer;
+
 
         // Build auto commands based on settings
 
