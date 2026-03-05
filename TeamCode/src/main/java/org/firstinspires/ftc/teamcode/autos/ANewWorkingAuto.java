@@ -62,8 +62,12 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot.
     public static final Pose scorePoseCloseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot.
     static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(294));
+
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
+
+    public static final Pose intakeAlign2Blue = new Pose(45, 58, Math.toRadians(180));
+    public static final Pose intake2Blue = new Pose(6, 58, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
@@ -83,11 +87,15 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
     // CHANGE THIS TO MANIPULATE PATHING
+    // Set true if  have full field control
+    // Set false if shoot far, or if skipping
     boolean forceCloseScore1 = true;
 
 
     Pose intakeAlign1;
     Pose intake1;
+    Pose intakeAlign2;
+    Pose intake2;
     Pose intakeAlign3;
     Pose intake3;
     Pose targetExitPos;
@@ -100,9 +108,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     Path intake1Path;
     Path score1Path;
 
-//    Path intakeAlign2 = new Path(new BezierLine(scorePose, intakeAlign2Blue));
-//    Path intake2 = new Path(new BezierLine(intakeAlign2Blue, intake2Blue));
-//    Path score2 = new Path(new BezierLine(intake2Blue, scorePose));
+    Path intakeAlign2Path;
+    Path intake2Path;
+    Path score2Path;
 
     Path intakeAlign3Path;
     Path intake3Path;
@@ -127,6 +135,35 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Outtake.on),
                 new FollowPath(scorePreloadPath),
                 new Delay(standardDelay),
+                Robot.outtakeAllSmooth(close),
+                new Delay(standardDelay),
+
+                // Intake2
+                new InstantCommand(Intake.on()),
+                new InstantCommand(Storage.spinToNextIntakeIndex()),
+                new FollowPath(intakeAlign2Path),
+                new InstantCommand(Intake.on()),
+                new Delay(standardDelay),
+                new ParallelGroup(
+                        new SequentialGroupFixed(
+                                new InstantCommand(Intake.on()),
+                                new FollowPath(intake2Path, true, 0.5),
+                                new Delay (0.05)
+                        ),
+                        new SequentialGroupFixed(
+                                Robot.intakeAll
+                        )
+                ),
+                new Delay(standardDelay),
+
+                // Scoring after Intake2
+                new InstantCommand(Outtake.on),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
+                new FollowPath(score2Path),
+                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.reverse()),
+                new WaitUntil(() -> !follower().isBusy()),
+                new InstantCommand(Intake.off()),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
 
@@ -250,6 +287,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         if (blue){
             intakeAlign1=intakeAlign1Blue;
             intake1 = intake1Blue;
+            intakeAlign2 = intakeAlign2Blue;
+            intake2 = intake2Blue;
             intakeAlign3 = intakeAlign3Blue;
             intake3 = intake3Blue;
             targetExitPos = targetExitPosBlue;
@@ -274,9 +313,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         }
 
         else{
-            scorePoseGeneral = scorePoseFarBlue.mirror();
             intakeAlign1=intakeAlign1Blue.mirror();
             intake1 = intake1Blue.mirror();
+            intakeAlign2 = intakeAlign2Blue.mirror();
+            intake2 = intake2Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
             intake3 = intake3Blue.mirror();
             targetExitPos = targetExitPosBlue.mirror();
@@ -313,6 +353,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
         scorePreloadPath = new Path(new BezierLine(startPose, scorePoseGeneral));
+
+        intakeAlign2Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign2));
+        intake2Path = new Path(new BezierLine(intakeAlign2, intake2));
+        score2Path = new Path(new BezierLine(intake2, scorePoseGeneral));
+
         intakeAlign1Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign1));
         intake1Path = new Path(new BezierLine(intakeAlign1, intake1));
         score1Path = new Path(new BezierLine(intake1, scorePose1));
@@ -330,6 +375,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         // Sets all the headings
 
         scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePoseGeneral.getHeading());
+
+        intakeAlign2Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign2.getHeading());
+        intake2Path.setLinearHeadingInterpolation(intakeAlign2.getHeading(), intake2.getHeading());
+        score2Path.setLinearHeadingInterpolation(intake2.getHeading(), scorePoseGeneral.getHeading());
+
         intakeAlign1Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign1.getHeading());
         intake1Path.setLinearHeadingInterpolation(intakeAlign1.getHeading(), intake1.getHeading());
         score1Path.setLinearHeadingInterpolation(intake1.getHeading(), scorePose1.getHeading());
@@ -349,6 +399,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         // Ensures the robot doesn't get stuck on an intake cycle if the balls are jammed in front of it
         intake1Path.setTimeoutConstraint(1000);
+        intake2Path.setTimeoutConstraint(1000);
         intake3Path.setTimeoutConstraint(1000);
         scorePlayerPath.setTimeoutConstraint(1000);
 
