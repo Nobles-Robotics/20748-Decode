@@ -57,6 +57,21 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         );
     }
 
+    boolean blue = false;
+    boolean close = false;
+
+    // --- SETTINGS ---
+
+    // CHANGE THIS TO MANIPULATE PATHING
+    // Set true if  have full field control
+    // Set false if shoot far, or if skipping
+    boolean forceCloseScore1 = false;
+
+    // Sets exit pose to close
+    boolean startCloseSkipFar = false;
+
+    ///  ---------------
+
     public static Pose endPose;
     public static final Pose startPoseFarBlue = new Pose(56, 8, Math.toRadians(270)); // Start Pose of our robot.
     public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot.
@@ -66,8 +81,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
-    public static final Pose intakeAlign2Blue = new Pose(45, 57, Math.toRadians(180));
-    public static final Pose intake2Blue = new Pose(6, 57, Math.toRadians(180));
+    public static final Pose intakeAlign2Blue = new Pose(45, 58, Math.toRadians(180));
+    public static final Pose intake2Blue = new Pose(6, 58, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
@@ -83,15 +98,6 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     private static Pose startPose;
     public static Pose scorePose1;
     public static Pose scorePoseGeneral;
-
-    boolean blue = false;
-    boolean close = false;
-
-
-    // CHANGE THIS TO MANIPULATE PATHING
-    // Set true if  have full field control
-    // Set false if shoot far, or if skipping
-    boolean forceCloseScore1 = false;
 
 
     Pose intakeAlign1;
@@ -164,9 +170,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Scoring after Intake2
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                new FollowPath(score2Path),
+                new Delay(standardDelay),
                 new InstantCommand(Intake.off()),
-                new InstantCommand(Intake.reverse()),
+                //new InstantCommand(Intake.reverse()),
+                new FollowPath(score2Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 Robot.outtakeAllSmooth(close),
@@ -193,9 +200,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Scoring after Intake1
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                new FollowPath(score1Path),
+                new Delay(standardDelay),
                 new InstantCommand(Intake.off()),
-                new InstantCommand(Intake.reverse()),
+                //new InstantCommand(Intake.reverse()),
+                new FollowPath(score1Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 Robot.outtakeAllSmooth(forceCloseScore1),
@@ -222,9 +230,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Scoring after Intake3
                 new InstantCommand(Outtake.on),
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                new FollowPath(score3Path),
+                new Delay(standardDelay),
                 new InstantCommand(Intake.off()),
-                new InstantCommand(Intake.reverse()),
+                //new InstantCommand(Intake.reverse()),
+                new FollowPath(score3Path),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
@@ -296,17 +305,23 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             intake2 = intake2Blue;
             intakeAlign3 = intakeAlign3Blue;
             intake3 = intake3Blue;
-            targetExitPos = targetExitPosFarBlue;
             intakeAlignPlayer = IntakeAlignPlayerBlue;
             intakePlayer = IntakePlayerBlue;
 
             if(close){
                 startPose = startPoseCloseBlue;
                 scorePoseGeneral = scorePoseCloseBlue;
+                if(startCloseSkipFar){
+                    targetExitPos = targetExitPosCloseBlue;
+                }
+                else{
+                    targetExitPos = targetExitPosFarBlue;
+                }
             }
             else{
                 startPose = startPoseFarBlue;
                 scorePoseGeneral = scorePoseFarBlue;
+                targetExitPos = targetExitPosFarBlue;
             }
 
             if (forceCloseScore1){
@@ -317,6 +332,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             }
         }
 
+        // RED
         else{
             intakeAlign1=intakeAlign1Blue.mirror();
             intake1 = intake1Blue.mirror();
@@ -324,18 +340,25 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             intake2 = intake2Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
             intake3 = intake3Blue.mirror();
-            targetExitPos = targetExitPosFarBlue.mirror();
             intakeAlignPlayer = IntakeAlignPlayerBlue.mirror();
             intakePlayer = IntakePlayerBlue.mirror();
+
 
             if(close){
                 startPose = startPoseCloseBlue.mirror();
                 scorePoseGeneral = scorePoseCloseBlue.mirror();
 
+                if(startCloseSkipFar){
+                    targetExitPos = targetExitPosCloseBlue.mirror();
+                }
+                else{
+                    targetExitPos = targetExitPosFarBlue.mirror();
+                }
             }
             else{
                 startPose = startPoseFarBlue.mirror();
                 scorePoseGeneral = scorePoseFarBlue.mirror();
+                targetExitPos = targetExitPosFarBlue.mirror();
             }
 
             if (forceCloseScore1){
