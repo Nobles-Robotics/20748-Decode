@@ -172,8 +172,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new Delay(standardDelay),
                 new InstantCommand(Intake.off()),
-                //new InstantCommand(Intake.reverse()),
-                new FollowPath(score2Path),
+                new ParallelGroup(
+//                    new SequentialGroupFixed(
+//                        new Delay(0.1),
+//                        new InstantCommand(Intake.reverse())
+//                    ),
+                    new FollowPath(score2Path)
+                ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 Robot.outtakeAllSmooth(close),
@@ -202,8 +207,14 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new Delay(standardDelay),
                 new InstantCommand(Intake.off()),
-                //new InstantCommand(Intake.reverse()),
-                new FollowPath(score1Path),
+
+                new ParallelGroup(
+//                    new SequentialGroupFixed(
+//                        new Delay(0.1),
+//                        new InstantCommand(Intake.reverse())
+//                    ),
+                        new FollowPath(score1Path)
+                ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 Robot.outtakeAllSmooth(forceCloseScore1),
@@ -232,8 +243,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Storage.spinToNextOuttakeIndex()),
                 new Delay(standardDelay),
                 new InstantCommand(Intake.off()),
-                //new InstantCommand(Intake.reverse()),
-                new FollowPath(score3Path),
+                new ParallelGroup(
+//                    new SequentialGroupFixed(
+//                        new Delay(0.1),
+//                        new InstantCommand(Intake.reverse())
+//                    ),
+                        new FollowPath(score3Path)
+                ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
