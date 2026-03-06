@@ -61,13 +61,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     public static final Pose startPoseFarBlue = new Pose(56, 8, Math.toRadians(270)); // Start Pose of our robot.
     public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot.
     public static final Pose scorePoseCloseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot.
-    static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(294));
+    public static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(294));
 
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
 
-    public static final Pose intakeAlign2Blue = new Pose(45, 58, Math.toRadians(180));
-    public static final Pose intake2Blue = new Pose(6, 58, Math.toRadians(180));
+    public static final Pose intakeAlign2Blue = new Pose(45, 57, Math.toRadians(180));
+    public static final Pose intake2Blue = new Pose(6, 57, Math.toRadians(180));
 
     public static final Pose intakeAlign3Blue = new Pose(45, 36, Math.toRadians(180));
     public static final Pose intake3Blue = new Pose(6, 36, Math.toRadians(180));
@@ -76,7 +76,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     public static final Pose IntakeAlignPlayerBlue = new Pose(11,17, Math.toRadians(185));
 
 
-    public static final Pose targetExitPosBlue = new Pose(50, 35, Math.toRadians(295));
+    public static final Pose targetExitPosFarBlue = new Pose(50, 35, Math.toRadians(295));
+    public static final Pose targetExitPosCloseBlue = new Pose(56, 81, Math.toRadians(315));
+
 
     private static Pose startPose;
     public static Pose scorePose1;
@@ -89,7 +91,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     // CHANGE THIS TO MANIPULATE PATHING
     // Set true if  have full field control
     // Set false if shoot far, or if skipping
-    boolean forceCloseScore1 = true;
+    boolean forceCloseScore1 = false;
 
 
     Pose intakeAlign1;
@@ -110,6 +112,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     Path intakeAlign2Path;
     Path intake2Path;
+    Path intakeAlign2OutPath;
     Path score2Path;
 
     Path intakeAlign3Path;
@@ -154,6 +157,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                                 Robot.intakeAll
                         )
                 ),
+                new Delay(standardDelay),
+                new FollowPath(intakeAlign2OutPath),
                 new Delay(standardDelay),
 
                 // Scoring after Intake2
@@ -291,7 +296,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             intake2 = intake2Blue;
             intakeAlign3 = intakeAlign3Blue;
             intake3 = intake3Blue;
-            targetExitPos = targetExitPosBlue;
+            targetExitPos = targetExitPosFarBlue;
             intakeAlignPlayer = IntakeAlignPlayerBlue;
             intakePlayer = IntakePlayerBlue;
 
@@ -319,7 +324,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             intake2 = intake2Blue.mirror();
             intakeAlign3 = intakeAlign3Blue.mirror();
             intake3 = intake3Blue.mirror();
-            targetExitPos = targetExitPosBlue.mirror();
+            targetExitPos = targetExitPosFarBlue.mirror();
             intakeAlignPlayer = IntakeAlignPlayerBlue.mirror();
             intakePlayer = IntakePlayerBlue.mirror();
 
@@ -356,7 +361,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         intakeAlign2Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign2));
         intake2Path = new Path(new BezierLine(intakeAlign2, intake2));
-        score2Path = new Path(new BezierLine(intake2, scorePoseGeneral));
+        intakeAlign2OutPath = new Path(new BezierLine(intake2, intakeAlign2));
+        score2Path = new Path(new BezierLine(intakeAlign2, scorePoseGeneral));
 
         intakeAlign1Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign1));
         intake1Path = new Path(new BezierLine(intakeAlign1, intake1));
@@ -378,7 +384,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         intakeAlign2Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign2.getHeading());
         intake2Path.setLinearHeadingInterpolation(intakeAlign2.getHeading(), intake2.getHeading());
-        score2Path.setLinearHeadingInterpolation(intake2.getHeading(), scorePoseGeneral.getHeading());
+        intakeAlign2OutPath.setLinearHeadingInterpolation(intake2.getHeading(), intakeAlign2.getHeading());
+        score2Path.setLinearHeadingInterpolation(intakeAlign2.getHeading(), scorePoseGeneral.getHeading());
 
         intakeAlign1Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign1.getHeading());
         intake1Path.setLinearHeadingInterpolation(intakeAlign1.getHeading(), intake1.getHeading());
