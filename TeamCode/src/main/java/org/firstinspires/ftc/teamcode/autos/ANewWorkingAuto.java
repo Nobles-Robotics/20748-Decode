@@ -357,52 +357,25 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
 
-        scorePreloadPath = new Path(new BezierLine(startPose, scorePoseGeneral));
+        scorePreloadPath = buildPath(startPose, scorePoseGeneral);
 
-        intakeAlign2Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign2));
-        intake2Path = new Path(new BezierLine(intakeAlign2, intake2));
-        intakeAlign2OutPath = new Path(new BezierLine(intake2, intakeAlign2));
-        score2Path = new Path(new BezierLine(intakeAlign2, scorePoseGeneral));
+        intakeAlign2Path = buildPath(scorePoseGeneral, intakeAlign2);
+        intake2Path = buildPath(intakeAlign2, intake2);
+        intakeAlign2OutPath = buildPath(intake2, intakeAlign2);
+        score2Path = buildPath(intakeAlign2, scorePoseGeneral);
 
-        intakeAlign1Path = new Path(new BezierLine(scorePoseGeneral, intakeAlign1));
-        intake1Path = new Path(new BezierLine(intakeAlign1, intake1));
-        score1Path = new Path(new BezierLine(intake1, scorePose1));
+        intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1);
+        intake1Path = buildPath(intakeAlign1, intake1);
+        score1Path = buildPath(intake1, scorePose1);
 
-        intakeAlign3Path = new Path(new BezierLine(scorePose1, intakeAlign3));
-        intake3Path = new Path(new BezierLine(intakeAlign3, intake3));
-        score3Path = new Path(new BezierLine(intake3, scorePoseGeneral));
-        finalExitPath = new Path(new BezierLine(scorePoseGeneral, targetExitPos));
+        intakeAlign3Path = buildPath(scorePose1, intakeAlign3);
+        intake3Path = buildPath(intakeAlign3, intake3);
+        score3Path = buildPath(intake3, scorePoseGeneral);
+        finalExitPath = buildPath(scorePoseGeneral, targetExitPos);
 
-        intakeAlignPlayerPath = new Path(new BezierLine(scorePoseGeneral, intakeAlignPlayer));
-        intakePlayerPath = new Path(new BezierLine(intakeAlignPlayer, intakePlayer));
-        scorePlayerPath = new Path(new BezierLine(intakePlayer, scorePoseGeneral));
-
-
-        // Sets all the headings
-
-        scorePreloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePoseGeneral.getHeading());
-
-        intakeAlign2Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign2.getHeading());
-        intake2Path.setLinearHeadingInterpolation(intakeAlign2.getHeading(), intake2.getHeading());
-        intakeAlign2OutPath.setLinearHeadingInterpolation(intake2.getHeading(), intakeAlign2.getHeading());
-        score2Path.setLinearHeadingInterpolation(intakeAlign2.getHeading(), scorePoseGeneral.getHeading());
-
-        intakeAlign1Path.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlign1.getHeading());
-        intake1Path.setLinearHeadingInterpolation(intakeAlign1.getHeading(), intake1.getHeading());
-        score1Path.setLinearHeadingInterpolation(intake1.getHeading(), scorePose1.getHeading());
-
-//        intakeAlign2.setLinearHeadingInterpolation(scorePose.getHeading(), intakeAlign2.getHeading());
-//        intake2.setLinearHeadingInterpolation(intakeAlign2.getHeading(), intake2.getHeading());
-//        score2.setLinearHeadingInterpolation(intake2.getHeading(), scorePose.getHeading());
-
-        intakeAlign3Path.setLinearHeadingInterpolation(scorePose1.getHeading(), intakeAlign3.getHeading());
-        intake3Path.setLinearHeadingInterpolation(intakeAlign3.getHeading(), intake3.getHeading());
-        score3Path.setLinearHeadingInterpolation(intake3.getHeading(), scorePoseGeneral.getHeading());
-        finalExitPath.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), targetExitPos.getHeading());
-        intakeAlignPlayerPath.setLinearHeadingInterpolation(scorePoseGeneral.getHeading(), intakeAlignPlayer.getHeading());
-        intakePlayerPath.setLinearHeadingInterpolation(intakeAlignPlayer.getHeading(), intakePlayer.getHeading());
-        scorePlayerPath.setLinearHeadingInterpolation(intakePlayer.getHeading(), scorePoseGeneral.getHeading());
-
+        intakeAlignPlayerPath = buildPath(scorePoseGeneral, intakeAlignPlayer);
+        intakePlayerPath = buildPath(intakeAlignPlayer, intakePlayer);
+        scorePlayerPath = buildPath(intakePlayer, scorePoseGeneral);
 
         // Ensures the robot doesn't get stuck on an intake cycle if the balls are jammed in front of it
         intake1Path.setTimeoutConstraint(1000);
@@ -446,4 +419,15 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         endPose = follower().getPose();
         autoendPose = follower().getPose();
     }
+
+
+    /**
+     * Helper to build a Path with linear heading interpolation between two poses.
+     */
+    private Path buildPath(Pose from, Pose to) {
+        Path path = new Path(new BezierLine(from, to));
+        path.setLinearHeadingInterpolation(from.getHeading(), to.getHeading());
+        return path;
+    }
+
 }
