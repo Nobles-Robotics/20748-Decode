@@ -310,10 +310,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             close = true;
         }
 
-
-
         // Build auto commands based on settings
-
         if (blue){
             intakeAlign1=intakeAlign1Blue;
             intake1 = intake1Blue;
@@ -334,6 +331,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                     targetExitPos = targetExitPosFarBlue;
                 }
             }
+            //FAR
             else{
                 startPose = startPoseFarBlue;
                 scorePoseGeneral = scorePoseFarBlue;
@@ -371,6 +369,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                     targetExitPos = targetExitPosFarBlue.mirror();
                 }
             }
+            //FAR
             else{
                 startPose = startPoseFarBlue.mirror();
                 scorePoseGeneral = scorePoseFarBlue.mirror();
@@ -384,17 +383,6 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 scorePose1 = scorePoseGeneral;
             }
         }
-
-
-//        System.out.println(scorePoseGeneral.toString());
-//        System.out.println(intakeAlign1.toString());
-//        System.out.println(intake1.toString());
-//        System.out.println(intakeAlign3.toString());
-//        System.out.println(intake3.toString());
-//        System.out.println(targetExitPos.toString());
-//        System.out.println(startPose.toString());
-
-
 
         scorePreloadPath = buildPath(startPose, scorePoseGeneral);
 
@@ -429,6 +417,14 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         // Sets autoendPose to correctly initiate the teleop
         autoendPose = follower().getPose();
+
+//        System.out.println(scorePoseGeneral.toString());
+//        System.out.println(intakeAlign1.toString());
+//        System.out.println(intake1.toString());
+//        System.out.println(intakeAlign3.toString());
+//        System.out.println(intake3.toString());
+//        System.out.println(targetExitPos.toString());
+//        System.out.println(startPose.toString());
     }
 
     public void onUpdate(){
