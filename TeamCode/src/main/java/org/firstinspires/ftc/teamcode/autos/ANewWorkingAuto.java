@@ -92,7 +92,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
     public static final Pose targetExitPosFarBlue = new Pose(50, 35, Math.toRadians(295));
-    public static final Pose targetExitPosCloseBlue = new Pose(56, 81, Math.toRadians(315));
+    public static final Pose targetExitPosCloseBlue = new Pose(56, 112, Math.toRadians(315));
 
 
     private static Pose startPose;
