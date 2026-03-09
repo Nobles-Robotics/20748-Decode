@@ -213,18 +213,32 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off)
     );
 
+    public static double targetVelocityClose = 1750;
+    public static double targetVelocityFar = 1975;
+
+    public static InstantCommand setTargetVelocityAuto(boolean close){
+        double targetVelocity;
+        if (close){
+            targetVelocity = targetVelocityClose;
+        }
+        else{
+            targetVelocity = targetVelocityFar;
+        }
+        return new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)); //1975 far, 1750 close
+    }
+
     public static SequentialGroupFixed outtakeAllSmooth (boolean close){
         double targetVelocity;
         if (close){
-            targetVelocity = 1750;
+            targetVelocity = targetVelocityClose;
         }
         else{
-            targetVelocity = 1975;
+            targetVelocity = targetVelocityFar;
         }
         return new SequentialGroupFixed(
                 new InstantCommand(Transitions.off()),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)), //1950 far, 1750 close
+                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)), //1975 far, 1750 close
                 new ParallelRaceGroup(
                         new WaitUntil(Outtake::reachedTargetVelocity),
                         new Delay(1)
