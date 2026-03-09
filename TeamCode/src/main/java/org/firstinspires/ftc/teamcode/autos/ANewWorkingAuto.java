@@ -224,16 +224,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Scoring after Intake1
                 new ParallelGroup(
                     new InstantCommand(Outtake.on),
-                    new InstantCommand(Storage.spinToNextOuttakeIndex())
-                ),
-                new Delay(standardDelay),
-                new ParallelGroup(
+                    new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //                    new SequentialGroupFixed(
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
 //                    ),
-                        new InstantCommand(Intake.off()),
-                        new FollowPath(score1Path)
+                    new InstantCommand(Intake.off()),
+                    new FollowPath(score1Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
@@ -266,10 +263,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Scoring after Intake3
                 new ParallelGroup(
                         new InstantCommand(Outtake.on),
-                        new InstantCommand(Storage.spinToNextOuttakeIndex())
-                ),
-                new Delay(standardDelay),
-                new ParallelGroup(
+                        new InstantCommand(Storage.spinToNextOuttakeIndex()),
+
 //                    new SequentialGroupFixed(
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
