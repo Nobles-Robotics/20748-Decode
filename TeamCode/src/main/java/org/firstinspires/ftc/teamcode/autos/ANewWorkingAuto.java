@@ -28,6 +28,7 @@ import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.ParallelGroup;
+import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
@@ -69,6 +70,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     // Sets exit pose to close
     boolean startCloseSkipFar = false;
+
+    // Max time for intake before cuts loss
+    double intakeMaxTime = 1;
 
     ///  ---------------
 
@@ -157,10 +161,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
-                        new SequentialGroupFixed(
-                                new InstantCommand(Intake.on()),
-                                new FollowPath(intake2Path, true, 0.5),
-                                new Delay (0.05)
+                        new ParallelRaceGroup(
+                                new SequentialGroupFixed(
+                                        new InstantCommand(Intake.on()),
+                                        new FollowPath(intake2Path, true, 0.5),
+                                        new Delay (0.05)
+                                ),
+                                new Delay(intakeMaxTime)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
@@ -197,10 +204,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
-                        new SequentialGroupFixed(
-                                new InstantCommand(Intake.on()),
-                                new FollowPath(intake1Path, true, 0.5),
-                                new Delay (0.05)
+                        new ParallelRaceGroup(
+                                new SequentialGroupFixed(
+                                        new InstantCommand(Intake.on()),
+                                        new FollowPath(intake1Path, true, 0.5),
+                                        new Delay (0.05)
+                                ),
+                                new Delay(intakeMaxTime)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
@@ -236,10 +246,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
-                        new SequentialGroupFixed(
-                                new InstantCommand(Intake.on()),
-                                new FollowPath(intake3Path, true, 0.5),
-                                new Delay (0.05)
+                        new ParallelRaceGroup(
+                                new SequentialGroupFixed(
+                                        new InstantCommand(Intake.on()),
+                                        new FollowPath(intake3Path, true, 0.5),
+                                        new Delay (0.05)
+                                ),
+                                new Delay(intakeMaxTime)
                         ),
                         new SequentialGroupFixed(
                                 Robot.intakeAll
@@ -417,10 +430,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         scorePlayerPath = buildPath(intakePlayer, scorePoseGeneral);
 
         // Ensures the robot doesn't get stuck on an intake cycle if the balls are jammed in front of it
-        intake1Path.setTimeoutConstraint(1000);
-        intake2Path.setTimeoutConstraint(1000);
-        intake3Path.setTimeoutConstraint(1000);
-        scorePlayerPath.setTimeoutConstraint(1000);
+        intake1Path.setTimeoutConstraint(intakeMaxTime*1000);
+        intake2Path.setTimeoutConstraint(intakeMaxTime*1000);
+        intake3Path.setTimeoutConstraint(intakeMaxTime*1000);
+        scorePlayerPath.setTimeoutConstraint(intakeMaxTime*1000);
 
         // Starts auto
         follower().setStartingPose(startPose);
