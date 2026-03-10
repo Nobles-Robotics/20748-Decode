@@ -451,7 +451,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     public void onUpdate(){
         PanelsTelemetry.INSTANCE.getTelemetry().update();
-        follower().update();
+        //follower().update();
 
         autoendPose = follower().getPose();
         Drawing.drawDebug(follower());
