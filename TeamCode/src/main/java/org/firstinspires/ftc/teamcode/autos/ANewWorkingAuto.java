@@ -310,7 +310,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                new Delay(standardDelay),
 
                 // Park for leave points
-                new FollowPath(finalExitPath)
+                new FollowPath(finalExitPath),
+
+                // Turn off everything
+                new InstantCommand(Intake.off()),
+                new InstantCommand(Transitions.off())
 
         );
     }
