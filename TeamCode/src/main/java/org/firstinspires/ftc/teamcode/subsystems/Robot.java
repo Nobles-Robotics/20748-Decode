@@ -249,7 +249,7 @@ public class Robot extends SubsystemGroup {
                 new ParallelGroup(
                         new InstantCommand(Storage.assertManualPower(0.25)),
                         new SequentialGroupFixed(
-                                new Delay(0.75)
+                                new Delay(0.75) // Control intake pause, currently disabled
                                 //new InstantCommand(Intake.on())
                         )
                 ),
