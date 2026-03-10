@@ -80,7 +80,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     public static final Pose startPoseFarBlue = new Pose(56, 8, Math.toRadians(270)); // Start Pose of our robot.
     public static final Pose startPoseCloseBlue = new Pose(20, 123, Math.toRadians(323)); // Scoring Pose of our robot.
     public static final Pose scorePoseCloseBlue = new Pose(56, 81, Math.toRadians(315)); // Scoring Pose of our robot.
-    public static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(294));
+    public static final Pose scorePoseFarBlue = new Pose(59, 18, Math.toRadians(293.83));
 
     public static final Pose intakeAlign1Blue = new Pose(45, 84, Math.toRadians(180));
     public static final Pose intake1Blue = new Pose(12, 84, Math.toRadians(180));
