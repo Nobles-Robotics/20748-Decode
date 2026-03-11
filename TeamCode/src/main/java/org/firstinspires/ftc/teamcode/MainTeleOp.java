@@ -228,7 +228,7 @@ public class MainTeleOp extends NextFTCOpMode {
 //        Logger.update();
 
         ActiveOpMode.telemetry().update();
-//        panelsTelemetry.getTelemetry().update();
+        panelsTelemetry.getTelemetry().update();
     }
 
     @Override public void onStop() {

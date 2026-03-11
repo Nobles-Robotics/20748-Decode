@@ -72,6 +72,7 @@ public class Outtake implements Subsystem {
 
     @Override
     public void initialize() {
+        targetVelocity = currentVelocity;
         manualMode = false;
         velocityMode = false;
         manualPower = 0;
@@ -86,7 +87,7 @@ public class Outtake implements Subsystem {
             outtake.setPower(manualPower);
             newPower = manualPower;
         } else if (velocityMode){
-            if (currentVelocity > targetVelocity){
+            if (currentVelocity > (targetVelocity - 25)){
                 newPower = 0;
             } else {
                 newPower = 1;
