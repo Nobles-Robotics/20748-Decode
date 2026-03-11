@@ -281,36 +281,36 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
 
-//                // IntakePlayer
-//                new InstantCommand(Intake.on()),
-//                new InstantCommand(Storage.spinToNextIntakeIndex()),
-//                new FollowPath(intakeAlignPlayerPath),
-//                new InstantCommand(Intake.on()),
-//                new Delay(standardDelay),
-//                new ParallelGroup(
-//                        new SequentialGroupFixed(
-//                                new InstantCommand(Intake.off()),
-//                                new FollowPath(intakePlayerPath, true, 0.5),
-//                                new Delay (0.5)
-//                        ),
-//                        new SequentialGroupFixed(
-//                                Robot.intakeAll
-//                        )
-//
-//                ),
-//                new Delay(standardDelay),
-//
-//                // Scoring after IntakePlayer
-//                new InstantCommand(Outtake.on),
-//                new InstantCommand(Storage.spinToNextOuttakeIndex()),
-//                new FollowPath(scorePlayerPath),
-//                new InstantCommand(Intake.off()),
-//                new InstantCommand(Intake.reverse()),
-//                new WaitUntil(() -> !follower().isBusy()),
-//                new InstantCommand(Intake.off()),
-//                new Delay(standardDelay),
-//                Robot.outtakeAllSmooth(close),
-//                new Delay(standardDelay),
+                // IntakePlayer
+                new InstantCommand(Intake.on()),
+                new InstantCommand(Storage.spinToNextIntakeIndex()),
+                new FollowPath(intakeAlignPlayerPath),
+                new InstantCommand(Intake.on()),
+                new Delay(standardDelay),
+                new ParallelGroup(
+                        new SequentialGroupFixed(
+                                new InstantCommand(Intake.off()),
+                                new FollowPath(intakePlayerPath, true, 0.5),
+                                new Delay (0.5)
+                        ),
+                        new SequentialGroupFixed(
+                                Robot.intakeAll
+                        )
+
+                ),
+                new Delay(standardDelay),
+
+                // Scoring after IntakePlayer
+                new InstantCommand(Outtake.on),
+                new InstantCommand(Storage.spinToNextOuttakeIndex()),
+                new FollowPath(scorePlayerPath),
+                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.reverse()),
+                new WaitUntil(() -> !follower().isBusy()),
+                new InstantCommand(Intake.off()),
+                new Delay(standardDelay),
+                Robot.outtakeAllSmooth(close),
+                new Delay(standardDelay),
 
                 // Park for leave points
                 new FollowPath(finalExitPath),
@@ -416,23 +416,23 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         scorePreloadPath = buildPath(startPose, scorePoseGeneral, false);
 
-        intakeAlign2Path = buildPath(scorePoseGeneral, intakeAlign2, true);
-        intake2Path = buildPath(intakeAlign2, intake2, true);
-        intakeAlign2OutPath = buildPath(intake2, intakeAlign2, true);
-        score2Path = buildPath(intakeAlign2, scorePoseGeneral, true);
+        intakeAlign2Path = buildPath(scorePoseGeneral, intakeAlign2, false);
+        intake2Path = buildPath(intakeAlign2, intake2, false);
+        intakeAlign2OutPath = buildPath(intake2, intakeAlign2, false);
+        score2Path = buildPath(intakeAlign2, scorePoseGeneral, false);
 
-        intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1, true);
-        intake1Path = buildPath(intakeAlign1, intake1, true);
+        intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1, false);
+        intake1Path = buildPath(intakeAlign1, intake1, false);
         score1Path = buildPath(intake1, scorePose1, false);
 
-        intakeAlign3Path = buildPath(scorePose1, intakeAlign3, true);
-        intake3Path = buildPath(intakeAlign3, intake3, true);
-        score3Path = buildPath(intake3, scorePoseGeneral, true);
-        finalExitPath = buildPath(scorePoseGeneral, targetExitPos, true);
+        intakeAlign3Path = buildPath(scorePose1, intakeAlign3, false);
+        intake3Path = buildPath(intakeAlign3, intake3, false);
+        score3Path = buildPath(intake3, scorePoseGeneral, false);
+        finalExitPath = buildPath(scorePoseGeneral, targetExitPos, false);
 
-        intakeAlignPlayerPath = buildPath(scorePoseGeneral, intakeAlignPlayer, true);
-        intakePlayerPath = buildPath(intakeAlignPlayer, intakePlayer, true);
-        scorePlayerPath = buildPath(intakePlayer, scorePoseGeneral, true);
+        intakeAlignPlayerPath = buildPath(scorePoseGeneral, intakeAlignPlayer, false);
+        intakePlayerPath = buildPath(intakeAlignPlayer, intakePlayer, false);
+        scorePlayerPath = buildPath(intakePlayer, scorePoseGeneral, false);
 
         // Ensures the robot doesn't get stuck on an intake cycle if the balls are jammed in front of it
         intake1Path.setTimeoutConstraint(intakeMaxTime*1000);
