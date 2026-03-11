@@ -5,6 +5,9 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentLocation;
 import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 
+import android.os.SystemClock;
+import android.util.Log;
+
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -322,6 +325,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
+        final long startButtonPressedNs = SystemClock.elapsedRealtimeNanos();
 
         // Start position management set during init
         if (currentAlliance == Alliance.BLUE){
@@ -438,6 +442,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         // Starts auto
         follower().setStartingPose(startPose);
+
+        final long scheduleStartNs = SystemClock.elapsedRealtimeNanos();
+        final double msToScheduleStart = (scheduleStartNs - startButtonPressedNs) / 1_000_000.0;
+        Log.i("ANewWorkingAuto", String.format("Auto start latency: %.3f ms from start press to autonomousRoutine.schedule()", msToScheduleStart));
+
         autonomousRoutine().schedule();
         follower().breakFollowing();
 
