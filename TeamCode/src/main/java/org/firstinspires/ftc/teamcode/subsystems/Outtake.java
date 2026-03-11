@@ -86,8 +86,13 @@ public class Outtake implements Subsystem {
             outtake.setPower(manualPower);
             newPower = manualPower;
         } else if (velocityMode){
-            controller.setGoal(new KineticState(0, targetVelocity));
-            newPower = controller.calculate(new KineticState(0, currentVelocity));
+            if (currentVelocity > targetVelocity){
+                newPower = 0;
+            } else {
+                newPower = 1;
+            }
+            //controller.setGoal(new KineticState(0, targetVelocity));
+            //newPower = controller.calculate(new KineticState(0, currentVelocity));
             outtake.setPower(newPower);
         } else {
             outtake.setPower(0);

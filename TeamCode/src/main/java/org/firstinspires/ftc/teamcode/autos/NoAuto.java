@@ -87,7 +87,8 @@
 //
 //    @Override
 //    public void onStartButtonPressed() {
-//        if (currentAlliance == Alliance.BLUE){
+//        if (currentAlliance == Alliance.BLUE){\
+
 //            blue = true;
 //        } else {
 //            blue = false;
