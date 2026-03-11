@@ -247,10 +247,19 @@ public class Robot extends SubsystemGroup {
                 new InstantCommand(Transitions.on()),
 
                 new ParallelGroup(
-                        new InstantCommand(Storage.assertManualPower(0.25)),
-                        new SequentialGroupFixed(
-                                new Delay(0.75) // Control intake pause, currently disabled
-                                //new InstantCommand(Intake.on())
+                        new InstantCommand(Storage.assertManualPower(0.3)),
+                        new ParallelGroup(
+                            new SequentialGroupFixed(
+                                new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+                                new Delay(INTAKE_DELAY),
+                                new IfElseCommand(() -> Storage.isStorageMotorStuck(), Storage.assertManualPower(1)),
+                                new Delay(INTAKE_DELAY/2),
+                                new InstantCommand(Storage.assertManualPower(0.3))
+                            ),
+                            new SequentialGroupFixed(
+                                    new Delay(0.75) // Control intake pause, currently disabled
+                                    //new InstantCommand(Intake.on())
+                            )
                         )
                 ),
                 new Delay(1),
