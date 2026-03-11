@@ -249,7 +249,7 @@ public class Robot extends SubsystemGroup {
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.on()),
 
-                new InstantCommand(Storage.assertManualPower(0.3)),
+                new InstantCommand(Storage.assertManualPower(0.25)),
 
                 // Stuck protection: +0.2 sec base, +0.5-1 sec if stuck
                 new Delay (INTAKE_DELAY),
@@ -282,7 +282,7 @@ public class Robot extends SubsystemGroup {
                                 )
                         )
                 ),
-                new InstantCommand(Storage.assertManualPower(0.3)),
+                new InstantCommand(Storage.assertManualPower(0.25)),
                 Transitions.on(),
                 new Delay(1.5),
 
