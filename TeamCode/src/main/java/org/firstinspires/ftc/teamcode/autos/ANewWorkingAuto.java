@@ -67,7 +67,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     // --- SETTINGS ---
 
     // CHANGE THIS TO MANIPULATE PATHING
-    // Set true if  have full field control
+    // Set true if have full field control
     // Set false if shoot far, or if skipping
     boolean forceCloseScore1 = false;
 
@@ -204,12 +204,13 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 // Intake1
                 new ParallelGroup(
-                        new InstantCommand(Intake.on()),
+                        new InstantCommand(Intake.reverse()),
                         new InstantCommand(Storage.spinToNextIntakeIndex()),
                         new FollowPath(intakeAlign1Path)
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
+                        Intake.on(),
                         new ParallelRaceGroup(
                                 new SequentialGroupFixed(
                                         new InstantCommand(Intake.on()),
@@ -237,17 +238,18 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
-                Robot.outtakeAllSmooth(forceCloseScore1),
+                Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
 //
 //                // Intake3
 //                new ParallelGroup(
-//                        new InstantCommand(Intake.on()),
+//                        new InstantCommand(Intake.reverse()),
 //                        new InstantCommand(Storage.spinToNextIntakeIndex()),
 //                        new FollowPath(intakeAlign3Path)
 //                ),
 //                new Delay(standardDelay),
 //                new ParallelGroup(
+//                        new InstantCommand(Intake.on()),
 //                        new ParallelRaceGroup(
 //                                new SequentialGroupFixed(
 //                                        new InstantCommand(Intake.on()),
