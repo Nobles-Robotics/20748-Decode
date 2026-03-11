@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Storage.extraTimeToOuttakeAfterStuck;
+
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
@@ -11,6 +13,7 @@ import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
+import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 
 public class Robot extends SubsystemGroup {
@@ -250,23 +253,26 @@ public class Robot extends SubsystemGroup {
                         new InstantCommand(Storage.assertManualPower(0.3)),
                         new ParallelGroup(
                             new SequentialGroupFixed(
+                                new Delay (INTAKE_DELAY),
                                 new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
-                                new Delay(INTAKE_DELAY),
+                                new Delay((INTAKE_DELAY)+0.02),
                                 new IfElseCommand(() -> Storage.isStorageMotorStuck(),
                                         new ParallelGroup(
-                                                new InstantCommand(Storage.assertManualPower(1))),
-                                                new InstantCommand(Storage.outtakeStuckSignal())
-                                        ),
-                                new Delay(INTAKE_DELAY/2),
-                                new InstantCommand(Storage.assertManualPower(0.3))
-                            ),
-                            new SequentialGroupFixed(
-                                    new Delay(0.75) // Control intake pause, currently disabled
-                                    //new InstantCommand(Intake.on())
+                                                new SequentialGroupFixed(
+                                                        new InstantCommand(Transitions.off()),
+                                                        new Delay (INTAKE_DELAY),
+                                                        new InstantCommand(Storage.assertManualPower(1)),
+                                                        new InstantCommand(Storage.outtakeStuckSignal())
+                                                ),
+                                                new Delay(0.5)
+                                        )
+                                ),
+                                new InstantCommand(Storage.assertManualPower(0.3)),
+                                Transitions.on()
                             )
                         )
                 ),
-                new Delay(1),
+                new Delay(1.75),
 
 //            new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //            new Delay(OUTTAKE_DELAY),
@@ -278,7 +284,8 @@ public class Robot extends SubsystemGroup {
 //            new Delay(OUTTAKE_DELAY),
                 new InstantCommand(Storage.assertManualPower(0)),
                 new InstantCommand(Transitions.off()),
-                new InstantCommand(Outtake.off)
+                new InstantCommand(Outtake.off),
+                new InstantCommand(Storage.resetOuttakeStuckSignal())
         );
     }
 

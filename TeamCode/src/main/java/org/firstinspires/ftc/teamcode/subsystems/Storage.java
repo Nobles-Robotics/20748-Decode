@@ -205,9 +205,16 @@ public class Storage implements Subsystem {
         });
     }
 
+    public static double extraTimeToOuttakeAfterStuck = 0;
     public static Command outtakeStuckSignal() {
         return new InstantCommand(() -> {
             Log.i("Storage", String.format("Spindexer stuck during outtake... speed boosted"));
+            extraTimeToOuttakeAfterStuck = 0.5;
+        });
+    }
+    public static Command resetOuttakeStuckSignal() {
+        return new InstantCommand(() -> {
+            extraTimeToOuttakeAfterStuck=0;
         });
     }
     public static Command assertManualPower(double newPower) {
@@ -265,9 +272,10 @@ public class Storage implements Subsystem {
                     if (elapsedSeconds >= checkDurationSeconds) {
                         double movedTicks = Math.abs(currentPosition - startPosition[0]);
                         storageMotorStuck = movedTicks < minPositionDeltaTicks;
+                        Log.i("ANewWorkingAuto", String.format("checkIfStuck: true, movedTicks: %.3f", movedTicks));
                         return true;
                     }
-
+                    Log.i("ANewWorkingAuto", String.format("checkIfStuck: false, movedTicks: %.3f", Math.abs(currentPosition - startPosition[0])));
                     return false;
                 })
                 .setStop(interrupted -> {
