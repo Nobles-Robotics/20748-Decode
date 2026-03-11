@@ -216,8 +216,8 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off)
     );
 
-    public static double targetVelocityClose = 1750;
-    public static double targetVelocityFar = 1975;
+    public static double targetVelocityClose = 1725;
+    public static double targetVelocityFar = 1960;
 
     public static InstantCommand setTargetVelocityAuto(boolean close){
         double targetVelocity;
@@ -241,7 +241,7 @@ public class Robot extends SubsystemGroup {
         return new SequentialGroupFixed(
                 new InstantCommand(Transitions.off()),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)), //1975 far, 1750 close
+                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)),
                 new ParallelRaceGroup(
                         new WaitUntil(Outtake::reachedTargetVelocity),
                         new Delay(1)
@@ -249,30 +249,42 @@ public class Robot extends SubsystemGroup {
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.on()),
 
-                new ParallelGroup(
-                        new InstantCommand(Storage.assertManualPower(0.3)),
+                new InstantCommand(Storage.assertManualPower(0.3)),
 
-                        // Stuck protection: 0.22 sec added if no stuck, 0.62 sec if stuck
+                // Stuck protection: +0.2 sec base, +0.5-1 sec if stuck
+                new Delay (INTAKE_DELAY),
+                new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+                new Delay((INTAKE_DELAY)+0.02),
+                new IfElseCommand(() -> Storage.isStorageMotorStuck(),
+                        new ParallelGroup(
+                                new SequentialGroupFixed(
+                                        new InstantCommand(Transitions.off()),
+                                        new Delay (INTAKE_DELAY),
+                                        new InstantCommand(Storage.assertManualPower(1)),
+                                        new InstantCommand(Storage.outtakeStuckSignal())
+                                ),
+                                new Delay(0.5)
+                        ),
                         new SequentialGroupFixed(
-                            new Delay (INTAKE_DELAY),
-                            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
-                            new Delay((INTAKE_DELAY)+0.02),
-                            new IfElseCommand(() -> Storage.isStorageMotorStuck(),
-                                    new ParallelGroup(
-                                            new SequentialGroupFixed(
-                                                    new InstantCommand(Transitions.off()),
-                                                    new Delay (INTAKE_DELAY),
-                                                    new InstantCommand(Storage.assertManualPower(1)),
-                                                    new InstantCommand(Storage.outtakeStuckSignal())
-                                            ),
-                                            new Delay(0.4)
-                                    )
-                            ),
-                            new InstantCommand(Storage.assertManualPower(0.3)),
-                            Transitions.on()
+                                new Delay (0.5),
+                                new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+                                new Delay((INTAKE_DELAY)+0.02),
+                                new IfElseCommand(() -> Storage.isStorageMotorStuck(),
+                                        new ParallelGroup(
+                                                new SequentialGroupFixed(
+                                                        new InstantCommand(Transitions.off()),
+                                                        new Delay (INTAKE_DELAY),
+                                                        new InstantCommand(Storage.assertManualPower(1)),
+                                                        new InstantCommand(Storage.outtakeStuckSignal())
+                                                ),
+                                                new Delay(0.5)
+                                        )
+                                )
                         )
                 ),
-                new Delay(1.75),
+                new InstantCommand(Storage.assertManualPower(0.3)),
+                Transitions.on(),
+                new Delay(1.5),
 
 //            new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //            new Delay(OUTTAKE_DELAY),
