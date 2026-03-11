@@ -72,7 +72,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     boolean forceCloseScore1 = false;
 
     // Sets exit pose to close
-    boolean startCloseSkipFarIntake = false;
+    boolean startCloseForCloseExit = true;
 
     // Max time for intake before cuts loss
     double intakeMaxTime = 1;
@@ -354,7 +354,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             if(close){
                 startPose = startPoseCloseBlue;
                 scorePoseGeneral = scorePoseCloseBlue;
-                if(startCloseSkipFarIntake){
+                if(startCloseForCloseExit){
                     targetExitPos = targetExitPosCloseBlue;
                 }
                 else{
@@ -392,7 +392,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 startPose = startPoseCloseBlue.mirror();
                 scorePoseGeneral = scorePoseCloseBlue.mirror();
 
-                if(startCloseSkipFarIntake){
+                if(startCloseForCloseExit){
                     targetExitPos = targetExitPosCloseBlue.mirror();
                 }
                 else{
