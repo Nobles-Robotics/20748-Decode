@@ -273,7 +273,7 @@ public class Storage implements Subsystem {
                         double movedTicks = Math.abs(currentPosition - startPosition[0]);
                         storageMotorStuck = movedTicks < minPositionDeltaTicks;
                         Log.i("Storage", String.format("checkIfStuck: true, movedTicks: %.3f", movedTicks));
-                        Log.i("Storage", String.format("storageMotorStuck: ", storageMotorStuck));
+                        Log.i("Storage", "storageMotorStuck: " + storageMotorStuck);
                         return true;
                     }
                     Log.i("Storage", String.format("checkIfStuck: false, movedTicks: %.3f", Math.abs(currentPosition - startPosition[0])));
