@@ -252,7 +252,11 @@ public class Robot extends SubsystemGroup {
                             new SequentialGroupFixed(
                                 new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
                                 new Delay(INTAKE_DELAY),
-                                new IfElseCommand(() -> Storage.isStorageMotorStuck(), Storage.assertManualPower(1)),
+                                new IfElseCommand(() -> Storage.isStorageMotorStuck(),
+                                        new ParallelGroup(
+                                                new InstantCommand(Storage.assertManualPower(1))),
+                                                new InstantCommand(Storage.outtakeStuckSignal())
+                                        ),
                                 new Delay(INTAKE_DELAY/2),
                                 new InstantCommand(Storage.assertManualPower(0.3))
                             ),
