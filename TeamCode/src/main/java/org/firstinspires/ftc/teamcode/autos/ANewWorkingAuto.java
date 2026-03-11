@@ -414,25 +414,25 @@ public class ANewWorkingAuto extends NextFTCOpMode {
             }
         }
 
-        scorePreloadPath = buildPath(startPose, scorePoseGeneral);
+        scorePreloadPath = buildPath(startPose, scorePoseGeneral, false);
 
-        intakeAlign2Path = buildPath(scorePoseGeneral, intakeAlign2);
-        intake2Path = buildPath(intakeAlign2, intake2);
-        intakeAlign2OutPath = buildPath(intake2, intakeAlign2);
-        score2Path = buildPath(intakeAlign2, scorePoseGeneral);
+        intakeAlign2Path = buildPath(scorePoseGeneral, intakeAlign2, true);
+        intake2Path = buildPath(intakeAlign2, intake2, true);
+        intakeAlign2OutPath = buildPath(intake2, intakeAlign2, true);
+        score2Path = buildPath(intakeAlign2, scorePoseGeneral, true);
 
-        intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1);
-        intake1Path = buildPath(intakeAlign1, intake1);
-        score1Path = buildPath(intake1, scorePose1);
+        intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1, true);
+        intake1Path = buildPath(intakeAlign1, intake1, true);
+        score1Path = buildPath(intake1, scorePose1, false);
 
-        intakeAlign3Path = buildPath(scorePose1, intakeAlign3);
-        intake3Path = buildPath(intakeAlign3, intake3);
-        score3Path = buildPath(intake3, scorePoseGeneral);
-        finalExitPath = buildPath(scorePoseGeneral, targetExitPos);
+        intakeAlign3Path = buildPath(scorePose1, intakeAlign3, true);
+        intake3Path = buildPath(intakeAlign3, intake3, true);
+        score3Path = buildPath(intake3, scorePoseGeneral, true);
+        finalExitPath = buildPath(scorePoseGeneral, targetExitPos, true);
 
-        intakeAlignPlayerPath = buildPath(scorePoseGeneral, intakeAlignPlayer);
-        intakePlayerPath = buildPath(intakeAlignPlayer, intakePlayer);
-        scorePlayerPath = buildPath(intakePlayer, scorePoseGeneral);
+        intakeAlignPlayerPath = buildPath(scorePoseGeneral, intakeAlignPlayer, true);
+        intakePlayerPath = buildPath(intakeAlignPlayer, intakePlayer, true);
+        scorePlayerPath = buildPath(intakePlayer, scorePoseGeneral, true);
 
         // Ensures the robot doesn't get stuck on an intake cycle if the balls are jammed in front of it
         intake1Path.setTimeoutConstraint(intakeMaxTime*1000);
@@ -494,9 +494,15 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     /**
      * Helper to build a Path with linear heading interpolation between two poses.
      */
-    private Path buildPath(Pose from, Pose to) {
+    private Path buildPath(Pose from, Pose to, boolean constantHeadingInterpolation) {
         Path path = new Path(new BezierLine(from, to));
-        path.setLinearHeadingInterpolation(from.getHeading(), to.getHeading());
+        if(constantHeadingInterpolation){
+            path.setConstantHeadingInterpolation(to.getHeading());
+        }
+        else{
+            path.setLinearHeadingInterpolation(from.getHeading(), to.getHeading());
+
+        }
         return path;
     }
 
