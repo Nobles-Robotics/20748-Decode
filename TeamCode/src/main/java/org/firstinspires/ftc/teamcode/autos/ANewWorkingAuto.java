@@ -238,51 +238,51 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.off()),
+                Robot.outtakeAllSmooth(close), //forceCloseScore1
+                new Delay(standardDelay),
+
+                // Intake3
+                new ParallelGroup(
+                        new InstantCommand(Intake.reverse()),
+                        new InstantCommand(Storage.spinToNextIntakeIndex()),
+                        new FollowPath(intakeAlign3Path)
+                ),
+                new Delay(standardDelay),
+                new ParallelGroup(
+                        new InstantCommand(Intake.on()),
+                        new ParallelRaceGroup(
+                                new SequentialGroupFixed(
+                                        new InstantCommand(Intake.on()),
+                                        new FollowPath(intake3Path, true, 0.5),
+                                        new Delay (0.05)
+                                ),
+                                new Delay(intakeMaxTime)
+                        ),
+                        new SequentialGroupFixed(
+                                Robot.intakeAll
+                        )
+
+                ),
+                new InstantCommand(Intake.on()),
+                new Delay(standardDelay),
+
+                // Scoring after Intake3
+                new ParallelGroup(
+                        new InstantCommand(Outtake.on),
+                        new InstantCommand(Storage.spinToNextOuttakeIndex()),
+
+//                    new SequentialGroupFixed(
+//                        new Delay(0.1),
+//                        new InstantCommand(Intake.reverse())
+//                    ),
+                        new InstantCommand(Intake.off()),
+                        new FollowPath(score3Path)
+                ),
+                new WaitUntil(() -> !follower().isBusy()),
+                new InstantCommand(Intake.off()),
+                new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
-//
-//                // Intake3
-//                new ParallelGroup(
-//                        new InstantCommand(Intake.reverse()),
-//                        new InstantCommand(Storage.spinToNextIntakeIndex()),
-//                        new FollowPath(intakeAlign3Path)
-//                ),
-//                new Delay(standardDelay),
-//                new ParallelGroup(
-//                        new InstantCommand(Intake.on()),
-//                        new ParallelRaceGroup(
-//                                new SequentialGroupFixed(
-//                                        new InstantCommand(Intake.on()),
-//                                        new FollowPath(intake3Path, true, 0.5),
-//                                        new Delay (0.05)
-//                                ),
-//                                new Delay(intakeMaxTime)
-//                        ),
-//                        new SequentialGroupFixed(
-//                                Robot.intakeAll
-//                        )
-//
-//                ),
-//                new InstantCommand(Intake.on()),
-//                new Delay(standardDelay),
-//
-//                // Scoring after Intake3
-//                new ParallelGroup(
-//                        new InstantCommand(Outtake.on),
-//                        new InstantCommand(Storage.spinToNextOuttakeIndex()),
-//
-////                    new SequentialGroupFixed(
-////                        new Delay(0.1),
-////                        new InstantCommand(Intake.reverse())
-////                    ),
-//                        new InstantCommand(Intake.off()),
-//                        new FollowPath(score3Path)
-//                ),
-//                new WaitUntil(() -> !follower().isBusy()),
-//                new InstantCommand(Intake.off()),
-//                new Delay(standardDelay),
-//                Robot.outtakeAllSmooth(close),
-//                new Delay(standardDelay),
 
                 // Park for leave points
                 new FollowPath(finalExitPath),
