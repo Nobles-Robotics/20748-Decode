@@ -306,7 +306,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.off())
         );
-        
+
+        // Close start = disable intake3Group
+        // Far start = disable intake1Group
         return new SequentialGroupFixed(
                 setupGroup,
                 scorePreloadGroup,
