@@ -155,7 +155,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                     new InstantCommand(Outtake.on),
                     new FollowPath(scorePreloadPath)
                 ),
-                new Delay(standardDelay),
+                new WaitUntil(() -> !follower().isBusy()),
+                new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
 
