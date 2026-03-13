@@ -217,7 +217,7 @@ public class Robot extends SubsystemGroup {
     );
 
     public static double targetVelocityClose = 1725;
-    public static double targetVelocityFar = 1960;
+    public static double targetVelocityFar = 1950;
 
     public static InstantCommand setTargetVelocityAuto(boolean close){
         double targetVelocity;
