@@ -26,10 +26,14 @@ import org.firstinspires.ftc.teamcode.utils.Location;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 import org.firstinspires.ftc.teamcode.utils.components.AllianceManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
+import dev.nextftc.core.commands.groups.CommandGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -61,8 +65,14 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         );
     }
 
+    // Sets start position (manual setup during init)
     boolean blue = false;
     boolean close = false;
+
+    // Sets intake paths (true = runs path, false = skips)
+    boolean runIntake1 = true;
+    boolean runIntake2 = true;
+    boolean runIntake3 = true;
 
     // --- SETTINGS ---
 
@@ -309,14 +319,32 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
         // Close start = disable intake3Group
         // Far start = disable intake1Group
-        return new SequentialGroupFixed(
-                setupGroup,
-                scorePreloadGroup,
-                intake2Group,
-                intake1Group,
-                intake3Group,
-                exitGroup
-        );
+        List<Object> groups = new ArrayList<>();
+
+        groups.add(setupGroup);
+        groups.add(scorePreloadGroup);
+        if (runIntake2){
+            groups.add(intake2Group);
+        }
+        if (runIntake1){
+            groups.add(intake1Group);
+        }
+        if (runIntake3){
+            groups.add(intake3Group);
+        }
+        groups.add(exitGroup);
+
+        return new SequentialGroupFixed(groups.toArray(new SequentialGroupFixed[0]));
+
+
+//        return new SequentialGroupFixed(
+//                setupGroup,
+//                scorePreloadGroup,
+//                intake2Group,
+//                intake1Group,
+//                intake3Group,
+//                exitGroup
+//        );
     }
 
 
