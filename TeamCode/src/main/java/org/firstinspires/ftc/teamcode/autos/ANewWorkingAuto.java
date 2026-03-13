@@ -12,6 +12,7 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -70,7 +71,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     boolean close = false;
 
     // Sets intake paths (true = runs path, false = skips)
-    boolean runIntake1 = true;
+    boolean runIntake1 = false;
     boolean runIntake2 = true;
     boolean runIntake3 = true;
 
@@ -137,6 +138,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     Path intake2Path;
     Path intakeAlign2OutPath;
     Path score2Path;
+    PathChain intake2Score2PathChain;
 
     Path intakeAlign3Path;
     Path intake3Path;
@@ -168,6 +170,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                     new FollowPath(scorePreloadPath)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
+                new Delay(standardDelay*3),
                 new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay)
@@ -199,21 +202,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new InstantCommand(Outtake.on),
                         new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                        new FollowPath(intakeAlign2OutPath, false)
-
-                ),
-                //new Delay(standardDelay),
-
-                // Scoring after Intake2
-                new ParallelGroup(
-//                    new SequentialGroupFixed(
-//                        new Delay(0.1),
-//                        new InstantCommand(Intake.reverse())
-//                    ),
                         new InstantCommand(Intake.on()),
-                        new FollowPath(score2Path)
+                        new FollowPath(intake2Score2PathChain, false)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
+                new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay)
@@ -256,6 +249,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                     new FollowPath(score1Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
+                new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close), //forceCloseScore1
                 new Delay(standardDelay)
@@ -301,6 +295,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                         new FollowPath(score3Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
+                new Delay(standardDelay),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
@@ -445,6 +440,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         intake2Path = buildPath(intakeAlign2, intake2, false);
         intakeAlign2OutPath = buildPath(intake2, intakeAlign2, false);
         score2Path = buildPath(intakeAlign2, scorePoseGeneral, false);
+        intake2Score2PathChain = follower().pathBuilder()
+                .addPaths(intakeAlign2OutPath, score2Path)
+                .build();
 
         intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1, false);
         intake1Path = buildPath(intakeAlign1, intake1, false);
