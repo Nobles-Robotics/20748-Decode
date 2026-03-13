@@ -217,7 +217,7 @@ public class Robot extends SubsystemGroup {
     );
 
     public static double targetVelocityClose = 1725;
-    public static double targetVelocityFar = 1950;
+    public static double targetVelocityFar = 1925;
 
     public static InstantCommand setTargetVelocityAuto(boolean close){
         double targetVelocity;
@@ -251,7 +251,6 @@ public class Robot extends SubsystemGroup {
 
                 new InstantCommand(Storage.assertManualPower(0.25)),
 
-                // Stuck protection: +0.2 sec base, +0.5-1 sec if stuck
                 new Delay (INTAKE_DELAY),
                 new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
                 new Delay((INTAKE_DELAY)+0.02),
@@ -263,7 +262,7 @@ public class Robot extends SubsystemGroup {
                                         new InstantCommand(Storage.assertManualPower(1)),
                                         new InstantCommand(Storage.outtakeStuckSignal())
                                 ),
-                                new Delay(0.5)
+                                new Delay(0.6)
                         ),
                         new SequentialGroupFixed(
                                 new Delay (0.5),
@@ -284,7 +283,7 @@ public class Robot extends SubsystemGroup {
                 ),
                 new InstantCommand(Storage.assertManualPower(0.25)),
                 Transitions.on(),
-                new Delay(1.5),
+                new Delay(1),
 
 //            new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //            new Delay(OUTTAKE_DELAY),
