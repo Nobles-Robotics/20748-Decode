@@ -141,14 +141,16 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     private Command autonomousRoutine() {
         double standardDelay = 0.025; // Slight delay to ensure that everything is settled before moving on
 
-        return new SequentialGroupFixed(
+        SequentialGroupFixed setupGroup = new SequentialGroupFixed(
 
                 // Setup
                 new ParallelGroup(
                         new InstantCommand(Intake.off()),
                         new InstantCommand(Transitions.off()),
                         new InstantCommand(Robot.setTargetVelocityAuto(close))
-                ),
+                )
+        );
+        SequentialGroupFixed scorePreloadGroup = new SequentialGroupFixed(
 
                 // Scoring Preload
                 new ParallelGroup(
@@ -158,7 +160,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed intake2Group = new SequentialGroupFixed(
 
                 // Intake2
                 new ParallelGroup(
@@ -201,7 +206,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed intake1Group = new SequentialGroupFixed(
 
                 // Intake1
                 new ParallelGroup(
@@ -240,7 +248,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new WaitUntil(() -> !follower().isBusy()),
                 new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close), //forceCloseScore1
-                new Delay(standardDelay),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed intake3Group = new SequentialGroupFixed(
 
                 // Intake3
                 new ParallelGroup(
@@ -283,7 +294,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed exitGroup = new SequentialGroupFixed(
 
                 // Park for leave points
                 new FollowPath(finalExitPath),
@@ -291,7 +305,15 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Turn off everything
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.off())
-
+        );
+        
+        return new SequentialGroupFixed(
+                setupGroup,
+                scorePreloadGroup,
+                intake2Group,
+                intake1Group,
+                intake3Group,
+                exitGroup
         );
     }
 
