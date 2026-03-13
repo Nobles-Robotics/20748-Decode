@@ -195,11 +195,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
 //                    ),
-                        new InstantCommand(Intake.off()),
+                        new InstantCommand(Intake.on()),
                         new FollowPath(score2Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
 
@@ -234,11 +234,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
 //                    ),
-                    new InstantCommand(Intake.off()),
+                    new InstantCommand(Intake.on()),
                     new FollowPath(score1Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close), //forceCloseScore1
                 new Delay(standardDelay),
 
@@ -276,11 +276,11 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
 //                    ),
-                        new InstantCommand(Intake.off()),
+                        new InstantCommand(Intake.on()),
                         new FollowPath(score3Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
+                new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
@@ -490,7 +490,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                new Delay(standardDelay),
 //                new ParallelGroup(
 //                        new SequentialGroupFixed(
-//                                new InstantCommand(Intake.off()),
+//                                new InstantCommand(Intake.on()),
 //                                new FollowPath(intakePlayerPath, true, 0.5),
 //                                new Delay (0.5)
 //                        ),
@@ -506,10 +506,10 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                new InstantCommand(Outtake.on),
 //                new InstantCommand(Storage.spinToNextOuttakeIndex()),
 //                new FollowPath(scorePlayerPath),
-//                new InstantCommand(Intake.off()),
+//                new InstantCommand(Intake.on()),
 //                new InstantCommand(Intake.reverse()),
 //                new WaitUntil(() -> !follower().isBusy()),
-//                new InstantCommand(Intake.off()),
+//                new InstantCommand(Intake.on()),
 //                new Delay(standardDelay),
 //                Robot.outtakeAllSmooth(close),
 //                new Delay(standardDelay),
