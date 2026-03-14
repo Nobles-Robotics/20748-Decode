@@ -28,13 +28,13 @@ public class Transitions implements Subsystem {
     }
 
     public static Command on() {
-        return new InstantCommand(setTransitionPowerCommand(FORWARD_POWER));
+        return new InstantCommand(() -> setTransitionPower(FORWARD_POWER));
     }
     public static Command reverse() {
-        return new InstantCommand(setTransitionPowerCommand(REVERSE_POWER));
+        return new InstantCommand(() -> setTransitionPower(REVERSE_POWER));
     }
     public static Command off() {
-        return new InstantCommand(setTransitionPowerCommand(0));
+        return new InstantCommand(() -> setTransitionPower(0));
     }
     public static Command setTransitionPowerCommand(double newPower) {
         return new InstantCommand(() -> setTransitionPower(newPower));

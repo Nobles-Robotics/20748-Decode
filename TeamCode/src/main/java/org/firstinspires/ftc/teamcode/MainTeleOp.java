@@ -77,8 +77,8 @@ public class MainTeleOp extends NextFTCOpMode {
 
         gp1.start()
                 .toggleOnBecomesTrue()
-                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true))
-                .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false));
+                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true).schedule())
+                .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false).schedule());
 
         gp1.a()
                 .whenBecomesTrue(() -> Storage.assertManualPower(-0.25).schedule())
@@ -142,8 +142,8 @@ public class MainTeleOp extends NextFTCOpMode {
 
         gp2.start()
                 .toggleOnBecomesTrue()
-                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true))
-                .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false));
+                .whenBecomesTrue(() -> Robot.optimizeLoopTimes(true).schedule())
+                .whenBecomesFalse(() -> Robot.optimizeLoopTimes(false).schedule());
 
         gp2.a()
                 .whenBecomesTrue(() -> Storage.assertManualPower(0.75).schedule())

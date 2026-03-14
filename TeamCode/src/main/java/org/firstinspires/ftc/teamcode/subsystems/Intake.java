@@ -28,13 +28,13 @@ public class Intake implements Subsystem {
     }
 
     public static Command on() {
-        return new InstantCommand(setIntakePowerCommand(FORWARD_POWER));
+        return new InstantCommand(() -> setIntakePower(FORWARD_POWER));
     }
     public static Command reverse() {
-        return new InstantCommand(setIntakePowerCommand(REVERSE_POWER));
+        return new InstantCommand(() -> setIntakePower(REVERSE_POWER));
     }
     public static Command off() {
-        return new InstantCommand(setIntakePowerCommand(0));
+        return new InstantCommand(() -> setIntakePower(0));
     }
 
     private static void setIntakePower(double newPower) {

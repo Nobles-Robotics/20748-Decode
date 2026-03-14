@@ -34,10 +34,8 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
-import dev.nextftc.core.commands.groups.CommandGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
-import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.FollowPath;
@@ -158,21 +156,21 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 // Setup
                 new ParallelGroup(
-                        new InstantCommand(Intake.off()),
-                        new InstantCommand(Transitions.off()),
-                        new InstantCommand(Robot.setTargetVelocityAuto(close))
+                        Intake.off(),
+                        Transitions.off(),
+                        Robot.setTargetVelocityAuto(close)
                 )
         );
         SequentialGroupFixed scorePreloadGroup = new SequentialGroupFixed(
 
                 // Scoring Preload
                 new ParallelGroup(
-                    new InstantCommand(Outtake.on),
+                    Outtake.on,
                     new FollowPath(scorePreloadPath)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay*3),
-                new InstantCommand(Intake.on()),
+                Intake.on(),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay)
         );
@@ -181,15 +179,15 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 // Intake2
                 new ParallelGroup(
-                        new InstantCommand(Intake.on()),
-                        new InstantCommand(Storage.spinToNextIntakeIndex()),
+                        Intake.on(),
+                        Storage.spinToNextIntakeIndex(),
                         new FollowPath(intakeAlign2Path)
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
                         new ParallelRaceGroup(
                                 new SequentialGroupFixed(
-                                        new InstantCommand(Intake.on()),
+                                        Intake.on(),
                                         new FollowPath(intake2Path, true, 0.5),
                                         new Delay (0.05)
                                 ),
@@ -201,14 +199,14 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
-                        new InstantCommand(Outtake.on),
-                        new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                        new InstantCommand(Intake.on()),
+                        Outtake.on,
+                        Storage.spinToNextOuttakeIndex(),
+                        Intake.on(),
                         new FollowPath(intake2Score2PathChain, false)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                new InstantCommand(Intake.on()),
+                Intake.on(),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay)
         );
@@ -217,8 +215,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 // Intake1
                 new ParallelGroup(
-                        new InstantCommand(Intake.reverse()),
-                        new InstantCommand(Storage.spinToNextIntakeIndex()),
+                        Intake.reverse(),
+                        Storage.spinToNextIntakeIndex(),
                         new FollowPath(intakeAlign1Path)
                 ),
                 new Delay(standardDelay),
@@ -226,7 +224,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                         Intake.on(),
                         new ParallelRaceGroup(
                                 new SequentialGroupFixed(
-                                        new InstantCommand(Intake.on()),
+                                        Intake.on(),
                                         new FollowPath(intake1Path, true, 0.5),
                                         new Delay (0.05)
                                 ),
@@ -236,22 +234,22 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                                 Robot.intakeAll
                         )
                 ),
-                new InstantCommand(Intake.on()),
+                Intake.on(),
                 new Delay(standardDelay),
                 // Scoring after Intake1
                 new ParallelGroup(
-                    new InstantCommand(Outtake.on),
-                    new InstantCommand(Storage.spinToNextOuttakeIndex()),
+                    Outtake.on,
+                    Storage.spinToNextOuttakeIndex(),
 //                    new SequentialGroupFixed(
 //                        new Delay(0.1),
-//                        new InstantCommand(Intake.reverse())
+//                        Intake.reverse()
 //                    ),
-                    new InstantCommand(Intake.on()),
+                    Intake.on(),
                     new FollowPath(score1Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                new InstantCommand(Intake.on()),
+                Intake.on(),
                 Robot.outtakeAllSmooth(close), //forceCloseScore1
                 new Delay(standardDelay)
         );
@@ -260,16 +258,16 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
                 // Intake3
                 new ParallelGroup(
-                        new InstantCommand(Intake.reverse()),
-                        new InstantCommand(Storage.spinToNextIntakeIndex()),
+                        Intake.reverse(),
+                        Storage.spinToNextIntakeIndex(),
                         new FollowPath(intakeAlign3Path)
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
-                        new InstantCommand(Intake.on()),
+                        Intake.on(),
                         new ParallelRaceGroup(
                                 new SequentialGroupFixed(
-                                        new InstantCommand(Intake.on()),
+                                        Intake.on(),
                                         new FollowPath(intake3Path, true, 0.5),
                                         new Delay (0.05)
                                 ),
@@ -280,24 +278,24 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                         )
 
                 ),
-                new InstantCommand(Intake.on()),
+                Intake.on(),
                 new Delay(standardDelay),
 
                 // Scoring after Intake3
                 new ParallelGroup(
-                        new InstantCommand(Outtake.on),
-                        new InstantCommand(Storage.spinToNextOuttakeIndex()),
+                        Outtake.on,
+                        Storage.spinToNextOuttakeIndex(),
 
 //                    new SequentialGroupFixed(
 //                        new Delay(0.1),
-//                        new InstantCommand(Intake.reverse())
+//                        Intake.reverse()
 //                    ),
-                        new InstantCommand(Intake.on()),
+                        Intake.on(),
                         new FollowPath(score3Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
                 new Delay(standardDelay),
-                new InstantCommand(Intake.on()),
+                Intake.on(),
                 new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay)
@@ -309,8 +307,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new FollowPath(finalExitPath),
 
                 // Turn off everything
-                new InstantCommand(Intake.off()),
-                new InstantCommand(Transitions.off())
+                Intake.off(),
+                Transitions.off()
         );
 
         // Close start = disable intake3Group
@@ -486,6 +484,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //        System.out.println(startPose.toString());
     }
 
+    @Override
     public void onUpdate(){
         PanelsTelemetry.INSTANCE.getTelemetry().update();
         //follower().update();
@@ -508,6 +507,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
 
 
+    @Override
     public void onStop(){
         CommandManager.INSTANCE.cancelAll();
         endPose = follower().getPose();
