@@ -11,9 +11,9 @@ public class AllianceManager implements Component {
     public static final AllianceManager INSTANCE = new AllianceManager();
     public static Alliance currentAlliance = Alliance.BLUE;
     public static Location currentLocation = Location.FAR;
-    public static boolean currentRunIntake1 = ANewWorkingAuto.runIntake1;
-    public static boolean currentRunIntake2 = ANewWorkingAuto.runIntake2;
-    public static boolean currentRunIntake3 = ANewWorkingAuto.runIntake3;
+//    public static boolean currentRunIntake1 = ANewWorkingAuto.runIntake1;
+//    public static boolean currentRunIntake2 = ANewWorkingAuto.runIntake2;
+//    public static boolean currentRunIntake3 = ANewWorkingAuto.runIntake3;
 
     private static boolean lastState;
     private static boolean lastStateY;
@@ -52,21 +52,21 @@ public class AllianceManager implements Component {
         // 3 is depot
 
         ActiveOpMode.telemetry().addLine("1 is closest to the goal; 2 is middle; 3 is closest to HP");
-        ActiveOpMode.telemetry().addLine("runIntake1" + currentRunIntake1 + "press d-pad left to toggle");
+        ActiveOpMode.telemetry().addLine("runIntake1" + ANewWorkingAuto.runIntake1 + "press d-pad left to toggle");
         if (ActiveOpMode.gamepad1().dpad_left && !lastDPadLeft) {
-            currentRunIntake1 = !currentRunIntake1;
+            ANewWorkingAuto.runIntake1 = !ANewWorkingAuto.runIntake1;
         }
         lastDPadLeft = ActiveOpMode.gamepad1().dpad_left;
 
-        ActiveOpMode.telemetry().addLine("runIntake2" + currentRunIntake2 + "press d-pad up to toggle");
+        ActiveOpMode.telemetry().addLine("runIntake2" + ANewWorkingAuto.runIntake2 + "press d-pad up to toggle");
         if (ActiveOpMode.gamepad1().dpad_up && !lastDPadUp) {
-            currentRunIntake2 = !currentRunIntake2;
+            ANewWorkingAuto.runIntake2 = !ANewWorkingAuto.runIntake2;
         }
         lastDPadUp = ActiveOpMode.gamepad1().dpad_up;
 
-        ActiveOpMode.telemetry().addLine("runIntake3" + currentRunIntake3 + "press d-pad right to toggle");
+        ActiveOpMode.telemetry().addLine("runIntake3" + ANewWorkingAuto.runIntake3 + "press d-pad right to toggle");
         if (ActiveOpMode.gamepad1().dpad_right && !lastDPadRight) {
-            currentRunIntake3 = !currentRunIntake3;
+            ANewWorkingAuto.runIntake3 = !ANewWorkingAuto.runIntake3;
         }
         lastDPadRight = ActiveOpMode.gamepad1().dpad_right;
 
