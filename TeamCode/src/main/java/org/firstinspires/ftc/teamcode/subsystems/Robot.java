@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Storage.extraTimeToOuttakeAfterStuck;
+
 import org.firstinspires.ftc.teamcode.utils.Logger;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 
@@ -11,6 +13,7 @@ import dev.nextftc.core.commands.groups.ParallelDeadlineGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
+import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 
 public class Robot extends SubsystemGroup {
@@ -69,51 +72,51 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new Delay(INTAKE_DELAY),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.assertManualPower(0)),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
-            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
-            new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.spinToNextIntakeIndex()),
-            new Delay(INTAKE_DELAY),
-            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+//            new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
+//            new Delay(INTAKE_DELAY),
+//            new InstantCommand(Storage.spinToNextIntakeIndex()),
+//            new Delay(INTAKE_DELAY),
+//            new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
             new IfElseCommand(() -> !Storage.isStorageMotorStuck(), Storage.spinToLastIntakeIndex()),
             new Delay(INTAKE_DELAY),
             new InstantCommand(Storage.spinToNextIntakeIndex()),
@@ -213,8 +216,8 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off)
     );
 
-    public static double targetVelocityClose = 1750;
-    public static double targetVelocityFar = 1975;
+    public static double targetVelocityClose = 1715;
+    public static double targetVelocityFar = 1925;
 
     public static InstantCommand setTargetVelocityAuto(boolean close){
         double targetVelocity;
@@ -238,7 +241,7 @@ public class Robot extends SubsystemGroup {
         return new SequentialGroupFixed(
                 new InstantCommand(Transitions.off()),
                 new InstantCommand(Outtake.on),
-                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)), //1975 far, 1750 close
+                new InstantCommand(() -> Outtake.setTargetVelocity(targetVelocity)),
                 new ParallelRaceGroup(
                         new WaitUntil(Outtake::reachedTargetVelocity),
                         new Delay(1)
@@ -246,13 +249,40 @@ public class Robot extends SubsystemGroup {
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.on()),
 
-                new ParallelGroup(
-                        new InstantCommand(Storage.assertManualPower(0.25)),
+                new InstantCommand(Storage.assertManualPower(0.25)),
+
+                new Delay (INTAKE_DELAY),
+                new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+                new Delay((INTAKE_DELAY)+0.02),
+                new IfElseCommand(() -> Storage.isStorageMotorStuck(),
+                        new ParallelGroup(
+                                new SequentialGroupFixed(
+                                        new InstantCommand(Transitions.off()),
+                                        new Delay (INTAKE_DELAY),
+                                        new InstantCommand(Storage.assertManualPower(1)),
+                                        new InstantCommand(Storage.outtakeStuckSignal())
+                                ),
+                                new Delay(0.6)
+                        ),
                         new SequentialGroupFixed(
-                                new Delay(0.75) // Control intake pause, currently disabled
-                                //new InstantCommand(Intake.on())
+                                new Delay (0.5),
+                                new InstantCommand(Storage.checkIfStuck(INTAKE_DELAY, 4)),
+                                new Delay((INTAKE_DELAY)+0.02),
+                                new IfElseCommand(() -> Storage.isStorageMotorStuck(),
+                                        new ParallelGroup(
+                                                new SequentialGroupFixed(
+                                                        new InstantCommand(Transitions.off()),
+                                                        new Delay (INTAKE_DELAY),
+                                                        new InstantCommand(Storage.assertManualPower(1)),
+                                                        new InstantCommand(Storage.outtakeStuckSignal())
+                                                ),
+                                                new Delay(0.5)
+                                        )
+                                )
                         )
                 ),
+                new InstantCommand(Storage.assertManualPower(0.25)),
+                Transitions.on(),
                 new Delay(1),
 
 //            new InstantCommand(Storage.spinToNextOuttakeIndex()),
@@ -265,7 +295,8 @@ public class Robot extends SubsystemGroup {
 //            new Delay(OUTTAKE_DELAY),
                 new InstantCommand(Storage.assertManualPower(0)),
                 new InstantCommand(Transitions.off()),
-                new InstantCommand(Outtake.off)
+                new InstantCommand(Outtake.off),
+                new InstantCommand(Storage.resetOuttakeStuckSignal())
         );
     }
 

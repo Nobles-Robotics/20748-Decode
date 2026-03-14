@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.subsystems.Robot.CACHING_TOLERANCE;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.utils.Logger;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -206,7 +205,18 @@ public class Storage implements Subsystem {
         });
     }
 
-
+    public static double extraTimeToOuttakeAfterStuck = 0;
+    public static Command outtakeStuckSignal() {
+        return new InstantCommand(() -> {
+            Log.i("Storage", String.format("Spindexer stuck during outtake... speed boosted"));
+            extraTimeToOuttakeAfterStuck = 0.5;
+        });
+    }
+    public static Command resetOuttakeStuckSignal() {
+        return new InstantCommand(() -> {
+            extraTimeToOuttakeAfterStuck=0;
+        });
+    }
     public static Command assertManualPower(double newPower) {
         return new InstantCommand(() -> {
             setManualMode(true);
@@ -262,9 +272,11 @@ public class Storage implements Subsystem {
                     if (elapsedSeconds >= checkDurationSeconds) {
                         double movedTicks = Math.abs(currentPosition - startPosition[0]);
                         storageMotorStuck = movedTicks < minPositionDeltaTicks;
+                        Log.i("Storage", String.format("checkIfStuck: true, movedTicks: %.3f", movedTicks));
+                        Log.i("Storage", "storageMotorStuck: " + storageMotorStuck);
                         return true;
                     }
-
+                    Log.i("Storage", String.format("checkIfStuck: false, movedTicks: %.3f", Math.abs(currentPosition - startPosition[0])));
                     return false;
                 })
                 .setStop(interrupted -> {

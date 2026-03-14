@@ -12,6 +12,7 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -26,10 +27,14 @@ import org.firstinspires.ftc.teamcode.utils.Location;
 import org.firstinspires.ftc.teamcode.utils.SequentialGroupFixed;
 import org.firstinspires.ftc.teamcode.utils.components.AllianceManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
+import dev.nextftc.core.commands.groups.CommandGroup;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -61,13 +66,20 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         );
     }
 
+    // Sets start position (manual setup during init)
     boolean blue = false;
     boolean close = false;
+
+    // TODO: CHANGE BEFORE EVERY MATCH
+    // Sets intake paths (true = runs path, false = skips)
+    boolean runIntake1 = true;
+    boolean runIntake2 = true;
+    boolean runIntake3 = true;
 
     // --- SETTINGS ---
 
     // CHANGE THIS TO MANIPULATE PATHING
-    // Set true if  have full field control
+    // Set true if have full field control
     // Set false if shoot far, or if skipping
     boolean forceCloseScore1 = false;
 
@@ -127,6 +139,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     Path intake2Path;
     Path intakeAlign2OutPath;
     Path score2Path;
+    PathChain intake2Score2PathChain;
 
     Path intakeAlign3Path;
     Path intake3Path;
@@ -141,23 +154,30 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     private Command autonomousRoutine() {
         double standardDelay = 0.025; // Slight delay to ensure that everything is settled before moving on
 
-        return new SequentialGroupFixed(
+        SequentialGroupFixed setupGroup = new SequentialGroupFixed(
 
                 // Setup
                 new ParallelGroup(
                         new InstantCommand(Intake.off()),
                         new InstantCommand(Transitions.off()),
                         new InstantCommand(Robot.setTargetVelocityAuto(close))
-                ),
+                )
+        );
+        SequentialGroupFixed scorePreloadGroup = new SequentialGroupFixed(
 
                 // Scoring Preload
                 new ParallelGroup(
                     new InstantCommand(Outtake.on),
                     new FollowPath(scorePreloadPath)
                 ),
-                new Delay(standardDelay),
+                new WaitUntil(() -> !follower().isBusy()),
+                new Delay(standardDelay*3),
+                new InstantCommand(Intake.on()),
                 Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed intake2Group = new SequentialGroupFixed(
 
                 // Intake2
                 new ParallelGroup(
@@ -183,33 +203,27 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 new ParallelGroup(
                         new InstantCommand(Outtake.on),
                         new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                        new FollowPath(intakeAlign2OutPath)
-
-                ),
-                //new Delay(standardDelay),
-
-                // Scoring after Intake2
-                new ParallelGroup(
-//                    new SequentialGroupFixed(
-//                        new Delay(0.1),
-//                        new InstantCommand(Intake.reverse())
-//                    ),
-                        new InstantCommand(Intake.off()),
-                        new FollowPath(score2Path)
+                        new InstantCommand(Intake.on()),
+                        new FollowPath(intake2Score2PathChain, false)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
-                Robot.outtakeAllSmooth(close),
                 new Delay(standardDelay),
+                new InstantCommand(Intake.on()),
+                Robot.outtakeAllSmooth(close),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed intake1Group = new SequentialGroupFixed(
 
                 // Intake1
                 new ParallelGroup(
-                        new InstantCommand(Intake.on()),
+                        new InstantCommand(Intake.reverse()),
                         new InstantCommand(Storage.spinToNextIntakeIndex()),
                         new FollowPath(intakeAlign1Path)
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
+                        Intake.on(),
                         new ParallelRaceGroup(
                                 new SequentialGroupFixed(
                                         new InstantCommand(Intake.on()),
@@ -222,8 +236,8 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                                 Robot.intakeAll
                         )
                 ),
+                new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
-
                 // Scoring after Intake1
                 new ParallelGroup(
                     new InstantCommand(Outtake.on),
@@ -232,22 +246,27 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
 //                    ),
-                    new InstantCommand(Intake.off()),
+                    new InstantCommand(Intake.on()),
                     new FollowPath(score1Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
-                Robot.outtakeAllSmooth(forceCloseScore1),
                 new Delay(standardDelay),
+                new InstantCommand(Intake.on()),
+                Robot.outtakeAllSmooth(close), //forceCloseScore1
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed intake3Group = new SequentialGroupFixed(
 
                 // Intake3
                 new ParallelGroup(
-                        new InstantCommand(Intake.on()),
+                        new InstantCommand(Intake.reverse()),
                         new InstantCommand(Storage.spinToNextIntakeIndex()),
                         new FollowPath(intakeAlign3Path)
                 ),
                 new Delay(standardDelay),
                 new ParallelGroup(
+                        new InstantCommand(Intake.on()),
                         new ParallelRaceGroup(
                                 new SequentialGroupFixed(
                                         new InstantCommand(Intake.on()),
@@ -261,6 +280,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                         )
 
                 ),
+                new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
 
                 // Scoring after Intake3
@@ -272,45 +292,18 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 //                        new Delay(0.1),
 //                        new InstantCommand(Intake.reverse())
 //                    ),
-                        new InstantCommand(Intake.off()),
+                        new InstantCommand(Intake.on()),
                         new FollowPath(score3Path)
                 ),
                 new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
                 new Delay(standardDelay),
-                Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
-
-                // IntakePlayer
-                new InstantCommand(Intake.on()),
-                new InstantCommand(Storage.spinToNextIntakeIndex()),
-                new FollowPath(intakeAlignPlayerPath),
                 new InstantCommand(Intake.on()),
                 new Delay(standardDelay),
-                new ParallelGroup(
-                        new SequentialGroupFixed(
-                                new InstantCommand(Intake.off()),
-                                new FollowPath(intakePlayerPath, true, 0.5),
-                                new Delay (0.5)
-                        ),
-                        new SequentialGroupFixed(
-                                Robot.intakeAll
-                        )
-
-                ),
-                new Delay(standardDelay),
-
-                // Scoring after IntakePlayer
-                new InstantCommand(Outtake.on),
-                new InstantCommand(Storage.spinToNextOuttakeIndex()),
-                new FollowPath(scorePlayerPath),
-                new InstantCommand(Intake.off()),
-                new InstantCommand(Intake.reverse()),
-                new WaitUntil(() -> !follower().isBusy()),
-                new InstantCommand(Intake.off()),
-                new Delay(standardDelay),
                 Robot.outtakeAllSmooth(close),
-                new Delay(standardDelay),
+                new Delay(standardDelay)
+        );
+
+        SequentialGroupFixed exitGroup = new SequentialGroupFixed(
 
                 // Park for leave points
                 new FollowPath(finalExitPath),
@@ -318,8 +311,36 @@ public class ANewWorkingAuto extends NextFTCOpMode {
                 // Turn off everything
                 new InstantCommand(Intake.off()),
                 new InstantCommand(Transitions.off())
-
         );
+
+        // Close start = disable intake3Group
+        // Far start = disable intake1Group
+        List<Object> groups = new ArrayList<>();
+
+        groups.add(setupGroup);
+        groups.add(scorePreloadGroup);
+        if (runIntake2){
+            groups.add(intake2Group);
+        }
+        if (runIntake1){
+            groups.add(intake1Group);
+        }
+        if (runIntake3){
+            groups.add(intake3Group);
+        }
+        groups.add(exitGroup);
+
+        return new SequentialGroupFixed(groups.toArray(new SequentialGroupFixed[0]));
+
+
+//        return new SequentialGroupFixed(
+//                setupGroup,
+//                scorePreloadGroup,
+//                intake2Group,
+//                intake1Group,
+//                intake3Group,
+//                exitGroup
+//        );
     }
 
 
@@ -420,6 +441,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
         intake2Path = buildPath(intakeAlign2, intake2, false);
         intakeAlign2OutPath = buildPath(intake2, intakeAlign2, false);
         score2Path = buildPath(intakeAlign2, scorePoseGeneral, false);
+        intake2Score2PathChain = follower().pathBuilder()
+                .addPaths(intakeAlign2OutPath, score2Path)
+                .build();
 
         intakeAlign1Path = buildPath(scorePoseGeneral, intakeAlign1, false);
         intake1Path = buildPath(intakeAlign1, intake1, false);
@@ -507,3 +531,36 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     }
 
 }
+
+
+//                // IntakePlayer
+//                new InstantCommand(Intake.on()),
+//                new InstantCommand(Storage.spinToNextIntakeIndex()),
+//                new FollowPath(intakeAlignPlayerPath),
+//                new InstantCommand(Intake.on()),
+//                new Delay(standardDelay),
+//                new ParallelGroup(
+//                        new SequentialGroupFixed(
+//                                new InstantCommand(Intake.on()),
+//                                new FollowPath(intakePlayerPath, true, 0.5),
+//                                new Delay (0.5)
+//                        ),
+//                        new SequentialGroupFixed(
+//                                Robot.intakeAll
+//                        )
+//
+//                ),
+//                new InstantCommand(Intake.on()),
+//                new Delay(standardDelay),
+//
+//                // Scoring after IntakePlayer
+//                new InstantCommand(Outtake.on),
+//                new InstantCommand(Storage.spinToNextOuttakeIndex()),
+//                new FollowPath(scorePlayerPath),
+//                new InstantCommand(Intake.on()),
+//                new InstantCommand(Intake.reverse()),
+//                new WaitUntil(() -> !follower().isBusy()),
+//                new InstantCommand(Intake.on()),
+//                new Delay(standardDelay),
+//                Robot.outtakeAllSmooth(close),
+//                new Delay(standardDelay),
