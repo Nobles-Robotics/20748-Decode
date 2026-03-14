@@ -72,9 +72,9 @@ public class ANewWorkingAuto extends NextFTCOpMode {
 
     // TODO: CHANGE BEFORE EVERY MATCH
     // Sets intake paths (true = runs path, false = skips)
-    boolean runIntake1 = true;
-    boolean runIntake2 = true;
-    boolean runIntake3 = true;
+    public static boolean runIntake1 = true;
+    public static boolean runIntake2 = true;
+    public static boolean runIntake3 = true;
 
     // --- SETTINGS ---
 

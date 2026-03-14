@@ -19,6 +19,7 @@ public class Transitions implements Subsystem {
     @Override
     public void initialize() {
         transition.setPower(0);
+        currentPower = 0;
     }
 
     @Override
