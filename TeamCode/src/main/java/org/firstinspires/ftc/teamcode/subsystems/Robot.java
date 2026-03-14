@@ -216,7 +216,7 @@ public class Robot extends SubsystemGroup {
             new InstantCommand(Outtake.off)
     );
 
-    public static double targetVelocityClose = 1725;
+    public static double targetVelocityClose = 1715;
     public static double targetVelocityFar = 1925;
 
     public static InstantCommand setTargetVelocityAuto(boolean close){
