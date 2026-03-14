@@ -13,7 +13,6 @@ public class AllianceManager implements Component {
     public static Location currentLocation = Location.FAR;
     public static boolean currentRunIntake1 = ANewWorkingAuto.runIntake1;
     public static boolean currentRunIntake2 = ANewWorkingAuto.runIntake2;
-
     public static boolean currentRunIntake3 = ANewWorkingAuto.runIntake3;
 
     private static boolean lastState;
