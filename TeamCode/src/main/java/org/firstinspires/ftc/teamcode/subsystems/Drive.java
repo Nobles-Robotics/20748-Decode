@@ -89,12 +89,17 @@ public class Drive implements Subsystem {
                 double turn = slowMode ? -(ActiveOpMode.gamepad1().right_stick_x + aimAssistment) * slowModeMultiplier: -(ActiveOpMode.gamepad1().right_stick_x + aimAssistment);
 
                 if (headingLock) {
-                    follower.setTeleOpDrive(forward, strafe, controller.run(), robotCentric);
                     if (holdEnd) {
                         follower.holdPoint(poseToHold);
+                    } else {
+                        follower.setTeleOpDrive(forward, strafe, controller.run(), robotCentric);
                     }
                 } else {
-                    follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
+                    if (holdEnd) {
+                        follower.holdPoint(poseToHold);
+                    } else {
+                        follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
+                    }
                 }
 
 //                Logger.add("Drive", "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
