@@ -118,7 +118,7 @@ public class Outtake implements Subsystem {
         if (currentAlliance == Alliance.BLUE)
             shootTarget = new Pose(6, 144 - 6, 0);
         else if (currentAlliance == Alliance.RED)
-            shootTarget = new Pose(144-6, 144 - 6, 0);
+            shootTarget = new Pose(144-6, 144-6, 0);
     }
 
     public static Pose getShootTarget() {

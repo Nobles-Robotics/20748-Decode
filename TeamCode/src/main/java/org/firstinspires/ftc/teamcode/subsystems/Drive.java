@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static dev.nextftc.extensions.pedro.PedroComponent.follower;
 import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.currentAlliance;
 
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -31,10 +32,9 @@ public class Drive implements Subsystem {
     public static Pose autoendPose;
     private static PIDFController controller;
     private static boolean headingLock = false;
-
-    // 69 ->
-
     private static double aimAssistment = 0;
+    private static boolean holdEnd = false;
+    private static Pose poseToHold;
     @Override
     public void initialize() {
         follower = Constants.createFollower(ActiveOpMode.hardwareMap());
@@ -88,10 +88,14 @@ public class Drive implements Subsystem {
                 strafe = -strafe;
                 double turn = slowMode ? -(ActiveOpMode.gamepad1().right_stick_x + aimAssistment) * slowModeMultiplier: -(ActiveOpMode.gamepad1().right_stick_x + aimAssistment);
 
-                if (headingLock)
+                if (headingLock) {
                     follower.setTeleOpDrive(forward, strafe, controller.run(), robotCentric);
-                else
+                    if (holdEnd) {
+                        follower.holdPoint(poseToHold);
+                    }
+                } else {
                     follower.setTeleOpDrive(forward, strafe, turn, robotCentric);
+                }
 
 //                Logger.add("Drive", "forward: " + forward + " strafe: " + strafe + " turn: " + turn);
 //                Logger.add("Drive", "posx: " + Math.round(follower.getPose().getX()*100/100) + " posy: " + Math.round(follower.getPose().getY()*100)/100 + " heading: " + Math.round(follower.getPose().getHeading()*100)/100);
@@ -113,6 +117,19 @@ public class Drive implements Subsystem {
     private static void setSlowMode(boolean newMode) {
         slowMode = newMode;
     }
+
+    public static Command setHoldPosCommand(boolean newMode) {
+        return new InstantCommand(() -> setHoldPos(newMode));
+    }
+    private static void setHoldPos(boolean newState) {
+        if (newState) {
+            holdEnd = true;
+            poseToHold = follower.getPose();
+        } else {
+            holdEnd = false;
+        }
+    }
+
 
     private static void setHeadingLock(boolean newLock) {
         headingLock = newLock;
