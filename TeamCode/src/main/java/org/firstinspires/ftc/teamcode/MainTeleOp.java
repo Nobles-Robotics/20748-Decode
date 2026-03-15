@@ -187,9 +187,9 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Intake.on().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp2.dpadLeft()
-                .whenBecomesTrue(() -> Drive.setHoldPosCommand(true).schedule())
-                .whenBecomesFalse(() -> Drive.setHoldPosCommand(false).schedule());
+//        gp2.dpadLeft()
+//                .whenBecomesTrue(() -> Drive.setHoldPosCommand(true).schedule())
+//                .whenBecomesFalse(() -> Drive.setHoldPosCommand(false).schedule());
 
         gp2.leftBumper()
                 .whenBecomesTrue(() -> Transitions.on().schedule())
