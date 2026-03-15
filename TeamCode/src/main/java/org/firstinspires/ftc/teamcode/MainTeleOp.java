@@ -167,9 +167,9 @@ public class MainTeleOp extends NextFTCOpMode {
 //                })
 //                .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp2.dpadLeft()
-                .whenBecomesTrue(() -> Storage.assertManualPower(-0.6).schedule())
-                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
+//        gp2.dpadLeft()
+//                .whenBecomesTrue(() -> Storage.assertManualPower(-0.6).schedule())
+//                .whenBecomesFalse(() -> Storage.assertManualPower(0).schedule());
 
         gp1.rightBumper()
                 .whenBecomesTrue(() -> {
@@ -187,9 +187,9 @@ public class MainTeleOp extends NextFTCOpMode {
                 .whenBecomesTrue(() -> Intake.on().schedule())
                 .whenBecomesFalse(() -> Intake.off().schedule());
 
-        gp2.dpadUp()
+        gp2.dpadLeft()
                 .whenBecomesTrue(() -> Drive.setHoldPosCommand(true).schedule())
-                .whenBecomesTrue(() -> Drive.setHoldPosCommand(false).schedule());
+                .whenBecomesFalse(() -> Drive.setHoldPosCommand(false).schedule());
 
         gp2.leftBumper()
                 .whenBecomesTrue(() -> Transitions.on().schedule())

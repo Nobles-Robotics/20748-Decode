@@ -5,9 +5,11 @@ import static org.firstinspires.ftc.teamcode.utils.components.AllianceManager.cu
 
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.geometry.Pose;
 
 import com.pedropathing.math.MathFunctions;
@@ -45,7 +47,6 @@ public class Drive implements Subsystem {
         follower.update();
         controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-
         //cornerReset();
     }
 
@@ -128,7 +129,8 @@ public class Drive implements Subsystem {
     }
     private static void setHoldPos(boolean newState) {
         if (newState) {
-            holdEnd = true;
+            holdEnd = true; // old 0.36 for p
+            follower.constants.coefficientsDrivePIDF = new FilteredPIDFCoefficients(10, 0.01, 0.000001, 0.6, 0.01);
             poseToHold = follower.getPose();
         } else {
             holdEnd = false;
