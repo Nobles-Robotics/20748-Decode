@@ -84,7 +84,7 @@ public class ANewWorkingAuto extends NextFTCOpMode {
     boolean forceCloseScore1 = false;
 
     // Sets exit pose to close
-    boolean startCloseForCloseExit = true;
+    boolean startCloseForCloseExit = true; // This should always be true
 
     // Max time for intake before cuts loss
     double intakeMaxTime = 1;
