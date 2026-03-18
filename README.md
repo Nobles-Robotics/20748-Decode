@@ -1,3 +1,30 @@
+## Features + General Description
+
+This project contains code for the First Tech Challenge Competition (FTC). The basic premise of the game this year was that there are balls that you have to collect and shoot at a goal. We are ranked 626 out of 8626 teams (92.22%). You can see our season's stats here: https://ftcscout.org/teams/20748
+
+![IMG_6255](https://github.com/user-attachments/assets/a8bc6ec0-c7fb-4008-991f-fd290bbf2c86)
+
+# Spindexer
+- Position PID (What is a PID? It stands for Proportional Integral Derivative Controller, and is a control strategy for motors and moving parts that allows them to reach some sort of target). In this case, it was to spin 120 degrees and hold 3 balls.
+- Limit Switch. This resets our position every turn in order to maintain 1. a constant zero and 2. eliminate the accumulation of error from the motor encoder
+- Color Sensor. This reads the color the ball so that we know if we're shooting purple or green balls. We get bonus points if we shoot balls in a certain order ie (Purple, Purple, Green or Purple, Green, Purple). 
+
+# Drivetrain
+- Using odometry, we are able to track our position on the field.
+- Limelight Camera, using 3d visual relocalization, we are able to read QR codes to gain information. Additionally, we can use multiple QR codes to obtain our location in the field.  
+- We are able to turn to face QR codes in this manner. 
+
+# Outtake
+- Velocity PID. This was the spin-up to a target velocity and the maintenance of that velocity to ensure we could shoot balls consistently. Using odometry, we are able to vary this target velocity based on our location on the field that is supplied based on our Drivetrain. 
+
+# Intake
+- Just a motor, either it spins or doesn't :)
+
+# Autonomous
+- A period of 30s where the robot controls itself! We intake and outtake balls fully autonomously through a combination of the sensors described above <3
+
+It was a great season <3
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the DECODE (2025-2026) competition season!
