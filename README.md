@@ -1,6 +1,6 @@
 ## Features + General Description
 
-This project contains code for the First Tech Challenge Competition (FTC). The basic premise of the game this year was that there are balls that you have to collect and shoot at a goal. We are ranked 626 out of 8626 teams (92.22%). You can see our season's stats here: https://ftcscout.org/teams/20748
+This project contains code for the First Tech Challenge Competition (FTC). The basic premise of the game this year was that there are balls that you have to collect and shoot at a goal. We are ranked 626 out of 8626 teams (92.22%). You can see our season's stats here: https://ftcscout.org/teams/20748. Below this (amazing ✨ image of our robot, is a more detailed description of the code).
 
 ![IMG_6255](https://github.com/user-attachments/assets/a8bc6ec0-c7fb-4008-991f-fd290bbf2c86)
 
@@ -24,6 +24,8 @@ This project contains code for the First Tech Challenge Competition (FTC). The b
 - A period of 30s where the robot controls itself! We intake and outtake balls fully autonomously through a combination of the sensors described above <3
 
 It was a great season <3
+
+-- below is a changelog from the official FTC SDK for 2025-2026 --
 
 ## NOTICE
 
